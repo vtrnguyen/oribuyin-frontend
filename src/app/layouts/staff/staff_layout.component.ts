@@ -1,6 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, HostListener } from "@angular/core";
+import { Component, ElementRef, HostListener, inject, ViewChild } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
+import { AuthService } from "../../core/auth/auth.service";
 
 @Component({
     selector: "app-staff-layout",
@@ -14,9 +15,24 @@ import { RouterOutlet } from "@angular/router";
 })
 export class StaffLayoutComponent {
     isStaffMenuOpen: boolean = false;
+    @ViewChild("staffMenuButton") staffMenuButton!: ElementRef;
+    @ViewChild("staffMenu") staffMenu!: ElementRef;
+
+    private authService = inject(AuthService);
 
     toggleStaffMenu(): void {
         this.isStaffMenuOpen = !this.isStaffMenuOpen;
+    }
+
+    logout(): void {
+        this.authService.logout().subscribe({
+            next: (response) => {
+                this.authService.clearLocalStorageAndRedirect();
+            },
+            error: (error) => {
+                this.authService.clearLocalStorageAndRedirect();
+            }
+        });
     }
 
     @HostListener("document:click", ["$event"])

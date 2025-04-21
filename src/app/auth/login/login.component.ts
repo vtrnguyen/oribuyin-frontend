@@ -62,8 +62,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
-        console.log("Lỗi khi đăng nhập:", err);
-        this.errorMessage = err?.error?.message || "Đăng nhập thất bại!";
+        this.errorMessage = "Tên đăng nhập hoặc mật khẩu không chính xác!";
       }
     });
   }
