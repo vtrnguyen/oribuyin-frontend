@@ -1,39 +1,73 @@
-<div class="min-h-screen bg-gray-200 flex">
-    <aside class="bg-[#f8f4f3] text-gray-700 w-72 flex flex-col">
+<div class="min-h-screen bg-gray-200 flex overflow-hidden">
+    <aside
+        class="bg-[#f8f4f3] text-gray-700 w-72 flex flex-col fixed top-0 left-0 h-screen z-20 transition-transform duration-300 ease-in-out md:flex md:translate-x-0">
         <div class="p-4 flex items-center gap-2">
             <h1 class="text-2xl font-semibold">OriBuyin</h1>
             <span class="bg-[#F84525] text-white py-1 px-2 rounded-md">
                 Quản trị viên
             </span>
         </div>
-        <nav class="flex-grow p-4 shadow-md">
-            <a routerLink="/admin/dashboard" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+        <nav class="flex-grow p-4 shadow-md space-y-1">
+            <a
+                routerLink="/admin"
+                routerLinkActive="bg-gray-700 text-white"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
                 <i class="fas fa-chart-line mr-2"></i> Thông tin chung
             </a>
-            <a routerLink="/admin/users" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a
+                routerLink="/admin/users"
+                routerLinkActive="bg-gray-700 text-white"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
                 <i class="fas fa-users mr-2"></i> Người dùng
             </a>
-            <a routerLink="/admin/categories" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a 
+                routerLink="/admin/categories" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }" 
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
                 <i class="fas fa-list mr-2"></i> Danh mục sản phẩm
             </a>
-            <a routerLink="/admin/products" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a routerLink="/admin/products" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }" 
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
                 <i class="fas fa-box-open mr-2"></i> Sản phẩm
             </a>
-            <a routerLink="/admin/orders" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a routerLink="/admin/orders" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }" 
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
                 <i class="fas fa-shopping-cart mr-2"></i> Đơn hàng
             </a>
-            <a routerLink="/admin/reports" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a routerLink="/admin/reports" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }" 
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
                 <i class="fas fa-chart-bar mr-2"></i> Báo cáo
             </a>
         </nav>
     </aside>
 
     <div class="flex-grow flex flex-col">
-        <header class="bg-[#f8f4f3] shadow-md py-4 px-8 flex justify-end items-center">
+        <header
+            class="bg-[#f8f4f3] shadow-md py-4 px-8 flex justify-between items-center md:justify-end fixed top-0 left-72 w-[calc(100%-18rem)] z-10"
+        >
             <div class="relative">
-                <button class="flex flex-col items-end focus:outline-none cursor-pointer" id="adminMenuButton" (click)="toggleAdminMenu()">
+                <button
+                    class="flex flex-col items-end focus:outline-none cursor-pointer"
+                    id="adminMenuButton"
+                    (click)="toggleAdminMenu()"
+                >
                     <div class="flex items-center">
-                        <img src="images/avatar.webp" alt="Ảnh của quản trị viên" class="rounded-full w-10 h-10 mr-2">
+                        <img
+                            src="images/avatar.webp"
+                            alt="Ảnh của quản trị viên"
+                            class="rounded-full w-10 h-10 mr-2"
+                        />
                         <div class="flex flex-col items-start">
                             <span class="text-gray-700 font-semibold">Origin Dev</span>
                             <span class="text-gray-500 text-xs">Quản trị viên</span>
@@ -41,21 +75,34 @@
                         <i class="fas fa-chevron-down ml-2 text-gray-500"></i>
                     </div>
                 </button>
-                <div id="adminMenu" *ngIf="isAdminMenuOpen" class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-10">
-                    <a routerLink="/admin/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                <div
+                    id="adminMenu"
+                    *ngIf="isAdminMenuOpen"
+                    class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-10"
+                >
+                    <a
+                        routerLink="/admin/profile"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                    >
                         <i class="fas fa-user mr-2"></i> Hồ sơ
                     </a>
-                    <a routerLink="/admin/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                    <a
+                        routerLink="/admin/settings"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                    >
                         <i class="fas fa-cog mr-2"></i> Cài đặt
                     </a>
-                    <a (click)="logout()" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                    <a
+                        (click)="logout()"
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                    >
                         <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
                     </a>
                 </div>
             </div>
         </header>
 
-        <main class="p-6">
+        <main class="mt-16 md:ml-72 p-6 overflow-y-auto h-[calc(100vh-4rem)]">
             <router-outlet></router-outlet>
         </main>
     </div>

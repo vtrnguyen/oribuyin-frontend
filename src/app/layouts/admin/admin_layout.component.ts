@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, ElementRef, HostListener, inject, ViewChild } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { RouterModule, RouterOutlet } from "@angular/router";
 import { AuthService } from "../../core/auth/auth.service";
 
 @Component({
@@ -8,6 +8,7 @@ import { AuthService } from "../../core/auth/auth.service";
     standalone: true,
     imports: [
         RouterOutlet,
+        RouterModule,
         CommonModule,
     ],
     templateUrl: "./admin_layout.component.html",

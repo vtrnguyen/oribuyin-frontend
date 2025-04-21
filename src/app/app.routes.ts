@@ -14,6 +14,13 @@ import { AdminAuthGuard } from './core/guards/admin_auth.guard';
 import { CustomerAuthGuard } from './core/guards/customer_auth.guard';
 import { StaffAuthGuard } from './core/guards/staff_auth.guard';
 import { AuthenticatedGuard } from './core/guards/authenticated.guard';
+import { AdminCategoriesComponent } from './pages/admin/categories/categories.component';
+import { AdminProductsComponent } from './pages/admin/products/products.component';
+import { AdminReportsComponent } from './pages/admin/reports/reports.component';
+import { AdminSettingsComponent } from './pages/admin/settings/settings.component';
+import { AdminUsersComponent } from './pages/admin/users/users.component';
+import { AdminOrdersComponent } from './pages/admin/orders/orders.component';
+import { AdminProfileComponent } from './pages/admin/profile/profile.component';
 
 export const routes: Routes = [
     { 
@@ -43,7 +50,15 @@ export const routes: Routes = [
         component: AdminLayoutComponent,
         canActivate: [AdminAuthGuard],
         children: [
-            { path: "", component: AdminDashboardComponent },
+            { path: "", component: AdminDashboardComponent, title: "Thông tin chung" },
+            { path: "dashboard", redirectTo: "", pathMatch: 'full' },
+            { path: "users", component: AdminUsersComponent, title: "Người dùng" },
+            { path: "categories", component: AdminCategoriesComponent, title: "Danh mục sản phẩm" },
+            { path: "products", component: AdminProductsComponent, title: "Sản phẩm" },
+            { path: "orders", component: AdminOrdersComponent, title: "Đơn hàng" },
+            { path: "reports", component: AdminReportsComponent, title: "Báo cáo" },
+            { path: "profile", component: AdminProfileComponent, title: "Thông tin cá nhân" },
+            { path: "settings", component: AdminSettingsComponent, title: "Cài đặt" },
         ]
     },
 
