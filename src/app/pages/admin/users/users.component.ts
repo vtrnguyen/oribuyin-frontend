@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { CommonModule, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { User } from "../../../shared/interfaces/user.interface";
+import { ClickOutsideModule } from 'ng-click-outside';
 
 @Component({
     selector: "app-admin-users",
@@ -9,6 +10,7 @@ import { User } from "../../../shared/interfaces/user.interface";
     imports: [
         CommonModule,
         FormsModule,
+        ClickOutsideModule,
     ],
     templateUrl: "./users.component.html",
     styleUrls: ["./users.component.scss"],
@@ -44,9 +46,13 @@ export class AdminUsersComponent {
         this.isAddUserModalOpen = false;
     }
 
-    openActionsMenu(user: User): void {
-        this.selectedUser = user;
-        this.isActionsMenuOpen = true;
+    toggleActionsMenu(user: User, button: HTMLButtonElement): void {
+        if (this.selectedUser === user && this.isActionsMenuOpen) {
+            this.closeActionMenu();
+        } else {
+            this.selectedUser = user;
+            this.isActionsMenuOpen = true;
+        }
     }
 
     closeActionMenu(): void {
