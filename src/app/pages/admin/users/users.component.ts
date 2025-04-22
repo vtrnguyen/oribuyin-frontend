@@ -1,8 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { User } from "../../../shared/interfaces/user.interface";
 import { ClickOutsideModule } from 'ng-click-outside';
+import { UsersService } from "../../../core/services/users.service";
+import * as XLSX from "xlsx";
 
 @Component({
     selector: "app-admin-users",
@@ -16,27 +18,38 @@ import { ClickOutsideModule } from 'ng-click-outside';
     styleUrls: ["./users.component.scss"],
     providers: [DatePipe],
 })
-export class AdminUsersComponent {
+export class AdminUsersComponent implements OnInit {
     isAddUserModalOpen: boolean = false;
-    users: User[] = [
-        { id: 1, avatar: 'images/avatar.webp', firstName: 'Jese', lastName: 'Leos', userName: "user1", password: "123", role: 'admin', email: 'jese@example.com', phoneNumber: '123-456-7890', gender: 'male', birthDay: new Date('1990-05-15'), address: 'USA' },
-        { id: 2, avatar: 'images/avatar.webp', firstName: 'Bonnie', lastName: 'Green', userName: "user2", password: "123", role: 'customer', email: 'bonnie@example.com', phoneNumber: '987-654-3210', gender: 'female', birthDay: new Date('1992-08-20'), address: 'USA' },
-        { id: 3, avatar: 'images/avatar.webp', firstName: 'Leslie', lastName: 'Livingston', userName: "user3", password: "123", role: 'staff', email: 'leslie@example.com', phoneNumber: '555-123-4567', gender: 'other', birthDay: new Date('1988-11-01'), address: 'USA' },
-        { id: 4, avatar: 'images/avatar.webp', firstName: 'Micheal', lastName: 'Gough', userName: "user4", password: "123", role: 'staff', email: 'michael@example.com', phoneNumber: '111-222-3333', gender: 'male', birthDay: new Date('1995-03-10'), address: 'France' },
-        { id: 5, avatar: 'images/avatar.webp', firstName: 'Joseph', lastName: 'McFall', userName: "user5", password: "123", role: 'customer', email: '[đã xoá địa chỉ email]', phoneNumber: '444-555-6666', gender: 'male', birthDay: new Date('1993-07-25'), address: 'England' },
-        { id: 6, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user6", password: "123", role: 'admin', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 7, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user7", password: "123", role: 'staff', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 8, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user8", password: "123", role: 'customer', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 9, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user9", password: "123", role: 'admin', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 10, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user10", password: "123", role: 'staff', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 11, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user11", password: "123", role: 'admin', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-        { id: 12, avatar: 'images/avatar.webp', firstName: 'Robert', lastName: 'Brown', userName: "user12", password: "123", role: 'customer', email: '[đã xoá địa chỉ email]', phoneNumber: '777-888-9999', gender: 'male', birthDay: new Date('1991-12-05'), address: 'Canada' },
-    ];
+    isDeleteUserModalOpen: boolean = false;
+    users: User[] = [];
     totalUsers: number = this.users.length;
     isActionsMenuOpen: boolean = false;
     selectedUser: User | null = null;
 
-    constructor(private datePipe: DatePipe) {}
+    constructor(
+        private datePipe: DatePipe,
+        private usersService: UsersService
+    ) {}
+
+    ngOnInit(): void {
+        this.usersService.getAllUsers().subscribe((response: any) => {
+            this.users = response.data.map((item: any) => ({
+                id: item.user.id,
+                firstName: item.user.first_name,
+                lastName: item.user.last_name,
+                email: item.user.email,
+                phoneNumber: item.user.phone_number,
+                avatar: item.user.avatar,
+                gender: item.user.gender,
+                birthDay: item.user.birth_day,
+                address: item.user.address,
+                role: item.role,
+                userName: item.user_name,
+            }));
+
+            this.totalUsers = this.users.length;
+        });
+    }
 
     openAddUserModal(): void {
         this.isAddUserModalOpen = true;
@@ -44,6 +57,15 @@ export class AdminUsersComponent {
 
     closeAddUserModal(): void {
         this.isAddUserModalOpen = false;
+    }
+
+    openDeleteUserModal(): void {
+        this.isDeleteUserModalOpen = true;
+        this.isActionsMenuOpen = false;
+    }
+
+    closeDeleteUserModal(): void {
+        this.isDeleteUserModalOpen = false;
     }
 
     toggleActionsMenu(user: User, button: HTMLButtonElement): void {
@@ -75,6 +97,30 @@ export class AdminUsersComponent {
         this.closeActionMenu();
     }
 
+    downloadUserInfo(): void {
+        const data = this.users.map(user => ({
+            "Mã người dùng": user.id,
+            "Họ và tên": `${user.firstName} ${user.lastName}`,
+            "Tên tài khoản": user.role,
+            "Quyền người dùng": this.getRoleDisplayName(user.role),
+            Email: user.email,
+            "Số điện thoại": user.phoneNumber,
+            "Giới tính": user.gender,
+            "Ngày sinh": user.birthDay ? this.datePipe.transform(user.birthDay, 'dd/MM/yyyy') : '',
+            "Địa chỉ": user.address,
+        }));
+        
+        // init worksheet
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+
+        // init workbook with the worksheet
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "OriBuyin's Users");
+
+        // save file
+        XLSX.writeFile(wb, "danh_sach_nguoi_dung_cua_oribuyin.xlsx");
+    }
+
     getRoleDisplayName(role: "admin" | "staff" | "customer"): string {
         switch (role) {
             case "admin":
@@ -88,7 +134,7 @@ export class AdminUsersComponent {
         }
     }
 
-    getGenderDisplayName(gender: "male" | "female" | "other"): string {
+    getGenderDisplayName(gender: string | null): string {
         switch (gender) {
             case "male":
                 return "Nam";

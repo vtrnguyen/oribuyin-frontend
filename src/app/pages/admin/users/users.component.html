@@ -44,7 +44,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10">
-                                <img class="h-10 w-10 rounded-full" [src]="user.avatar || 'https://via.placeholder.com/150'" alt="">
+                                <img class="h-10 w-10 rounded-full" [src]="user.avatar" [alt]="'Ảnh đại diện của ' + user.firstName + ' ' + user.lastName">
                             </div>
                             <div class="ml-4">
                                 <div class="text-sm font-medium text-gray-900">{{ user.firstName }} {{ user.lastName }}</div>
@@ -62,7 +62,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.phoneNumber }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getGenderDisplayName(user.gender) }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.birthDay | date }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.birthDay | date:'dd/MM/yyyy' }}</td>
                     <td class="px-6 py-4 text-sm text-gray-500">{{ user.address }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="relative inline-block text-left">
@@ -83,7 +83,7 @@
                                 <div class="py-1" role="menuitem">
                                     <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="viewUser(user)">Xem</a>
                                     <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="editUser(user)">Chỉnh sửa</a>
-                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="deleteUser(user)">Xóa</a>
+                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="openDeleteUserModal()">Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
     </div>
 
     <div class="mt-4 flex justify-between items-center">
-        <button class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200">
+        <button class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200" (click)="downloadUserInfo()">
             Tải xuống
         </button>
         <span class="text-sm text-gray-700">Tổng số người dùng: <span class="font-bold">{{ totalUsers }}</span></span>
@@ -224,6 +224,35 @@
                         <button type="submit"
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200">
                             Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isDeleteUserModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-xl">
+                <form class="px-6 py-4" (clickOutside)="closeDeleteUserModal()">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin người dùng</h2>
+
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa người dùng này không?</p>
+
+                    <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">
+                        <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> Cảnh báo</span>
+                        <p>Hành động này không thể hoàn tác. Hãy chắc chắn bạn hiểu rõ những hậu quả.</p>
+                    </div>
+
+                    <div class="flex justify-start">
+                        <button type="button"
+                            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                            (click)="closeDeleteUserModal()">
+                            Hủy bỏ
+                        </button>
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200">
+                            Xác nhận xóa
                         </button>
                     </div>
                 </form>

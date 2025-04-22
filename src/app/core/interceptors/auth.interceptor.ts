@@ -11,23 +11,22 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const accessToken = localStorage.getItem("access_token");
+        let authRequest = req;
 
         if (accessToken) {
-            const authRequest = req.clone({
+            authRequest = req.clone({
                 headers: req.headers.set("Authorization", `Bearer ${accessToken}`),
             });
-            return next.handle(authRequest);
         }
 
-        return next.handle(req).pipe(
+        return next.handle(authRequest).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401 || error.status === 403) {
                     this.authService.clearLocalStorageAndRedirect();
                     return throwError(() => error);
                 }
-
                 return throwError(() => error);
             })
-        )
+        );
     }
 }
