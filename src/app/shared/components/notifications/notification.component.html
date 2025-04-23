@@ -1,0 +1,9 @@
+<div *ngIf="isVisible" class="notification" [ngClass]="type">
+    <div class="icon">
+        <i [ngClass]="getIconClass()"></i>
+    </div>
+    <div class="content">
+        <h3 *ngIf="title">{{ title }}</h3>
+        <p>{{ message }}</p>
+    </div>
+</div>

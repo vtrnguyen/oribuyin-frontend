@@ -5,6 +5,9 @@ import { User } from "../../../shared/interfaces/user.interface";
 import { ClickOutsideModule } from 'ng-click-outside';
 import { UsersService } from "../../../core/services/users.service";
 import * as XLSX from "xlsx";
+import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
+import { Notification } from "../../../shared/types/notification.type";
+import { isValidEmail, isValidPhoneNumber } from "../../../utils/validation.utils";
 
 @Component({
     selector: "app-admin-users",
@@ -13,6 +16,7 @@ import * as XLSX from "xlsx";
         CommonModule,
         FormsModule,
         ClickOutsideModule,
+        NotificationComponent,
     ],
     templateUrl: "./users.component.html",
     styleUrls: ["./users.component.scss"],
@@ -20,11 +24,46 @@ import * as XLSX from "xlsx";
 })
 export class AdminUsersComponent implements OnInit {
     isAddUserModalOpen: boolean = false;
+    isEditUserModalOpen: boolean = false;
     isDeleteUserModalOpen: boolean = false;
     users: User[] = [];
     totalUsers: number = this.users.length;
     isActionsMenuOpen: boolean = false;
     selectedUser: User | null = null;
+    editingUser: User | null = null;
+    deletingUser: User | null = null;
+    notificationVisible: boolean = false;
+    notificationType: Notification = "success";
+    notificationTitle: string = "";
+    notificationMessage: string = "";
+
+    // adding user properties
+    newFirstName: string = "";
+    newLastName: string = '';
+    newEmail: string = '';
+    newPhoneNumber: string = '';
+    newGender: string = 'male';
+    newBirthDay: string = '';
+    newAddress: string = '';
+    newUsername: string = '';
+    newPassword: string = '';
+    newConfirmPassword: string = '';
+    newRole: string = 'customer';
+
+    // editing user properties
+    updateID: number = 0;
+    updateFirstName: string = "";
+    updateLastName: string = "";
+    updateAvatar: string = "images/default_avatar.png";
+    updateEmail: string = "";
+    updatePhoneNumber: string = "";
+    updateGender: string = 'male';
+    updateBirthDay: string = "";
+    updateAddress: string = "";
+    updateUsername: string = "";
+    updatePassword: string = "";
+    updateConfirmPassword: string = "";
+    updateRole: string = "customer";
 
     constructor(
         private datePipe: DatePipe,
@@ -32,6 +71,77 @@ export class AdminUsersComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.getAllUsers();
+    }
+
+    // adding modal
+    openAddUserModal(): void {
+        this.isAddUserModalOpen = true;
+    }
+
+    
+    closeAddUserModal(): void {
+        this.isAddUserModalOpen = false;
+        this.resetAddingUserForm();
+    }
+
+
+    // editing modal
+    openEditUserModal(user: User): void {
+        this.updateID = user.id;
+        this.updateFirstName = user.firstName;
+        this.updateLastName = user.lastName;
+        this.updateAvatar = user.avatar;
+        this.updateEmail = user.email;
+        this.updatePhoneNumber = user.phoneNumber;
+        this.updateGender = user.gender;
+        this.updateBirthDay = user.birthDay.toString();
+        this.updateAddress = user.address;
+        this.updateUsername = user.userName;
+        this.updatePassword = "";
+        this.updateConfirmPassword = "";
+        this.updateRole = user.role;
+
+        this.isEditUserModalOpen = true;
+    }
+
+    closeEditUserModal() {
+        this.isEditUserModalOpen = false;
+        this.resetEditingUserForm();
+    }
+
+
+    // deleting modal
+    openDeleteUserModal(user: User): void {
+        this.isDeleteUserModalOpen = true;
+        this.deletingUser = user;
+        this.isActionsMenuOpen = false;
+    }
+
+    closeDeleteUserModal(): void {
+        this.isDeleteUserModalOpen = false;
+        this.deletingUser = null;
+    }
+
+
+    // actions menu
+    toggleActionsMenu(user: User, button: HTMLButtonElement): void {
+        if (this.selectedUser === user && this.isActionsMenuOpen) {
+            this.closeActionMenu();
+        } else {
+            this.selectedUser = user;
+            this.isActionsMenuOpen = true;
+        }
+    }
+
+    closeActionMenu(): void {
+        this.isActionsMenuOpen = false;
+        this.selectedUser = null;
+    }
+
+
+    // CRUD
+    getAllUsers(): void {
         this.usersService.getAllUsers().subscribe((response: any) => {
             this.users = response.data.map((item: any) => ({
                 id: item.user.id,
@@ -51,35 +161,73 @@ export class AdminUsersComponent implements OnInit {
         });
     }
 
-    openAddUserModal(): void {
-        this.isAddUserModalOpen = true;
-    }
+    addUser(): void {
+        const newUser = {
+            first_name: this.newFirstName.trim(),
+            last_name: this.newLastName.trim(),
+            email: this.newEmail.trim(),
+            phone_number: this.newPhoneNumber.trim(),
+            gender: this.newGender,
+            birth_day: this.newBirthDay,
+            address: this.newAddress.trim(),
+            avatar: 'images/default_avatar.png',
+        };
 
-    closeAddUserModal(): void {
-        this.isAddUserModalOpen = false;
-    }
+        const newAccount = {
+            user_name: this.newUsername.trim(),
+            password: this.newPassword,
+            role: this.newRole,
+        };
 
-    openDeleteUserModal(): void {
-        this.isDeleteUserModalOpen = true;
-        this.isActionsMenuOpen = false;
-    }
-
-    closeDeleteUserModal(): void {
-        this.isDeleteUserModalOpen = false;
-    }
-
-    toggleActionsMenu(user: User, button: HTMLButtonElement): void {
-        if (this.selectedUser === user && this.isActionsMenuOpen) {
-            this.closeActionMenu();
-        } else {
-            this.selectedUser = user;
-            this.isActionsMenuOpen = true;
+        if (!newUser.first_name || !newUser.last_name || !newUser.email 
+            || !newUser.phone_number || !newUser.gender || !newUser.birth_day || !newUser.address || 
+            !newAccount.user_name || !newAccount.password || !newAccount.role) {
+            this.showNotification("warning", "Thông báo", "Không được để trống thông tin!");
+            return;
         }
-    }
 
-    closeActionMenu(): void {
-        this.isActionsMenuOpen = false;
-        this.selectedUser = null;
+        if (!isValidEmail(newUser.email)) {
+            this.showNotification("warning", "Thông báo", "Định dạng email không hợp lệ!");
+            return;
+        }
+
+        if (!isValidPhoneNumber(newUser.phone_number)) {
+            this.showNotification("warning", "Thông báo", "Định dạng số điện thoại không hợp lệ (phải bắt đầu bằng 0 và có 10 hoặc 11 số)!");
+            return;
+        }
+
+        if (this.newPassword !== this.newConfirmPassword) {
+            this.showNotification('error', 'Lỗi', 'Mật khẩu xác nhận không khớp.');
+            return;
+        }
+
+        this.usersService.createUser(newUser, newAccount).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.getAllUsers();
+                    this.closeAddUserModal();
+                    this.showNotification('success', 'Thành công', 'Tạo mới người dùng thành công.');
+                }
+            },
+            error: (error: any) => {
+                if (error.error?.subcode === 1) {
+                    this.showNotification('error', 'Lỗi', 'Tên tài khoản đã tồn tại!');
+                    return;
+                }
+
+                if (error.error?.subcode === 2) {
+                    this.showNotification('error', 'Lỗi', 'Email đã tồn tại!');
+                    return;
+                }
+
+                if (error.error?.subcode === 3) {
+                    this.showNotification('error', 'Lỗi', 'Số điện thoại đã tồn tại!');
+                    return;
+                }
+
+                this.showNotification('error', 'Lỗi', 'Tạo mới người dùng không thành công.');
+            },
+        })
     }
 
     viewUser(user: User): void {
@@ -87,16 +235,31 @@ export class AdminUsersComponent implements OnInit {
         this.closeActionMenu();
     }
 
-    editUser(user: User): void {
-        console.log("Chỉnh sửa thông tin người dùng:", user);
-        this.closeActionMenu();
+    editUser(): void {
+        
     }
 
-    deleteUser(user: User): void {
-        console.log("Xóa thông tin người dùng:", user);
-        this.closeActionMenu();
+    deleteUser(): void {
+        if (this.deletingUser === null) return;
+
+        this.usersService.deleteUser(this.deletingUser.id).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.getAllUsers();
+                    this.showNotification("success", "Thành công", `Đã xóa người dùng ${this.deletingUser?.firstName} ${this.deletingUser?.lastName}`);
+                    this.closeDeleteUserModal();
+                } else {
+                    this.showNotification("error", "Lỗi", `Không thể xóa người dùng ${this.deletingUser?.firstName} ${this.deletingUser?.lastName}`);
+                }
+            },
+            error: (error: any) => {
+                this.showNotification("error", "Lỗi", `Không thể xóa người dùng ${this.deletingUser?.firstName} ${this.deletingUser?.lastName}`);
+            }
+        })
     }
 
+
+    // download all users info
     downloadUserInfo(): void {
         const data = this.users.map(user => ({
             "Mã người dùng": user.id,
@@ -121,6 +284,51 @@ export class AdminUsersComponent implements OnInit {
         XLSX.writeFile(wb, "danh_sach_nguoi_dung_cua_oribuyin.xlsx");
     }
 
+    // show notification
+    showNotification(type: Notification, title: string, message: string): void {
+        this.notificationType = type;
+        this.notificationTitle = title;
+        this.notificationMessage = message;
+        this.notificationVisible = true;
+        setTimeout(() => {
+            this.notificationVisible = false;
+        }, 3000);
+    }
+
+
+    // reset forms
+    resetAddingUserForm(): void {
+        this.newFirstName = '';
+        this.newLastName = '';
+        this.newEmail = '';
+        this.newPhoneNumber = '';
+        this.newGender = 'other';
+        this.newBirthDay = '';
+        this.newAddress = '';
+        this.newUsername = '';
+        this.newPassword = '';
+        this.newConfirmPassword = '';
+        this.newRole = 'customer';
+    }
+
+    resetEditingUserForm(): void {
+        this.updateID = 0;
+        this.updateFirstName = "";
+        this.updateLastName = "";
+        this.updateAvatar = "images/default_avatar.png";
+        this.updateEmail = "";
+        this.updatePhoneNumber = "";
+        this.updateGender = 'male';
+        this.updateBirthDay = "";
+        this.updateAddress = "";
+        this.updateUsername = "";
+        this.updatePassword = "";
+        this.updateConfirmPassword = "";
+        this.updateRole = "customer";
+    }
+
+
+    // get selections options
     getRoleDisplayName(role: "admin" | "staff" | "customer"): string {
         switch (role) {
             case "admin":

@@ -1,4 +1,11 @@
 <div class="p-6">
+    <app-notification-component
+        [isVisible]="notificationVisible"
+        [type]="notificationType"
+        [title]="notificationTitle"
+        [message]="notificationMessage"
+    ></app-notification-component>
+
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-semibold text-gray-900">Quản lý người dùng</h1>
         <button class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200" type="button" (click)="openAddUserModal()">
@@ -15,7 +22,7 @@
         </div>
         <div class="relative mr-4">
             <select class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
-                <option value="">Tất cả vai trò</option>
+                <option value="">Quyền người dùng</option>
                 <option value="admin">Quản trị viên</option>
                 <option value="staff">Nhân viên</option>
                 <option value="customer">Khách hàng</option>
@@ -79,11 +86,11 @@
                                 </button>
                             </div>
 
-                            <div *ngIf="selectedUser === user && isActionsMenuOpen" (clickOutside)="closeActionMenu()" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-100" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
+                            <div *ngIf="selectedUser === user && isActionsMenuOpen" (clickOutside)="closeActionMenu()" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
                                 <div class="py-1" role="menuitem">
                                     <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="viewUser(user)">Xem</a>
-                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="editUser(user)">Chỉnh sửa</a>
-                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="openDeleteUserModal()">Xóa</a>
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="openEditUserModal(user)">Chỉnh sửa</a>
+                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="openDeleteUserModal(user)">Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -106,123 +113,126 @@
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl">
                 <form class="p-6" (clickOutside)="closeAddUserModal()">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Thêm thông tin người dùng</h2>
-
-                    <!-- Avatar -->
+    
                     <div class="mb-4">
                         <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Avatar:</label>
                         <div class="flex items-center gap-4">
                             <div class="w-24 h-24 border rounded-full overflow-hidden bg-gray-100 shrink-0">
                                 <img src="images/default_avatar.png" alt="Preview avatar" class="object-cover rounded-full w-full h-full">
                             </div>
-
+    
                             <div class="flex-1">
-                                <input 
+                                <input
                                     class="block w-full shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
                                     aria-describedby="file_input_help"
                                     id="avatar"
                                     type="file"
-                                >
+                                    >
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                                     SVG, PNG, hoặc JPG (tối đa 800x400px).
                                 </p>
                             </div>
                         </div>
                     </div>
-
-                    <!-- First name, last name -->
+    
                     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="firstName" class="block text-gray-700 text-sm font-bold mb-2">Họ:</label>
                             <input type="text" id="firstName"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newFirstName" name="firstName">
                         </div>
                         <div>
                             <label for="lastName" class="block text-gray-700 text-sm font-bold mb-2">Tên:</label>
                             <input type="text" id="lastName"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newLastName" name="lastName">
                         </div>
                     </div>
-
-                    <!-- Email, Phonenumber -->
+    
                     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
                             <input type="email" id="email"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newEmail" name="email">
                         </div>
                         <div>
                             <label for="phoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Số điện thoại:</label>
                             <input type="tel" id="phoneNumber"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newPhoneNumber" name="phoneNumber">
                         </div>
                     </div>
-
-                    <!-- Birthday, genders -->
+    
                     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="birthDay" class="block text-gray-700 text-sm font-bold mb-2">Ngày sinh:</label>
                             <input type="date" id="birthDay"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                   [(ngModel)]="newBirthDay" name="birthDay">
                         </div>
                         <div>
                             <label for="gender" class="block text-gray-700 text-sm font-bold mb-2">Giới tính:</label>
                             <select id="gender"
-                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
+                                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                    [(ngModel)]="newGender" name="gender">
                                 <option value="male">Nam</option>
                                 <option value="female">Nữ</option>
                                 <option value="other">Khác</option>
                             </select>
                         </div>
                     </div>
-
-                    <!-- Address -->
+    
                     <div class="mb-4">
                         <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Địa chỉ:</label>
                         <textarea id="address"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                  [(ngModel)]="newAddress" name="address"></textarea>
                     </div>
-
-                    <!-- Username -->
+    
                     <div class="mb-4">
                         <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Tên tài khoản:</label>
                         <input type="text" id="username"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                               [(ngModel)]="newUsername" name="username">
                     </div>
-
-                    <!-- Password, confirmation passsword -->
+    
                     <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Mật khẩu:</label>
                             <input type="password" id="password"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newPassword" name="password">
                         </div>
                         <div>
                             <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Xác nhận mật khẩu:</label>
                             <input type="password" id="confirmPassword"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="newConfirmPassword" name="confirmPassword">
                         </div>
                     </div>
-
-                    <!-- Roles -->
+    
                     <div class="mb-4">
                         <label for="role" class="block text-gray-700 text-sm font-bold mb-2">Quyền người dùng:</label>
                         <select id="role"
-                            class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
+                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                [(ngModel)]="newRole" name="role">
                             <option value="admin">Quản trị viên</option>
                             <option value="staff">Nhân viên</option>
                             <option value="customer">Khách hàng</option>
                         </select>
                     </div>
-
-                    <!-- Actions button -->
+    
                     <div class="flex justify-end">
                         <button type="button"
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
-                            (click)="closeAddUserModal()">
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                                (click)="closeAddUserModal()">
                             Hủy
                         </button>
                         <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200">
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                                (click)="addUser()">
                             Lưu
                         </button>
                     </div>
@@ -231,28 +241,165 @@
         </div>
     </div>
 
+    <!-- edit user modal -->
+    <div *ngIf="isEditUserModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl">
+                <form class="p-6" (clickOutside)="closeEditUserModal()">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Cập nhật thông tin người dùng</h2>
+    
+                    <div class="mb-4">
+                        <label for="avatar" class="block text-gray-700 text-sm font-bold mb-2">Avatar:</label>
+                        <div class="flex items-center gap-4">
+                            <div class="w-24 h-24 border rounded-full overflow-hidden bg-gray-100 shrink-0">
+                                <img [src]="updateAvatar" alt="Ảnh đại diện người dùng" class="object-cover rounded-full w-full h-full">
+                            </div>
+    
+                            <div class="flex-1">
+                                <input
+                                    class="block w-full shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                    aria-describedby="file_input_help"
+                                    id="avatar"
+                                    type="file"
+                                    >
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+                                    SVG, PNG, hoặc JPG (tối đa 800x400px).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="updateFirstName" class="block text-gray-700 text-sm font-bold mb-2">Họ:</label>
+                            <input type="text" id="updateFirstName"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updateFirstName" name="updateFirstName">
+                        </div>
+                        <div>
+                            <label for="updateLastName" class="block text-gray-700 text-sm font-bold mb-2">Tên:</label>
+                            <input type="text" id="updateLastName"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updateLastName" name="updateLastName">
+                        </div>
+                    </div>
+    
+                    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="updateLastName" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                            <input type="email" id="updateLastName"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updateLastName" name="updateLastName">
+                        </div>
+                        <div>
+                            <label for="updatePhoneNumber" class="block text-gray-700 text-sm font-bold mb-2">Số điện thoại:</label>
+                            <input type="tel" id="updatePhoneNumber"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updatePhoneNumber" name="updatePhoneNumber">
+                        </div>
+                    </div>
+    
+                    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="updateBirthDay" class="block text-gray-700 text-sm font-bold mb-2">Ngày sinh:</label>
+                            <input type="date" id="updateBirthDay"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                   [(ngModel)]="updateBirthDay" name="updateBirthDay">
+                        </div>
+                        <div>
+                            <label for="updateGender" class="block text-gray-700 text-sm font-bold mb-2">Giới tính:</label>
+                            <select id="updateGender"
+                                    class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                    [(ngModel)]="updateGender" name="updateGender">
+                                <option value="male">Nam</option>
+                                <option value="female">Nữ</option>
+                                <option value="other">Khác</option>
+                            </select>
+                        </div>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="updateAddress" class="block text-gray-700 text-sm font-bold mb-2">Địa chỉ:</label>
+                        <textarea id="updateAddress"
+                                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                  [(ngModel)]="updateAddress" name="updateAddress"></textarea>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="updateUsername" class="block text-gray-700 text-sm font-bold mb-2">Tên tài khoản:</label>
+                        <input type="text" id="username"
+                               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                               [(ngModel)]="updateUsername" name="updateUsername" [readonly]="true">
+                    </div>
+    
+                    <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="updatePassword" class="block text-gray-700 text-sm font-bold mb-2">Mật khẩu:</label>
+                            <input type="password" id="updatePassword" placeholder="••••••••••"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updatePassword" name="updatePassword">
+                        </div>
+                        <div>
+                            <label for="updateConfirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Xác nhận mật khẩu:</label>
+                            <input type="password" id="updateConfirmPassword" placeholder="••••••••••"
+                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                   [(ngModel)]="updateConfirmPassword" name="updateConfirmPassword">
+                        </div>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="updateRole" class="block text-gray-700 text-sm font-bold mb-2">Quyền người dùng:</label>
+                        <select id="updateRole"
+                                class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                [(ngModel)]="updateRole" name="updateRole">
+                            <option value="admin">Quản trị viên</option>
+                            <option value="staff">Nhân viên</option>
+                            <option value="customer">Khách hàng</option>
+                        </select>
+                    </div>
+    
+                    <div class="flex justify-end">
+                        <button type="button"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                                (click)="closeEditUserModal()">
+                            Hủy
+                        </button>
+                        <button type="submit"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                                (click)="editUser()">
+                            Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- delete user modal -->
     <div *ngIf="isDeleteUserModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-xl">
                 <form class="px-6 py-4" (clickOutside)="closeDeleteUserModal()">
                     <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin người dùng</h2>
 
-                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa người dùng này không?</p>
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa người dùng {{ deletingUser?.firstName }} {{ deletingUser?.lastName }} không?</p>
 
                     <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">
                         <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> Cảnh báo</span>
                         <p>Hành động này không thể hoàn tác. Hãy chắc chắn bạn hiểu rõ những hậu quả.</p>
                     </div>
 
-                    <div class="flex justify-start">
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer duration-200"
+                            (click)="deleteUser()"
+                        >
+                            Xác nhận xóa
+                        </button>
                         <button type="button"
-                            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
                             (click)="closeDeleteUserModal()">
                             Hủy bỏ
-                        </button>
-                        <button type="submit"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200">
-                            Xác nhận xóa
                         </button>
                     </div>
                 </form>
