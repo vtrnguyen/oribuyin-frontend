@@ -50,7 +50,7 @@ export class AdminUsersComponent implements OnInit {
     newConfirmPassword: string = '';
     newRole: string = 'customer';
 
-    // editing user properties
+    // updating user properties
     updateID: number = 0;
     updateFirstName: string = "";
     updateLastName: string = "";
@@ -179,6 +179,7 @@ export class AdminUsersComponent implements OnInit {
             role: this.newRole,
         };
 
+
         if (!newUser.first_name || !newUser.last_name || !newUser.email 
             || !newUser.phone_number || !newUser.gender || !newUser.birth_day || !newUser.address || 
             !newAccount.user_name || !newAccount.password || !newAccount.role) {
@@ -235,8 +236,67 @@ export class AdminUsersComponent implements OnInit {
         this.closeActionMenu();
     }
 
-    editUser(): void {
-        
+    updateUser(): void {
+        const updatingUser =  {
+            first_name: this.updateFirstName.trim(),
+            last_name: this.updateLastName.trim(),
+            email: this.updateEmail.trim(),
+            phone_number: this.updatePhoneNumber.trim(),
+            gender: this.updateGender,
+            birth_day: this.updateBirthDay.trim(),
+            address: this.updateAddress.trim(),
+        };
+
+        const updatingAccount = {
+            user_name: this.updateUsername.trim(),
+            password: this.updatePassword.trim(),
+            role: this.updateRole,
+        };
+
+        if (!updatingUser.first_name || !updatingUser.last_name || !updatingUser.email
+            || !updatingUser.phone_number || !updatingUser.gender || !updatingUser.birth_day || !updatingUser.address ||
+            !updatingAccount.user_name || !updatingAccount.password || !updatingAccount.role) {
+            this.showNotification("warning", "Thông báo", "Không được để trống thông tin!");
+            return;
+        }
+
+        if (!isValidEmail(updatingUser.email)) {
+            this.showNotification("warning", "Thông báo", "Định dạng email không hợp lệ!");
+            return;
+        }
+
+        if (!isValidPhoneNumber(updatingUser.phone_number)) {
+            this.showNotification("warning", "Thông báo", "Định dạng số điện thoại không hợp lệ (phải bắt đầu bằng 0 và có 10 hoặc 11 số)!");
+            return;
+        }
+
+        if (this.updatePassword && this.updatePassword !== this.updateConfirmPassword) {
+            this.showNotification("error", "Lỗi", "Mật khẩu xác nhận không khớp!");
+            return;
+        }
+
+        this.usersService.updateUser(this.updateID, updatingUser, updatingAccount).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.getAllUsers();
+                    this.closeEditUserModal();
+                    this.showNotification("success", "Thành công", "Cập nhật thông tin người dùng thành công.");
+                }
+            },
+            error: (error: any) => {
+                if (error.error?.subcode === 2) {
+                    this.showNotification("error", "Lỗi", "Email đã tồn tại!");
+                    return;
+                }
+
+                if (error.error?.subcode === 3) {
+                    this.showNotification("error", "Lỗi", "Số điện thoại đã tồn tại!");
+                    return;
+                }
+
+                this.showNotification("error", "Lỗi", "Cập nhật thông tin người dùng không thành công!");
+            }
+        });
     }
 
     deleteUser(): void {
