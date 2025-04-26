@@ -26,16 +26,23 @@ export class AdminUsersComponent implements OnInit {
     isAddUserModalOpen: boolean = false;
     isEditUserModalOpen: boolean = false;
     isDeleteUserModalOpen: boolean = false;
+    isViewUserModalOpen: boolean = false;
     users: User[] = [];
     totalUsers: number = this.users.length;
     isActionsMenuOpen: boolean = false;
+
     selectedUser: User | null = null;
     editingUser: User | null = null;
+    viewUser: User = {} as User;
+    filteredUsers: User[] = [];
+    searchName: string = "";
+
     deletingUser: User | null = null;
     notificationVisible: boolean = false;
     notificationType: Notification = "success";
     notificationTitle: string = "";
     notificationMessage: string = "";
+    selectedRoleFilter: string = "";
 
     // adding user properties
     newFirstName: string = "";
@@ -103,6 +110,7 @@ export class AdminUsersComponent implements OnInit {
         this.updateRole = user.role;
 
         this.isEditUserModalOpen = true;
+        this.closeActionMenu();
     }
 
     closeEditUserModal() {
@@ -121,6 +129,19 @@ export class AdminUsersComponent implements OnInit {
     closeDeleteUserModal(): void {
         this.isDeleteUserModalOpen = false;
         this.deletingUser = null;
+    }
+
+
+    // viewing modal
+    openViewUserModal(user: User): void {
+        this.viewUser = { ...user };
+        this.isViewUserModalOpen = true;
+        this.closeActionMenu();
+    }
+
+    closeViewUserModal(): void {
+        this.isViewUserModalOpen = false;
+        this.viewUser = {} as User;
     }
 
 
@@ -157,7 +178,8 @@ export class AdminUsersComponent implements OnInit {
                 userName: item.user_name,
             }));
 
-            this.totalUsers = this.users.length;
+            this.filterUsers();
+            this.totalUsers = this.filteredUsers.length;
         });
     }
 
@@ -229,11 +251,6 @@ export class AdminUsersComponent implements OnInit {
                 this.showNotification('error', 'Lỗi', 'Tạo mới người dùng không thành công.');
             },
         })
-    }
-
-    viewUser(user: User): void {
-        console.log("Xem thông tin người dùng:", user);
-        this.closeActionMenu();
     }
 
     updateUser(): void {
@@ -318,6 +335,17 @@ export class AdminUsersComponent implements OnInit {
         })
     }
 
+    filterUsers(): void {
+        this.filteredUsers = this.users.filter(user => {
+            const roleMatch = !this.selectedRoleFilter || user.role === this.selectedRoleFilter;
+            const nameMatch = !this.searchName ||
+                              user.firstName.toLowerCase().includes(this.searchName.toLowerCase()) ||
+                              user.lastName.toLowerCase().includes(this.searchName.toLowerCase());
+            return roleMatch && nameMatch;
+        });
+        this.totalUsers = this.filteredUsers.length;
+    }
+
 
     // download all users info
     downloadUserInfo(): void {
@@ -357,7 +385,7 @@ export class AdminUsersComponent implements OnInit {
 
 
     // reset forms
-    resetAddingUserForm(): void {
+    private resetAddingUserForm(): void {
         this.newFirstName = '';
         this.newLastName = '';
         this.newEmail = '';
@@ -371,7 +399,7 @@ export class AdminUsersComponent implements OnInit {
         this.newRole = 'customer';
     }
 
-    resetEditingUserForm(): void {
+    private resetEditingUserForm(): void {
         this.updateID = 0;
         this.updateFirstName = "";
         this.updateLastName = "";
