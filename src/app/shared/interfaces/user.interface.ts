@@ -12,4 +12,4 @@ export interface User {
     gender: "male" | "female" | "other";
     birthDay: Date;
     address: string;
-}
+};

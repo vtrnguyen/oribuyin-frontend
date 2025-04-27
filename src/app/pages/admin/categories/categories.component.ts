@@ -163,6 +163,7 @@ export class AdminCategoriesComponent implements OnInit {
             this.filteredCategories = this.categories.filter(category =>
                 category.name.toLowerCase().includes(this.searchCategoryName.toLowerCase()),
             );
+            this.totalCategories = this.filteredCategories.length;
         }
     }
 

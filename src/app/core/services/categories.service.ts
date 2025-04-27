@@ -19,6 +19,10 @@ export class CategoriesService {
         );
     }
 
+    getCategoryValue(): Observable<any[]> {
+        return this.http.get<any[]>(`${this.categoryApiUrl}/values`);
+    }
+
     createCategory(newCategory: any): Observable<any> {
         return this.http.post<any>(`${this.categoryApiUrl}`, { newCategory });
     }

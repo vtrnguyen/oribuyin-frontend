@@ -25,9 +25,7 @@
         <div class="relative mr-4">
             <select class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white" >
                 <option value="">Danh mục sản phẩm</option>
-                <option value="admin">Quản trị viên</option>
-                <option value="staff">Nhân viên</option>
-                <option value="customer">Khách hàng</option>
+                <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}</option>
             </select>
         </div>
     </div>
@@ -49,7 +47,11 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                
+                <tr *ngIf="products.length === 0">
+                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                        Không có sản phẩm nào.
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
