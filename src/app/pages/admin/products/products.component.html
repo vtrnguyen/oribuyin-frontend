@@ -23,7 +23,7 @@
                    placeholder="Tìm kiếm theo tên">
         </div>
         <div class="relative mr-4">
-            <select class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white" >
+            <select class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
                 <option value="">Danh mục sản phẩm</option>
                 <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}</option>
             </select>
@@ -38,9 +38,8 @@
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mô tả</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giá</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số lượng tồn kho</th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn kho</th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giảm giá</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Danh mục sản phẩm</th>
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Hành động</span>
                     </th>
@@ -48,8 +47,46 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <tr *ngIf="products.length === 0">
-                    <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                    <td colspan="9" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                         Không có sản phẩm nào.
+                    </td>
+                </tr>
+                <tr *ngFor="let product of products; let i = index">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex-shrink-0 h-10 w-10">
+                            <img class="h-10 w-10 object-cover rounded" [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image" [alt]="product.name">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900">{{ product.name }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">{{ product.description }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-red-500">{{ product.price | number:'1.0-0' }} VNĐ</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ product.stockQuantity }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ product.discount }}%</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div class="relative inline-block text-left">
+                            <div>
+                                <button
+                                    #actionsMenuButton
+                                    type="button"
+                                    class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
+                                    aria-expanded="false"
+                                    aria-haspopup="true"
+                                    (click)="toggleActionsMenu(product, actionsMenuButton)"
+                                >
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+            
+                            <div *ngIf="selectedProduct === product && isActionsMenuOpen" (clickOutside)="closeActionMenu()" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
+                                <div class="py-1" role="menuitem">
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="openViewProductModal(product)">Xem</a>
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="openEditProductModal(product)">Chỉnh sửa</a>
+                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="openDeleteProductModal(product)">Xóa</a>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -61,5 +98,284 @@
             Tải xuống
         </button>
         <span class="text-sm text-gray-700">Tổng số sản phẩm: <span class="font-bold">{{ totalProducts }}</span></span>
+    </div>
+
+    <!-- view product modal -->
+    <div *ngIf="isViewProductModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+          <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-4xl" (clickOutside)="closeViewProductModal()">
+            <div class="relative p-6 flex">
+              <button
+                type="button"
+                class="absolute top-3 right-4 text-gray-500 hover:text-gray-700 cursor-pointer"
+                (click)="closeViewProductModal()"
+              >
+                <i class="fa-solid fa-xmark text-2xl"></i>
+              </button>
+      
+              <div class="w-1/2 pr-4 flex items-center justify-center">
+                <div class="overflow-hidden" style="max-height: 360px; max-width: 360px;">
+                  <img
+                    *ngIf="selectedProduct?.image"
+                    [src]="
+                      'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' +
+                      selectedProduct?.image
+                    "
+                    [alt]="'Hình ảnh của sản phẩm ' + selectedProduct?.name"
+                    class="object-cover rounded-lg w-full h-full"
+                  />
+                  <div
+                    *ngIf="!selectedProduct?.image"
+                    class="flex items-center justify-center w-full h-full text-gray-500"
+                  >
+                    <i class="fas fa-image fa-3x"></i>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="w-1/2">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Thông tin sản phẩm</h2>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Tên sản phẩm:</label>
+                  <p class="py-2 text-gray-700 leading-tight">{{ selectedProduct?.name }}</p>
+                </div>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Mô tả:</label>
+                  <p class="py-2 text-gray-700 leading-tight">{{ selectedProduct?.description }}</p>
+                </div>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Giá:</label>
+                  <p class="py-2 text-gray-700 leading-tight text-red-500">
+                    {{ selectedProduct?.price | number : '1.0-0' }} VNĐ
+                  </p>
+                </div>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Tồn kho:</label>
+                  <p class="py-2 text-gray-700 leading-tight">{{ selectedProduct?.stockQuantity }}</p>
+                </div>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Giảm giá:</label>
+                  <p class="py-2 text-gray-700 leading-tight">{{ selectedProduct?.discount }}%</p>
+                </div>
+      
+                <div class="mb-4">
+                  <label class="block text-gray-700 text-sm font-bold">Danh mục:</label>
+                  <p class="py-2 text-gray-700 leading-tight">
+                    {{ getCategoryName(selectedProduct?.categoryID ?? null) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- add product modal -->
+    <div *ngIf="isAddProductModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl" (clickOutside)="closeAddProductModal()">
+                <form class="p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Thêm thông tin sản phẩm</h2>
+    
+                    <div class="flex items-center gap-4">
+                        <div class="w-24 h-24">
+                            <img [src]="'images/default_product.png'" alt="Xem trước ảnh" class="object-cover rounded-full w-full h-full">
+                        </div>
+                        <label for="productImage" class="block text-gray-700 text-sm font-bold mb-2">
+                            Hình ảnh sản phẩm:
+                        </label>
+                        <input type="file" id="productImage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productName" class="block text-gray-700 text-sm font-bold mb-2">
+                            Tên sản phẩm:
+                        </label>
+                        <input type="text" id="productName" [(ngModel)]="newProduct.name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productDescription" class="block text-gray-700 text-sm font-bold mb-2">
+                            Mô tả sản phẩm:
+                        </label>
+                        <textarea id="productDescription" [(ngModel)]="newProduct.description" name="description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mô tả sản phẩm"></textarea>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productPrice" class="block text-gray-700 text-sm font-bold mb-2">
+                            Giá sản phẩm:
+                        </label>
+                        <input type="number" id="productPrice" [(ngModel)]="newProduct.price" name="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập giá sản phẩm">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productStock" class="block text-gray-700 text-sm font-bold mb-2">
+                            Số lượng tồn kho:
+                        </label>
+                        <input type="number" id="productStock" [(ngModel)]="newProduct.stockQuantity" name="stockQuantity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập số lượng tồn kho">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productDiscount" class="block text-gray-700 text-sm font-bold mb-2">
+                            Giảm giá (%):
+                        </label>
+                        <input type="number" id="productDiscount" [(ngModel)]="newProduct.discount" name="discount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập phần trăm giảm giá">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="productCategory" class="block text-gray-700 text-sm font-bold mb-2">
+                            Danh mục sản phẩm:
+                        </label>
+                        <select id="productCategory" [(ngModel)]="newProduct.categoryID" name="categoryID" class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
+                            <option value="" disabled>Chọn danh mục</option>
+                            <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}</option>
+                        </select>
+                    </div>
+    
+                    <div class="flex justify-end">
+                        <button type="button"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                                (click)="closeAddProductModal()">
+                            Hủy
+                        </button>
+                        <button type="button"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                                (click)="addProduct()">
+                            Thêm
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- update product modal -->
+    <div *ngIf="isEditProductModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl" (clickOutside)="closeEditProductModal()">
+                <form class="p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Cập nhật thông tin sản phẩm</h2>
+    
+                    <div class="mb-4">
+                        <label for="editProductImage" class="block text-gray-700 text-sm font-bold mb-2">
+                            Ảnh sản phẩm:
+                        </label>
+
+                        <div class="flex items-center gap-4">
+                            <div class="w-24 h-24 overflow-hidden bg-gray-100 shrink-0">
+                                <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + editingProductImage" alt="Preview category image" class="object-cover rounded-full w-full h-full">
+                            </div>
+
+                            <div class="flex-1">
+                                <input 
+                                    class="block w-full shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
+                                    aria-describedby="file_input_help"
+                                    id="editProductImage"
+                                    type="file"
+                                >
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
+                                    SVG, PNG, hoặc JPG (tối đa 800x400px).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductName" class="block text-gray-700 text-sm font-bold mb-2">
+                            Tên sản phẩm:
+                        </label>
+                        <input type="text" id="editProductName" [(ngModel)]="editingProductName" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên sản phẩm">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductDescription" class="block text-gray-700 text-sm font-bold mb-2">
+                            Mô tả sản phẩm:
+                        </label>
+                        <textarea id="editProductDescription" [(ngModel)]="editingProductDescription" name="description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mô tả sản phẩm"></textarea>
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductPrice" class="block text-gray-700 text-sm font-bold mb-2">
+                            Giá sản phẩm:
+                        </label>
+                        <input type="number" id="editProductPrice" [(ngModel)]="editingProductPrice" name="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập giá sản phẩm">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductStock" class="block text-gray-700 text-sm font-bold mb-2">
+                            Số lượng tồn kho:
+                        </label>
+                        <input type="number" id="editProductStock" [(ngModel)]="editingProductStockQuantity" name="stockQuantity" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập số lượng tồn kho">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductDiscount" class="block text-gray-700 text-sm font-bold mb-2">
+                            Giảm giá (%):
+                        </label>
+                        <input type="number" id="editProductDiscount" [(ngModel)]="editingProductDiscount" name="discount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập phần trăm giảm giá">
+                    </div>
+    
+                    <div class="mb-4">
+                        <label for="editProductCategory" class="block text-gray-700 text-sm font-bold mb-2">
+                            Danh mục sản phẩm:
+                        </label>
+                        <select id="editProductCategory" [(ngModel)]="editingProductCategoryID" name="editProductCategory" class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
+                            <option value="" disabled>Chọn danh mục</option>
+                            <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}</option>
+                        </select>
+                    </div>
+    
+                    <div class="flex justify-end">
+                        <button type="button"
+                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                                (click)="closeEditProductModal()">
+                            Hủy
+                        </button>
+                        <button type="button"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                                (click)="updateProduct()">
+                            Lưu
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- delete product modal -->
+    <div *ngIf="isDeleteProductModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-xl">
+                <form class="px-6 py-4" (clickOutside)="closeDeleteProductModal()">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin sản phẩm</h2>
+
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa danh mục "{{ selectedProduct?.name }}" không?</p>
+
+                    <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">
+                        <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> Cảnh báo</span>
+                        <p>Hành động này không thể hoàn tác. Hãy chắc chắn bạn hiểu rõ những hậu quả.</p>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer duration-200"
+                            (click)="deleteProduct()"
+                        >
+                            Xác nhận xóa
+                        </button>
+                        <button type="button"
+                            class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
+                            (click)="closeDeleteProductModal()">
+                            Hủy bỏ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>

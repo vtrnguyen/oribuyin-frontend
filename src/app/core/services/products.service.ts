@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, tap } from "rxjs";
 import { Product } from "../../shared/interfaces/product.interface";
 import { HttpClient } from "@angular/common/http";
 
@@ -12,4 +12,22 @@ export class ProductsService {
     products$ = this.productsSubject.asObservable();
 
     constructor(private http: HttpClient) {}
+
+    getAllProducts(): Observable<Product[]> {
+        return this.http.get<Product[]>(`${this.productApiUrl}`).pipe(
+            tap(products => this.productsSubject.next(products)),
+        );
+    }
+
+    createProduct(newProduct: any): Observable<any> {
+        return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
+    }
+
+    updateProduct(productID: number, updatingProduct: any): Observable<any> {
+        return this.http.put<any>(`${this.productApiUrl}/${productID}`, { updatingProduct });
+    }
+
+    deleteProduct(productID: number): Observable<any> {
+        return this.http.delete<any>(`${this.productApiUrl}/${productID}`);
+    }
 }

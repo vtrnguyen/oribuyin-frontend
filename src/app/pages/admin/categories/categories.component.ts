@@ -6,6 +6,7 @@ import { CategoriesService } from "../../../core/services/categories.service";
 import { FormsModule } from "@angular/forms";
 import { ClickOutsideModule } from "ng-click-outside";
 import { Notification } from "../../../shared/types/notification.type";
+import * as XLSX from "xlsx";
 
 @Component({
     selector: "app-admin-categories",
@@ -230,7 +231,18 @@ export class AdminCategoriesComponent implements OnInit {
     }
 
     downloadCategoryInfo(): void {
-        console.log('Tải xuống thông tin danh mục');
+        const data = this.categories.map(category => ({
+            "Mã danh mục sản phẩm": category.id,
+            "Tên danh mục": category.name,
+            "Mô tả": category.description,
+            "Đường dẫn hình ảnh": `https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/${category.image}`,
+        }));
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "OriBuyin's Prodcts");
+
+        XLSX.writeFile(wb, "danh_san_pham_duoc_ban_tai_oribuyin.xlsx")
     }
 
     showNotification(type: Notification, title: string, message: string): void {
