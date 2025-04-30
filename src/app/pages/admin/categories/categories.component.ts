@@ -240,9 +240,9 @@ export class AdminCategoriesComponent implements OnInit {
 
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "OriBuyin's Prodcts");
+        XLSX.utils.book_append_sheet(wb, ws, "OriBuyin's Categories");
 
-        XLSX.writeFile(wb, "danh_san_pham_duoc_ban_tai_oribuyin.xlsx")
+        XLSX.writeFile(wb, "danh_muc_san_pham_duoc_ban_tai_oribuyin.xlsx");
     }
 
     showNotification(type: Notification, title: string, message: string): void {

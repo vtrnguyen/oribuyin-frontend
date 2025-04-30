@@ -7,6 +7,7 @@ import { Product } from "../../../shared/interfaces/product.interface";
 import { ProductsService } from "../../../core/services/products.service";
 import { ClickOutsideModule } from "ng-click-outside";
 import { FormsModule } from "@angular/forms";
+import * as XLSX from "xlsx";
 
 @Component({
     selector: "app-admin-products",
@@ -76,7 +77,22 @@ export class AdminProductsComponent implements OnInit {
     }
     
     downloadProductInfo(): void {
-    
+        const data = this.products.map(product => ({
+            "Mã sản phẩm": product.id,
+            "Tên sản phẩm": product.name,
+            "Giá bán": product.price,
+            "Giảm giá": product.discount,
+            "Tồn kho": product.stockQuantity,
+            "Mô tả": product.description,
+            "Hình ảnh": `https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/${product.image}`,
+            "Danh mục sản phẩm": this.getCategoryName(product.categoryID),
+        }));
+
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "OriBuyin's Product");
+
+        XLSX.writeFile(wb, "san_pham_duoc_ban_tai_oribuyin.xlsx");
     }
 
     toggleActionsMenu(product: Product, button: any): void {

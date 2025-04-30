@@ -19,6 +19,10 @@ export class UsersService {
         );
     }
 
+    getNumberOfUsers(): Observable<any> {
+        return this.http.get<any>(`${this.userApiUrl}/count`);
+    }
+
     createUser(newUser: any, newAccount: any): Observable<any> {
         return this.http.post<any>(`${this.userApiUrl}`, { newUser, newAccount });
     }
