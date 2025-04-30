@@ -6,23 +6,37 @@
                 Nhân viên
             </span>
         </div>
-        <nav class="flex-grow p-4 shadow-md">
-            <a routerLink="/staff/dashboard" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+        <nav class="flex-grow p-4 shadow-md space-y-1">
+            <a 
+                routerLink="/staff" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
                 <i class="fas fa-chart-line mr-2"></i> Thông tin chung
             </a>
-            <a routerLink="/staff/users" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
-                <i class="fas fa-users mr-2"></i> Người dùng
+            <a 
+                routerLink="/staff/stocks" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
+                <i class="fas fa-shopping-cart mr-2"></i> Nhập kho
             </a>
-            <a routerLink="/staff/categories" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
-                <i class="fas fa-list mr-2"></i> Danh mục sản phẩm
-            </a>
-            <a routerLink="/staff/products" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
-                <i class="fas fa-box-open mr-2"></i> Sản phẩm
-            </a>
-            <a routerLink="/staff/orders" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a 
+                routerLink="/staff/orders" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
                 <i class="fas fa-shopping-cart mr-2"></i> Đơn hàng
             </a>
-            <a routerLink="/staff/reports" routerLinkActive="bg-gray-700 text-white" class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+            <a 
+                routerLink="/staff/reports" 
+                routerLinkActive="bg-gray-700 text-white" 
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+            >
                 <i class="fas fa-chart-bar mr-2"></i> Báo cáo
             </a>
         </nav>

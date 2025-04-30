@@ -1,19 +1,16 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
-import { CustomerLayoutComponent } from './layouts/customer/customer_layout.component';
+// Layouts
 import { AdminLayoutComponent } from './layouts/admin/admin_layout.component';
 import { StaffLayoutComponent } from './layouts/staff/staff_layout.component';
+import { CustomerLayoutComponent } from './layouts/customer/customer_layout.component';
 
-import { UserHomeComponent } from './pages/customer/home/home.component';
+// Auth components
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+
+// Admin components
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
-import { StaffDashboardComponent } from './pages/staff/dashboard/dashboard.component';
-import { PageNotFoundComponent } from './pages/errors/page_not_found.component';
-import { AdminAuthGuard } from './core/guards/admin_auth.guard';
-import { CustomerAuthGuard } from './core/guards/customer_auth.guard';
-import { StaffAuthGuard } from './core/guards/staff_auth.guard';
-import { AuthenticatedGuard } from './core/guards/authenticated.guard';
 import { AdminCategoriesComponent } from './pages/admin/categories/categories.component';
 import { AdminProductsComponent } from './pages/admin/products/products.component';
 import { AdminReportsComponent } from './pages/admin/reports/reports.component';
@@ -21,6 +18,26 @@ import { AdminSettingsComponent } from './pages/admin/settings/settings.componen
 import { AdminUsersComponent } from './pages/admin/users/users.component';
 import { AdminOrdersComponent } from './pages/admin/orders/orders.component';
 import { AdminProfileComponent } from './pages/admin/profile/profile.component';
+
+// Staff components
+import { StaffDashboardComponent } from './pages/staff/dashboard/dashboard.component';
+import { StaffStocksComponent } from './pages/staff/stocks/stocks.component';
+import { StaffOrdersComponent } from './pages/staff/orders/orders.component';
+import { StaffReportsComponent } from './pages/staff/reports/reports.component';
+import { StaffProfileComponent } from './pages/staff/profile/profile.component';
+import { StaffSettingsComponent } from './pages/staff/settings/settings.component';
+
+// User components
+import { UserHomeComponent } from './pages/customer/home/home.component';
+
+// Error components
+import { PageNotFoundComponent } from './pages/errors/page_not_found.component';
+
+// Guards
+import { AdminAuthGuard } from './core/guards/admin_auth.guard';
+import { CustomerAuthGuard } from './core/guards/customer_auth.guard';
+import { StaffAuthGuard } from './core/guards/staff_auth.guard';
+import { AuthenticatedGuard } from './core/guards/authenticated.guard';
 
 export const routes: Routes = [
     { 
@@ -68,7 +85,13 @@ export const routes: Routes = [
         component: StaffLayoutComponent,
         canActivate: [StaffAuthGuard],
         children: [
-            { path: "", component: StaffDashboardComponent },
+            { path: "", component: StaffDashboardComponent, title: "Thông tin chung" },
+            { path: "dashboard", redirectTo: "", pathMatch: 'full' },
+            { path: "stocks", component: StaffStocksComponent, title: "Nhập kho" },
+            { path: "orders", component: StaffOrdersComponent, title: "Đơn hàng" },
+            { path: "reports", component: StaffReportsComponent, title: "Báo cáo" },
+            { path: "profile", component: StaffProfileComponent, title: "Thông tin cá nhân" },
+            { path: "settings", component: StaffSettingsComponent, title: "Cài đặt" },
         ]
     },
 
