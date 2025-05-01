@@ -28,7 +28,16 @@ import { StaffProfileComponent } from './pages/staff/profile/profile.component';
 import { StaffSettingsComponent } from './pages/staff/settings/settings.component';
 
 // User components
-import { UserHomeComponent } from './pages/customer/home/home.component';
+import { CustomerHomeComponent } from './pages/customer/home/home.component';
+import { CustomerAboutComponent } from './pages/customer/about/about.component';
+import { CustomerCategoriesComponent } from './pages/customer/categories/categories.component';
+import { CustomerDetailCategoryComponent } from './pages/customer/detail_category/detail_category.component';
+import { CustomerDetailProductComponent } from './pages/customer/detail_product/detail_product.component';
+import { CustomerOrdersComponent } from './pages/customer/orders/orders.component';
+import { CustomerProductsComponent } from './pages/customer/products/products.component';
+import { CustomerProfileComponent } from './pages/customer/profile/profile.component';
+import { CustomerSearchesComponent } from './pages/customer/searches/searches.component';
+import { CustomerSettingsComponent } from './pages/customer/settings/settings.component';
 
 // Error components
 import { PageNotFoundComponent } from './pages/errors/page_not_found.component';
@@ -40,27 +49,37 @@ import { StaffAuthGuard } from './core/guards/staff_auth.guard';
 import { AuthenticatedGuard } from './core/guards/authenticated.guard';
 
 export const routes: Routes = [
-    { 
+    {
         path: "login",
         component: LoginComponent,
         canActivate: [AuthenticatedGuard],
     },
-    { 
-        path: "register", 
+    {
+        path: "register",
         component: RegisterComponent,
         canActivate: [AuthenticatedGuard],
     },
-    
+
     // customer
-    { 
+    {
         path: "",
         component: CustomerLayoutComponent,
         canActivate: [CustomerAuthGuard],
         children: [
-            { path: "", component: UserHomeComponent },
+            { path: "", component: CustomerHomeComponent, title: "Trang chủ" },
+            { path: "home", redirectTo: "", pathMatch: "full" },
+            { path: "about", component: CustomerAboutComponent, title: "Thông tin về OriAuto" },
+            { path: "categories", component: CustomerCategoriesComponent, title: "Danh mục sản phẩm" },
+            { path: "detail-category", component: CustomerDetailCategoryComponent, title: "Chi tiết danh mục sản phẩm" },
+            { path: "detail-product", component: CustomerDetailProductComponent, title: "Chi tiết sản phẩm" },
+            { path: "orders", component: CustomerOrdersComponent, title: "Đơn hàng của tôi" },
+            { path: "products", component: CustomerProductsComponent, title: "Đơn hàng của tôi" },
+            { path: "profile", component: CustomerProfileComponent, title: "Thông tin của tôi" },
+            { path: "searches", component: CustomerSearchesComponent, title: "Tìm kiếm sản phẩm" },
+            { path: "settings", component: CustomerSettingsComponent, title: "Cài đặt" },
         ],
     },
-    
+
     // admin
     {
         path: "admin",
@@ -68,7 +87,7 @@ export const routes: Routes = [
         canActivate: [AdminAuthGuard],
         children: [
             { path: "", component: AdminDashboardComponent, title: "Thông tin chung" },
-            { path: "dashboard", redirectTo: "", pathMatch: 'full' },
+            { path: "dashboard", redirectTo: "", pathMatch: "full" },
             { path: "users", component: AdminUsersComponent, title: "Người dùng" },
             { path: "categories", component: AdminCategoriesComponent, title: "Danh mục sản phẩm" },
             { path: "products", component: AdminProductsComponent, title: "Sản phẩm" },
@@ -86,7 +105,7 @@ export const routes: Routes = [
         canActivate: [StaffAuthGuard],
         children: [
             { path: "", component: StaffDashboardComponent, title: "Thông tin chung" },
-            { path: "dashboard", redirectTo: "", pathMatch: 'full' },
+            { path: "dashboard", redirectTo: "", pathMatch: "full" },
             { path: "stocks", component: StaffStocksComponent, title: "Nhập kho" },
             { path: "orders", component: StaffOrdersComponent, title: "Đơn hàng" },
             { path: "reports", component: StaffReportsComponent, title: "Báo cáo" },

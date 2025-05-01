@@ -1,6 +1,193 @@
-<div class="admin-layout">
-    <h1>Hello World from customer layout</h1>
-    <main>
-        <router-outlet></router-outlet>
+<div class="flex flex-col min-h-screen">
+    <header class="sticky top-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-md">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <a routerLink="/" class="flex items-center">
+                        <img src="images/oribuyin_logo.png" alt="Logo OriBuyin" class="h-10 w-auto mr-1" />
+                        <span class="text-2xl font-bold text-pink-500">OriBuyin</span>
+                    </a>
+                </div>
+
+                <div class="hidden md:flex flex-1 max-w-xl mx-4">
+                    <form class="relative w-full" (ngSubmit)="handleSearch()">
+                        <input type="text" placeholder="Tìm kiếm sản phẩm..."
+                            class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            [(ngModel)]="searchQuery" name="searchQuery" />
+                        <button type="submit"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors"
+                            aria-label="Search">
+                            <i class="fa-solid fa-search text-lg"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <a routerLink="/cart" class="relative p-2 text-gray-700 hover:text-gray-600 transition-colors"
+                        aria-label="Shopping cart">
+                        <i class="fa-solid fa-shopping-cart text-xl"></i>
+                        <span *ngIf="cartItemCount > 0"
+                            class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                            {{ cartItemCount }}
+                        </span>
+                    </a>
+
+                    <div class="relative">
+                        <button (click)="toggleUserDropdown()"
+                            class="flex items-center space-x-2 focus:outline-none cursor-pointer" aria-label="User menu"
+                            [attr.aria-expanded]="isUserDropdownOpen">
+                            <div
+                                class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
+                                <i class="fa-solid fa-user text-gray-600 text-lg"></i>
+                            </div>
+                            <span class="hidden lg:inline text-sm font-medium">Origin Dev</span>
+                        </button>
+
+                        <div *ngIf="isUserDropdownOpen" (clickOutside)="toggleUserDropdown()"
+                            class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+                            <a routerLink="/profile"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-gray-600 transition-colors"
+                                (click)="isUserDropdownOpen = false">
+                                <i class="fa-solid fa-user mr-2"></i> Thông tin cá nhân
+                            </a>
+                            <a routerLink="/orders"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-gray-600 transition-colors"
+                                (click)="isUserDropdownOpen = false">
+                                <i class="fa-solid fa-box-open mr-2"></i> Đơn hàng của tôi
+                            </a>
+                            <a routerLink="/settings"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-gray-600 transition-colors"
+                                (click)="isUserDropdownOpen = false">
+                                <i class="fa-solid fa-gear mr-2"></i> Cài đặt
+                            </a>
+                            <div class="border-t border-gray-100 my-1"></div>
+                            <button
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-gray-600 transition-colors cursor-pointer"
+                                (click)="logout(); isUserDropdownOpen = false">
+                                <i class="fa-solid fa-sign-out-alt mr-2"></i> Đăng xuất
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 md:hidden">
+                <form class="relative w-full" (ngSubmit)="handleSearch()">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..."
+                        class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        [(ngModel)]="searchQuery" name="searchQuery" />
+                    <button type="submit"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors"
+                        aria-label="Search">
+                        <i class="fa-solid fa-search text-lg"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-6 sm:py-8 lg:py-10">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <router-outlet></router-outlet>
+        </div>
     </main>
+
+    <footer class="bg-gray-100 py-4 mt-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">Liên hệ với chúng tôi</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-location-dot mt-1 mr-2 text-gray-600"></i>
+                            <span class="text-gray-700">
+                                123 Đường Thương Mại<br />
+                                Khu Kinh Doanh, TP.HCM 12345
+                            </span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-phone mr-2 text-gray-600"></i>
+                            <a href="tel:+841234567890" class="text-gray-700 hover:text-gray-600 transition-colors">
+                                (123) 456-7890
+                            </a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa-solid fa-envelope mr-2 text-gray-600"></i>
+                            <a href="mailto:jorigindev@gmail.com"
+                                class="text-gray-700 hover:text-gray-600 transition-colors">
+                                hehe
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">Theo dõi OriBuyin</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="https://www.facebook.com/istrnguyen" class="flex items-center text-gray-700"
+                                target="_blank" rel="noopener noreferrer" aria-label="Facebook của OriBuyin">
+                                <i class="fa-brands fa-facebook-f text-lg mr-2"></i>
+                                <span class="hover:text-pink-500 transition-colors">Facebook</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/isnguyen" class="flex items-center text-gray-700"
+                                target="_blank" rel="noopener noreferrer" aria-label="Instagram của OriBuyin">
+                                <i class="fa-brands fa-instagram text-lg mr-2"></i>
+                                <span class="hover:text-pink-500 transition-colors">Instagram</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/in/origindev" class="flex items-center text-gray-700"
+                                target="_blank" rel="noopener noreferrer" aria-label="LinkedIn của OriBuyin">
+                                <i class="fa-brands fa-linkedin-in text-lg mr-2"></i>
+                                <span class="hover:text-pink-500 transition-colors">LinkedIn</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-800">Liên kết nhanh</h3>
+                        <ul class="space-y-2">
+                            <li><a routerLink="/about" class="text-gray-700 hover:text-gray-600 transition-colors">Về
+                                    chúng tôi</a></li>
+                            <li><a routerLink="/contact"
+                                    class="text-gray-700 hover:text-gray-600 transition-colors">Liên hệ</a></li>
+                            <li><a routerLink="/faq" class="text-gray-700 hover:text-gray-600 transition-colors">FAQ</a>
+                            </li>
+                            <li><a routerLink="/terms" class="text-gray-700 hover:text-gray-600 transition-colors">Điều
+                                    khoản & Điều kiện</a></li>
+                            <li><a routerLink="/privacy"
+                                    class="text-gray-700 hover:text-gray-600 transition-colors">Chính sách bảo mật</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4 text-gray-800">Thanh toán an toàn</h3>
+                        <div class="flex space-x-4 mb-2">
+                            <i class="fa-brands fa-cc-visa text-blue-700 text-xl"></i>
+                            <i class="fa-brands fa-cc-mastercard text-red-500 text-xl"></i>
+                            <i class="fa-brands fa-cc-paypal text-gray-600 text-xl"></i>
+                            <i class="fa-brands fa-apple-pay text-black text-xl"></i>
+                            <i class="fa-brands fa-google-pay text-gray-700 text-xl"></i>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-shield-alt text-gray-600"></i>
+                            <span class="text-sm text-gray-700">Giao dịch được mã hóa an toàn</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 py-4 border-t border-gray-200 text-center text-sm text-gray-600">
+                <p class="mb-4">Công ty TNHH Origin</p>
+                <p>Địa chỉ: 385 Lê Văn Việt, phường Tăng Nhơn Phú A, thành phố Thủ Đức, TP. Hồ Chí Minh</p>
+                <p>Thiết kế và phát triển hệ thống do Origin Dev chịu trách nhiệm</p>
+                <p>© 2025 - Bản quyền thuộc về Công ty TNHH Origin</p>
+            </div>
+        </div>
+    </footer>
 </div>
