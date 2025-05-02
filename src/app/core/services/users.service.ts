@@ -11,12 +11,16 @@ export class UsersService {
     private usersSubject = new BehaviorSubject<User[]>([]);
     users$ = this.usersSubject.asObservable();
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getAllUsers(): Observable<User[]> {
         return this.http.get<User[]>(`${this.userApiUrl}`).pipe(
             tap(users => this.usersSubject.next(users)),
         );
+    }
+
+    getUserByID(userID: number): Observable<User> {
+        return this.http.get<User>(`${this.userApiUrl}/${userID}`);
     }
 
     getNumberOfUsers(): Observable<any> {
@@ -37,5 +41,10 @@ export class UsersService {
 
     getCurrentUsers(): User[] {
         return this.usersSubject.value;
+    }
+
+    getCurrentUserID(): number {
+        const userID: number = Number(localStorage.getItem("user_id"));
+        return userID | 0;
     }
 }

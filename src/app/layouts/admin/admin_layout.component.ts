@@ -19,7 +19,7 @@ export class AdminLayoutComponent {
     @ViewChild("adminMenuButton") adminMenuButton!: ElementRef;
     @ViewChild("adminMenu") adminMenu!: ElementRef;
 
-    private authService = inject(AuthService);
+    constructor(private authService: AuthService) { }
 
     toggleAdminMenu(): void {
         this.isAdminMenuOpen = !this.isAdminMenuOpen;

@@ -40,7 +40,10 @@
                                 class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
                                 <i class="fa-solid fa-user text-gray-600 text-lg"></i>
                             </div>
-                            <span class="hidden lg:inline text-sm font-medium">Origin Dev</span>
+                            <span class="hidden lg:inline text-sm font-medium">
+                                {{ (userInfo && userInfo.firstName && userInfo.lastName) ? (userInfo.firstName + ' ' +
+                                userInfo.lastName) : 'OriBuyin User' }}
+                            </span>
                         </button>
 
                         <div *ngIf="isUserDropdownOpen" (clickOutside)="toggleUserDropdown()"
@@ -101,21 +104,21 @@
                         <li class="flex items-start">
                             <i class="fa-solid fa-location-dot mt-1 mr-2 text-gray-600"></i>
                             <span class="text-gray-700">
-                                123 Đường Thương Mại<br />
-                                Khu Kinh Doanh, TP.HCM 12345
+                                385 Lê Văn Việt, phường Tăng Nhơn Phú A, <br>
+                                thành phố Thủ Đức, TP. Hồ Chí Minh
                             </span>
                         </li>
                         <li class="flex items-center">
                             <i class="fa-solid fa-phone mr-2 text-gray-600"></i>
                             <a href="tel:+841234567890" class="text-gray-700 hover:text-gray-600 transition-colors">
-                                (123) 456-7890
+                                0368686868
                             </a>
                         </li>
                         <li class="flex items-center">
                             <i class="fa-solid fa-envelope mr-2 text-gray-600"></i>
                             <a href="mailto:jorigindev@gmail.com"
                                 class="text-gray-700 hover:text-gray-600 transition-colors">
-                                hehe
+                                jorigindev&#64;gmail.com
                             </a>
                         </li>
                     </ul>

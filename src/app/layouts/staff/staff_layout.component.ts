@@ -19,7 +19,7 @@ export class StaffLayoutComponent {
     @ViewChild("staffMenuButton") staffMenuButton!: ElementRef;
     @ViewChild("staffMenu") staffMenu!: ElementRef;
 
-    private authService = inject(AuthService);
+    constructor(private authService: AuthService) { }
 
     toggleStaffMenu(): void {
         this.isStaffMenuOpen = !this.isStaffMenuOpen;
@@ -40,12 +40,12 @@ export class StaffLayoutComponent {
     onDocumentClick(event: MouseEvent): void {
         const staffMenuButton = document.getElementById("staffMenuButton");
         const staffMenu = document.getElementById("staffMenu");
-    
+
         if (staffMenuButton && staffMenu && this.isStaffMenuOpen && event?.target) {
             if (!staffMenuButton.contains(event.target as Node) &&
                 !staffMenu.contains(event.target as Node)) {
-                    this.isStaffMenuOpen = false;
-                }
+                this.isStaffMenuOpen = false;
+            }
         }
     }
 }
