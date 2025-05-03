@@ -1,1 +1,118 @@
-<h1>Customer Home</h1>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Flash Sales 🔥</h2>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                <div
+                    class="swiper-slide bg-gradient-to-r from-red-200 to-red-400 rounded-lg shadow-md p-6 flex items-center justify-around">
+                    <div>
+                        <h3 class="text-xl font-semibold text-red-800">Giảm giá sập sàn!</h3>
+                        <p class="text-gray-700">Sản phẩm A chỉ còn <span class="font-bold text-red-600">99.000đ</span>
+                        </p>
+                        <button
+                            class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md mt-2">Mua
+                            ngay</button>
+                    </div>
+                    <img src="https://via.placeholder.com/150/FF0000" alt="Sản phẩm A"
+                        class="h-24 w-24 object-cover rounded-md">
+                </div>
+                <div
+                    class="swiper-slide bg-gradient-to-r from-yellow-200 to-yellow-400 rounded-lg shadow-md p-6 flex items-center justify-around">
+                    <div>
+                        <h3 class="text-xl font-semibold text-yellow-800">Ưu đãi đặc biệt!</h3>
+                        <p class="text-gray-700">Sản phẩm B giảm <span class="font-bold text-yellow-600">30%</span></p>
+                        <button
+                            class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 px-4 rounded-md mt-2">Xem
+                            ngay</button>
+                    </div>
+                    <img src="https://via.placeholder.com/150/FFFF00" alt="Sản phẩm B"
+                        class="h-24 w-24 object-cover rounded-md">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Danh mục sản phẩm</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <ng-container *ngFor="let category of categories">
+                <a [routerLink]="['/category', category.id]"
+                    class="rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image"
+                        [alt]="category.name" class="w-full h-32 object-cover">
+                    <div class="p-2 text-sm bg-gray-100 text-center">
+                        <h3 class="font-semibold text-gray-700">{{ category.name }}</h3>
+                    </div>
+                </a>
+            </ng-container>
+        </div>
+    </section>
+
+    <section class="mb-10">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-2xl font-bold text-gray-800">Sản phẩm bán chạy nhất</h2>
+            <a routerLink="/products"
+                class="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300">Xem thêm <i
+                    class="fa-solid fa-arrow-right ml-1"></i></a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/1">
+                    <img src="images/default_product.png" alt="Sản phẩm 1" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 1</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">199.000đ</span></p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/2">
+                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/2">
+                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/2">
+                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/2">
+                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <a href="/product/2">
+                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
+                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
