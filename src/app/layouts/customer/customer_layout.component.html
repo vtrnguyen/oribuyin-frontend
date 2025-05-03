@@ -38,7 +38,13 @@
                             [attr.aria-expanded]="isUserDropdownOpen">
                             <div
                                 class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
-                                <i class="fa-solid fa-user text-gray-600 text-lg"></i>
+                                <ng-container *ngIf="userInfo && userInfo.avatar">
+                                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/avatar/' + userInfo.avatar"
+                                        [alt]="(userInfo.firstName || '') + ' ' + (userInfo.lastName || '') + ' Avatar'"
+                                        class="w-full h-full object-cover">
+                                </ng-container>
+                                <i *ngIf="!(userInfo && userInfo.avatar)"
+                                    class="fa-solid fa-user text-gray-600 text-lg"></i>
                             </div>
                             <span class="hidden lg:inline text-sm font-medium">
                                 {{ (userInfo && userInfo.firstName && userInfo.lastName) ? (userInfo.firstName + ' ' +
@@ -95,7 +101,7 @@
         </div>
     </main>
 
-    <footer class="bg-gray-100 py-4 mt-12">
+    <footer class="bg-gray-100 py-4 mt-2">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div>
@@ -127,6 +133,15 @@
                 <div>
                     <h3 class="text-lg font-semibold mb-4 text-gray-800">Theo dõi OriBuyin</h3>
                     <ul class="space-y-2">
+                        <li>
+                            <a href="https://vtrnguyen.github.io/origindev-profolio"
+                                class="flex items-center text-gray-700" target="_blank" rel="noopener noreferrer"
+                                aria-label="Facebook của OriBuyin">
+                                <i class="fa-solid fa-terminal text-lg mr-2"></i>
+                                <span class="hover:text-pink-500 transition-colors">Trang web chính thức của
+                                    Origin</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="https://www.facebook.com/istrnguyen" class="flex items-center text-gray-700"
                                 target="_blank" rel="noopener noreferrer" aria-label="Facebook của OriBuyin">

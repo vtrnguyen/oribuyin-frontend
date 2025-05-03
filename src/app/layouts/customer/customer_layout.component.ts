@@ -25,7 +25,7 @@ export class CustomerLayoutComponent implements OnInit {
     userInfo: User | null = null;
     searchQuery: string = '';
     isUserDropdownOpen: boolean = false;
-    cartItemCount: number = 0;
+    cartItemCount: number = 2;
 
     constructor(
         private router: Router,
@@ -86,8 +86,6 @@ export class CustomerLayoutComponent implements OnInit {
                         address: response.data[0].address,
                     }
                 }
-
-                console.log(">>> check user info:", this.userInfo);
             },
             error: (error: any) => {
                 console.log(">>> error when fetching user info:", error);

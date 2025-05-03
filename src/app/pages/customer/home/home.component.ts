@@ -5,6 +5,8 @@ import { CategoriesService } from "../../../core/services/categories.service";
 import { Notification } from "../../../shared/types/notification.type";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { RouterLink } from "@angular/router";
+import { ProductsService } from "../../../core/services/products.service";
+import { Product } from "../../../shared/interfaces/product.interface";
 
 @Component({
     selector: "app-customer-home",
@@ -25,10 +27,16 @@ export class CustomerHomeComponent implements OnInit {
     notificationTitle: string = "";
     notificationMessage: string = "";
 
-    constructor(private categoriesService: CategoriesService) { }
+    suggestedProducts: Product[] = [];
+
+    constructor(
+        private categoriesService: CategoriesService,
+        private productsService: ProductsService
+    ) { }
 
     ngOnInit(): void {
         this.loadAllCategories();
+        this.loadSuggestedProducts();
     }
 
     private loadAllCategories(): void {
@@ -47,6 +55,40 @@ export class CustomerHomeComponent implements OnInit {
                 this.showNotification("error", "Lỗi", "Không tải được danh sách danh mục sản phẩm");
             },
         });
+    }
+
+
+    // export interface Product {
+    //     id: number;
+    //     name: string;
+    //     description: string;
+    //     price: number;
+    //     discount: number;
+    //     stockQuantity: number;
+    //     image: string;
+    //     categoryID: number;
+    // };
+
+    private loadSuggestedProducts(): void {
+        this.productsService.getSuggestedProducts().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.suggestedProducts = response.data.map((suggestedProduct: any) => ({
+                        id: suggestedProduct.id,
+                        name: suggestedProduct.name,
+                        description: suggestedProduct.description,
+                        price: suggestedProduct.price,
+                        discount: suggestedProduct.discount,
+                        stockQuantity: suggestedProduct.stock_quantity,
+                        image: suggestedProduct.image,
+                        categoryID: suggestedProduct.category_id,
+                    }));
+                }
+            },
+            error: (error: any) => {
+                this.showNotification("error", "Lỗi", "Không tải được danh sách sản phẩm gợi ý");
+            },
+        })
     }
 
     private showNotification(type: Notification, title: string, message: string): void {

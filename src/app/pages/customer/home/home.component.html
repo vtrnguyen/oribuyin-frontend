@@ -36,13 +36,14 @@
     <section class="mb-8">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-bold text-gray-800">Danh mục sản phẩm</h2>
-            <a routerLink="/categories"
+            <a routerLink="/categories" *ngIf="categories && categories.length > 0"
                 class="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300">Xem thêm <i
                     class="fa-solid fa-arrow-right ml-1"></i></a>
         </div>
-        <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-2">
+        <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-2"
+            *ngIf="categories && categories.length > 0; else noCategories">
             <ng-container *ngFor="let category of categories">
-                <a [routerLink]="['/category', category.id]"
+                <a [routerLink]="['/detail-category', category.id]"
                     class="rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                     <div class="w-full h-3/4 p-2">
                         <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image"
@@ -54,70 +55,51 @@
                 </a>
             </ng-container>
         </div>
+        <ng-template #noCategories>
+            <p class="text-gray-500 text-center">Hiện chưa có danh mục sản phẩm nào.</p>
+        </ng-template>
     </section>
 
-    <section class="mb-10">
+    <section class="mb-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Sản phẩm bán chạy nhất</h2>
-            <a routerLink="/products"
+            <h2 class="text-2xl font-bold text-gray-800">Gợi ý sản phẩm hôm nay</h2>
+            <a routerLink="/products" *ngIf="suggestedProducts && suggestedProducts.length > 0"
                 class="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-300">Xem thêm <i
                     class="fa-solid fa-arrow-right ml-1"></i></a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/1">
-                    <img src="images/default_product.png" alt="Sản phẩm 1" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 1</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">199.000đ</span></p>
+        <div *ngIf="suggestedProducts && suggestedProducts.length > 0; else noProducts"
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+            <ng-container *ngFor="let product of suggestedProducts">
+                <div
+                    class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-lg relative py-2">
+                    <a [routerLink]="['/detail-product', product.id]" class="block">
+                        <div class="w-full h-40 md:h-52 lg:h-64 p-2">
+                            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
+                                [alt]="product.name" class="w-full h-full object-contain">
+                        </div>
+                    </a>
+                    <div class="p-3 flex flex-col flex-grow">
+                        <h3 class="font-semibold text-gray-700 text-base truncate">{{ product.name }}</h3>
+                        <p class="text-gray-600 text-sm mb-1">Giá: <span class="font-bold text-red-600">{{
+                                product.price | number : '1.0-0' }} VNĐ</span></p>
+                        <p class="text-gray-500 text-xs" *ngIf="product.stockQuantity > 0; else outOfStock">
+                            Tồn kho: {{ product.stockQuantity }}
+                        </p>
+                        <ng-template #outOfStock>
+                            <p class="text-red-600 text-xs font-semibold">Hết hàng</p>
+                        </ng-template>
+                    </div>
+                    <div *ngIf="product.discount > 0" class="absolute -top-5 -left-6 w-24 h-24 overflow-hidden">
+                        <div
+                            class="absolute rotate-[-35deg] bg-red-600 text-white text-center py-1 font-semibold text-xs w-32 left-[-10px] top-6">
+                            -{{ product.discount | number: '1.0-0' }}%
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/2">
-                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/2">
-                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/2">
-                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/2">
-                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="/product/2">
-                    <img src="images/default_product.png" alt="Sản phẩm 2" class="w-full h-48 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-700 text-sm mb-2">Tên sản phẩm bán chạy 2</h3>
-                    <p class="text-gray-600 text-xs">Giá: <span class="font-bold text-blue-600">249.000đ</span></p>
-                </div>
-            </div>
+            </ng-container>
         </div>
+        <ng-template #noProducts>
+            <p class="text-gray-500 text-center">Hiện chưa có sản phẩm gợi ý nào.</p>
+        </ng-template>
     </section>
 </div>

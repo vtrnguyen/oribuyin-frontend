@@ -23,6 +23,10 @@ export class ProductsService {
         return this.http.get<any>(`${this.productApiUrl}/count`);
     }
 
+    getSuggestedProducts(): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/suggested`);
+    }
+
     createProduct(newProduct: any): Observable<any> {
         return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
     }
