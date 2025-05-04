@@ -11,12 +11,16 @@ export class CategoriesService {
     private categoriesSubject = new BehaviorSubject<Category[]>([]);
     categories$ = this.categoriesSubject.asObservable();
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     getAllCategories(): Observable<Category[]> {
         return this.http.get<Category[]>(`${this.categoryApiUrl}`).pipe(
             tap(categories => this.categoriesSubject.next(categories)),
         );
+    }
+
+    getCategoryByID(categoryID: number): Observable<any> {
+        return this.http.get<any>(`${this.categoryApiUrl}/${categoryID}`);
     }
 
     getCategoryValue(): Observable<any[]> {

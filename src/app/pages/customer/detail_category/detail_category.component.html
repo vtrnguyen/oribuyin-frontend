@@ -1,1 +1,76 @@
-<h1>Customer Detail Category with ID {{ categoryID }}</h1>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Thông tin danh mục</h2>
+        <div *ngIf="category" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <div class="flex justify-center item">
+                <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image"
+                    [alt]="category.name" class="w-full h-auto rounded-md shadow-sm object-cover"
+                    class="h-auto max-w-full">
+            </div>
+            <div class="flex flex-col justify-center">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-2">{{ category.name }}</h3>
+                <p class="text-gray-600 leading-relaxed">{{ category.description }}</p>
+            </div>
+        </div>
+        <div *ngIf="!category" class="text-gray-500 text-center">
+            Không tìm thấy thông tin danh mục sản phẩm...
+        </div>
+    </section>
+
+    <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-700">
+
+    <section>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Sản phẩm thuộc danh mục</h2>
+        <div *ngIf="products && products.length > 0"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div *ngFor="let product of products" class="bg-white rounded-lg shadow-md p-4">
+                <img [src]="product.image" [alt]="product.name" class="w-full h-32 object-cover rounded-md mb-2">
+                <h3 class="text-md font-semibold text-gray-700">{{ product.name }}</h3>
+                <p class="text-gray-600 text-sm">{{ product.description | slice:0:50 }}...</p>
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-red-500 font-bold">{{ product.price | currency:'VND':'symbol':'1.0-0' }}</span>
+                    <button [routerLink]="['/detail-product', product.id]"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md text-sm cursor-pointer transition-all duration-200">
+                        Xem chi tiết
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="!products || products.length === 0" class="text-gray-500 italic">
+            Không có sản phẩm nào thuộc danh mục này.
+        </div>
+
+        <div *ngIf="totalRecords > pageSize" class="mt-8 flex justify-center">
+            <nav aria-label="Page navigation">
+                <ul class="inline-flex items-center -space-x-px">
+                    <li>
+                        <button (click)="previousPage()" [disabled]="currentPage === 1"
+                            class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                            [ngClass]="{'disabled:opacity-50 cursor-not-allowed': currentPage === 1}">
+                            <span class="sr-only">Previous</span>
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                    </li>
+                    <li *ngFor="let page of pages" [ngClass]="{'active': page === currentPage}">
+                        <button (click)="changePage(page)"
+                            class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                            [ngClass]="{'bg-blue-500 text-white hover:bg-blue-700': page === currentPage}">
+                            {{ page }}
+                        </button>
+                    </li>
+                    <li>
+                        <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                            class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                            [ngClass]="{'disabled:opacity-50 cursor-not-allowed': currentPage === totalPages}">
+                            <span class="sr-only">Next</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </section>
+</div>

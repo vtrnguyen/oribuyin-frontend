@@ -57,18 +57,6 @@ export class CustomerHomeComponent implements OnInit {
         });
     }
 
-
-    // export interface Product {
-    //     id: number;
-    //     name: string;
-    //     description: string;
-    //     price: number;
-    //     discount: number;
-    //     stockQuantity: number;
-    //     image: string;
-    //     categoryID: number;
-    // };
-
     private loadSuggestedProducts(): void {
         this.productsService.getSuggestedProducts().subscribe({
             next: (response: any) => {

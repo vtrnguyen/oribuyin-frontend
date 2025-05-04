@@ -31,6 +31,7 @@ import { StaffSettingsComponent } from './pages/staff/settings/settings.componen
 import { CustomerHomeComponent } from './pages/customer/home/home.component';
 import { CustomerAboutComponent } from './pages/customer/about/about.component';
 import { CustomerCategoriesComponent } from './pages/customer/categories/categories.component';
+import { CustomerCartComponent } from './pages/customer/cart/cart.component';
 import { CustomerDetailCategoryComponent } from './pages/customer/detail_category/detail_category.component';
 import { CustomerDetailProductComponent } from './pages/customer/detail_product/detail_product.component';
 import { CustomerOrdersComponent } from './pages/customer/orders/orders.component';
@@ -70,6 +71,7 @@ export const routes: Routes = [
             { path: "home", redirectTo: "", pathMatch: "full" },
             { path: "about", component: CustomerAboutComponent, title: "Thông tin về OriAuto" },
             { path: "categories", component: CustomerCategoriesComponent, title: "Danh mục sản phẩm" },
+            { path: "cart", component: CustomerCartComponent, title: "Giỏ hàng của tôi" },
             { path: "detail-category/:id", component: CustomerDetailCategoryComponent, title: "Chi tiết danh mục sản phẩm" },
             { path: "detail-product/:id", component: CustomerDetailProductComponent, title: "Chi tiết sản phẩm" },
             { path: "orders", component: CustomerOrdersComponent, title: "Đơn hàng của tôi" },
