@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Product } from "../../../shared/interfaces/product.interface";
 import { Review } from "../../../shared/interfaces/review.interface";
+import { ProductsService } from "../../../core/services/products.service";
 
 @Component({
     selector: "app-customer-detail-product",
@@ -15,66 +16,65 @@ import { Review } from "../../../shared/interfaces/review.interface";
 })
 export class CustomerDetailProductComponent implements OnInit {
     productID: number = 0;
+    product: Product | null = null;
+    reviews: Review[] = [];
 
-    mockProduct: Product = {
-        id: 123,
-        name: "Áo Thun Cotton Basic",
-        description: "Áo thun cotton 100% mềm mại, thoáng mát, phù hợp cho mọi hoạt động hàng ngày.",
-        price: 250000,
-        discount: 15,
-        stockQuantity: 150,
-        image: "https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/ao-so-mi-nam-oxford-cao-cap.png",
-        categoryID: 1,
-    };
-    mockReviews: Review[] = [
-        {
-            id: 1,
-            userAvatar: "images/default_avatar.png",
-            userFullName: "Nguyễn Văn A",
-            timestamp: new Date(),
-            rating: 4,
-            comment: "Sản phẩm tuyệt vời, chất liệu rất tốt!",
-            userID: 101,
-            productID: 123,
-        },
-        {
-            id: 2,
-            userAvatar: "images/default_avatar.png",
-            userFullName: "Trần Thị B",
-            timestamp: new Date(new Date().setDate(new Date().getDate() - 2)),
-            rating: 4,
-            comment: "Áo mặc khá thoải mái, giá cả hợp lý.",
-            userID: 102,
-            productID: 123,
-        },
-        {
-            id: 3,
-            userAvatar: "images/default_avatar.png",
-            userFullName: "Lê Minh C",
-            timestamp: new Date(new Date().setDate(new Date().getDate() - 5)),
-            rating: 3,
-            comment: "Chất liệu ổn, nhưng giao hàng hơi lâu.",
-            userID: 103,
-            productID: 123,
-        },
-    ];
-
-    constructor(private activatedRoute: ActivatedRoute) { }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private productsService: ProductsService
+    ) { }
 
     ngOnInit(): void {
-        this.loadProductID();
+        this.loadDetailProduct();
+    }
+
+    private loadDetailProduct(): void {
+        this.activatedRoute.paramMap.subscribe(params => {
+            this.productID = Number(params.get("id"));
+            if (this.productID) {
+                this.productsService.getProductByID(this.productID).subscribe({
+                    next: (response: any) => {
+                        if (response && response.code === 1 && response.data) {
+                            this.product = {
+                                id: response.data.product.id,
+                                name: response.data.product.name,
+                                description: response.data.product.description,
+                                price: response.data.product.price,
+                                discount: response.data.product.discount,
+                                stockQuantity: response.data.product.stock_quantity,
+                                image: response.data.product.image,
+                                categoryID: response.data.product.category_id,
+                            };
+
+                            this.reviews = response.data.reviews.map((review: any) => ({
+                                id: review.id,
+                                userAvatar: review.user_avatar,
+                                userFullName: review.user_full_name,
+                                timestamp: review.timestamps,
+                                rating: review.rating,
+                                comment: review.comment,
+                                userID: review.user_id,
+                                productID: review.product_id,
+                            }));
+
+                        } else {
+                            this.product = null;
+                            this.reviews = [];
+                        }
+                    },
+                    error: (error: any) => {
+                        this.product = null;
+                        this.reviews = [];
+                    },
+                });
+            }
+        });
     }
 
     calculateDiscountedPrice(): number {
-        if (this.mockProduct.discount > 0) {
-            return this.mockProduct.price * (1 - this.mockProduct.discount / 100);
+        if (this.product && this.product.discount > 0) {
+            return this.product.price * (1 - this.product.discount / 100);
         }
-        return this.mockProduct.price;
-    }
-
-    private loadProductID(): void {
-        this.activatedRoute.paramMap.subscribe(params => {
-            this.productID = Number(params.get("id"));
-        });
+        return this.product ? this.product.price : 0;
     }
 }

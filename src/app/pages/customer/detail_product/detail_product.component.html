@@ -1,34 +1,40 @@
-<div class="container mx-auto px-4 py-8">
+<div *ngIf="product" class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
             <div>
                 <div class="w-full h-120 object-contain rounded-md">
-                    <img [src]="mockProduct.image" [alt]="mockProduct.name" class="w-full h-full object-contain">
+                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
+                        [alt]="product.name" class="w-full h-full object-contain">
                 </div>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">{{ mockProduct.name }}</h1>
-                <p class="text-gray-600 mt-2">{{ mockProduct.description }}</p>
+                <h1 class="text-2xl font-bold text-gray-800">{{ product.name }}</h1>
+                <p class="text-gray-600 mt-2">{{ product.description }}</p>
                 <div class="mt-4 flex items-center">
                     <span class="text-xl font-bold text-red-600">
                         {{ calculateDiscountedPrice() | number : '1.0-0' }} VNĐ
                     </span>
-                    <span *ngIf="mockProduct.discount > 0" class="text-gray-500 line-through ml-2">
-                        {{ mockProduct.price | number : '1.0-0' }} VNĐ
+                    <span *ngIf="product.discount > 0" class="text-gray-500 line-through ml-2">
+                        {{ product.price | number : '1.0-0' }} VNĐ
                     </span>
-                    <span *ngIf="mockProduct.discount > 0" class="text-sm text-green-600 font-semibold ml-2">
-                        (-{{ mockProduct.discount | number : '1.0-0' }}%)
+                    <span *ngIf="product.discount > 0" class="text-sm text-green-600 font-semibold ml-2">
+                        (-{{ product.discount | number : '1.0-0' }}%)
                     </span>
                 </div>
-                <p class="text-gray-700 mt-2">Tồn kho: {{ mockProduct.stockQuantity }}</p>
+                <p class="text-gray-700 mt-2" *ngIf="product.stockQuantity > 0; else outOfStock">
+                    Tồn kho: {{ product.stockQuantity }}
+                </p>
+                <ng-template #outOfStock>
+                    <p class="text-red-600 font-semibold mt-2">Hết hàng</p>
+                </ng-template>
                 <div class="mt-6 flex gap-4">
                     <button
-                        class="min-w-[180px] py-3 px-6 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100 transition-all duration-200 cursor-pointer">
+                        class="py-3 px-6 text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 transition-all duration-200 cursor-pointer">
                         <i class="fa-solid fa-cart-plus mr-2"></i>
                         Thêm vào giỏ hàng
                     </button>
                     <button
-                        class="min-w-[180px] bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-md transition-all duration-200 cursor-pointer">
+                        class="bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-md transition-all duration-200 cursor-pointer">
                         Mua ngay
                     </button>
                 </div>
@@ -38,10 +44,11 @@
 
     <div class="bg-white rounded-lg shadow-md overflow-hidden p-6">
         <h2 class="text-xl font-semibold text-gray-800 mb-4">Đánh giá sản phẩm</h2>
-        <div *ngFor="let review of mockReviews" class="mb-8 border-b border-gray-300 pb-4">
+        <div *ngFor="let review of reviews" class="mb-8 border-b border-gray-300 pb-4">
             <div class="flex items-center mb-2">
                 <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden">
-                    <img [src]="review.userAvatar" [alt]="review.userFullName" class="w-full h-full object-cover">
+                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/avatar/' + review.userAvatar"
+                        [alt]="review.userFullName" class="w-full h-full object-cover">
                 </div>
                 <div class="ml-2">
                     <p class="text-sm font-semibold text-gray-700">{{ review.userFullName }}</p>
@@ -58,8 +65,12 @@
             </div>
             <p class="text-gray-800 mb-2">{{ review.comment }}</p>
         </div>
-        <div *ngIf="mockReviews.length === 0" class="text-gray-500 text-center">
+        <div *ngIf="reviews.length === 0" class="text-gray-500 text-center">
             Chưa có đánh giá nào cho sản phẩm này.
         </div>
     </div>
+</div>
+
+<div *ngIf="!product" class="container mx-auto px-4 py-8 text-center text-gray-500">
+    Đang tải thông tin sản phẩm...
 </div>
