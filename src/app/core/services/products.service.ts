@@ -19,6 +19,10 @@ export class ProductsService {
         );
     }
 
+    getProductByID(productID: number): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/:${productID}`);
+    }
+
     getNumberOfProducts(): Observable<any> {
         return this.http.get<any>(`${this.productApiUrl}/count`);
     }
