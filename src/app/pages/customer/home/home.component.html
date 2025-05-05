@@ -57,34 +57,8 @@
         </div>
         <div *ngIf="suggestedProducts && suggestedProducts.length > 0; else noProducts"
             class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-            <ng-container *ngFor="let product of suggestedProducts">
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col transition-shadow duration-300 hover:shadow-lg relative py-2"
-                    [title]="product.name">
-                    <a [routerLink]="['/detail-product', product.id]" class="block">
-                        <div class="w-full h-40 md:h-52 lg:h-64 p-2">
-                            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
-                                [alt]="product.name" class="w-full h-full object-contain">
-                        </div>
-                    </a>
-                    <div class="p-3 flex flex-col flex-grow">
-                        <h3 class="font-semibold text-gray-700 text-base truncate">{{ product.name }}</h3>
-                        <p class="text-gray-600 text-sm mb-1">Giá: <span class="font-bold text-red-600">{{
-                                product.price | number : '1.0-0' }} VNĐ</span></p>
-                        <p class="text-gray-500 text-xs" *ngIf="product.stockQuantity > 0; else outOfStock">
-                            Tồn kho: {{ product.stockQuantity }}
-                        </p>
-                        <ng-template #outOfStock>
-                            <p class="text-red-600 text-xs font-semibold">Hết hàng</p>
-                        </ng-template>
-                    </div>
-                    <div *ngIf="product.discount > 0" class="absolute -top-5 -left-6 w-24 h-24 overflow-hidden">
-                        <div
-                            class="absolute rotate-[-35deg] bg-red-600 text-white text-center py-1 font-semibold text-xs w-32 left-[-10px] top-6">
-                            -{{ product.discount | number: '1.0-0' }}%
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
+            <app-product-item-component *ngFor="let suggestedProduct of suggestedProducts"
+                [product]="suggestedProduct"></app-product-item-component>
         </div>
         <ng-template #noProducts>
             <p class="text-gray-500 text-center">Hiện chưa có sản phẩm gợi ý nào.</p>

@@ -7,6 +7,7 @@ import { NotificationComponent } from "../../../shared/components/notifications/
 import { RouterLink } from "@angular/router";
 import { ProductsService } from "../../../core/services/products.service";
 import { Product } from "../../../shared/interfaces/product.interface";
+import { ProductItemComponent } from "../../../shared/components/product/product_item.component";
 
 @Component({
     selector: "app-customer-home",
@@ -15,6 +16,7 @@ import { Product } from "../../../shared/interfaces/product.interface";
         CommonModule,
         NotificationComponent,
         RouterLink,
+        ProductItemComponent,
     ],
     templateUrl: "./home.component.html",
     styleUrls: ["./home.component.scss"],

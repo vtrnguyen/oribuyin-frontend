@@ -27,6 +27,10 @@ export class ProductsService {
         return this.http.get<any>(`${this.productApiUrl}/suggested`);
     }
 
+    getProductsByCategoryID(categoryID: number, page: number, pageSize: number): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/categories/${categoryID}?page=${page}&pageSize=${pageSize}`);
+    }
+
     createProduct(newProduct: any): Observable<any> {
         return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
     }

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Notification } from "../../types/notification.type";
 
@@ -41,7 +41,7 @@ export class NotificationComponent implements OnChanges {
     }
 
     getIconClass(): string {
-        switch(this.type) {
+        switch (this.type) {
             case "success":
                 return "fas fa-check-circle";
             case "error":
