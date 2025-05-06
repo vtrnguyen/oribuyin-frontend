@@ -1,1 +1,56 @@
-<h1>Customer Cart</h1>
+<div class="container mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-4">Giỏ hàng của bạn</h1>
+
+    <div *ngIf="cartItems.length > 0; else emptyCart">
+        <ul class="space-y-4">
+            <li *ngFor="let item of cartItems" class="bg-white shadow-md rounded-lg overflow-hidden flex items-center">
+                <div class="w-1/4 md:w-1/5 lg:w-1/6 p-4">
+                    <div class="relative w-full h-24 md:h-32 overflow-hidden rounded-md">
+                        <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image"
+                            [alt]="item.product.name" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="flex-grow p-4">
+                    <h2 class="text-lg font-semibold text-gray-800">{{ item.product.name }}</h2>
+                    <div class="flex items-center mt-2">
+                        <span class="text-red-600 font-bold">{{ item.product.price | number: '1.0-0' }} VNĐ</span>
+                        <span *ngIf="item.product.discount > 0" class="ml-2 text-gray-500 line-through">
+                            {{ (item.product.price * (1 + item.product.discount / 100)) | number: '1.0-0' }} VNĐ
+                        </span>
+                        <span *ngIf="item.product.discount > 0" class="ml-2 text-green-600 font-semibold">
+                            (-{{ item.product.discount | number: '1.0-0' }}%)
+                        </span>
+                    </div>
+                </div>
+                <div class="w-1/5 md:w-1/6 p-4 flex flex-col items-center">
+                    <div class="flex items-center">
+                        <input type="number" id="quantity-{{item.id}}" [value]="item.quantity" min="1"
+                            class="w-20 border border-gray-300 rounded-md py-1 px-2 text-center">
+                    </div>
+                </div>
+                <div class="w-1/6 flex justify-end items-center p-4">
+                    <button
+                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all duration-200 cursor-pointer">
+                        <i class="fa-solid fa-trash mr-2"></i>
+                        Xóa khỏi giỏ hàng
+                    </button>
+                </div>
+            </li>
+        </ul>
+
+        <div class="mt-6 py-4 border-t border-gray-300">
+            <div class="flex justify-between font-semibold text-red-700">
+                <span>Tổng cộng:</span>
+                <span>{{ calculateTotalPrice() | number: '1.0-0' }} VNĐ</span>
+            </div>
+            <button
+                class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-md w-full duration-200 cursor-pointer">
+                Tiến hành thanh toán
+            </button>
+        </div>
+    </div>
+
+    <ng-template #emptyCart>
+        <p class="text-gray-500 text-center">Chưa có sản phẩm nào được thêm vào giỏ hàng.</p>
+    </ng-template>
+</div>

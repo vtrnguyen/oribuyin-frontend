@@ -4,12 +4,17 @@ import { ActivatedRoute } from "@angular/router";
 import { Product } from "../../../shared/interfaces/product.interface";
 import { Review } from "../../../shared/interfaces/review.interface";
 import { ProductsService } from "../../../core/services/products.service";
+import { FormsModule } from "@angular/forms";
+import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
+import { Notification } from "../../../shared/types/notification.type";
 
 @Component({
     selector: "app-customer-detail-product",
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
+        NotificationComponent,
     ],
     templateUrl: "./detail_product.component.html",
     styleUrls: ["./detail_product.component.scss"],
@@ -18,6 +23,12 @@ export class CustomerDetailProductComponent implements OnInit {
     productID: number = 0;
     product: Product | null = null;
     reviews: Review[] = [];
+    quantityProduct: number = 1;
+
+    notificationVisible: boolean = false;
+    notificationType: Notification = "success";
+    notificationTitle: string = "";
+    notificationMessage: string = "";
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -76,5 +87,39 @@ export class CustomerDetailProductComponent implements OnInit {
             return this.product.price * (1 - this.product.discount / 100);
         }
         return this.product ? this.product.price : 0;
+    }
+
+    decreaseQuantity(): void {
+        if (this.quantityProduct > 1) {
+            this.quantityProduct--;
+        }
+    }
+
+    increaseQuantity(): void {
+        if (this.product && (this.quantityProduct < this.product.stockQuantity)) {
+            this.quantityProduct++;
+        }
+    }
+
+    addToCart(): void {
+        if (this.product && this.quantityProduct > 0) {
+            this.showNotification("success", "Thành công", `Đã thêm ${this.quantityProduct} sản phẩm ${this.product.name} vào giỏ hàng`);
+        }
+    }
+
+    buyNow(): void {
+        if (this.product && this.quantityProduct > 0) {
+            this.showNotification("success", "Thành công", `Đã chọn mua ${this.quantityProduct} sản phẩm ${this.product.name}`);
+        }
+    }
+
+    private showNotification(type: Notification, title: string, message: string): void {
+        this.notificationType = type;
+        this.notificationTitle = title;
+        this.notificationMessage = message;
+        this.notificationVisible = true;
+        setTimeout(() => {
+            this.notificationVisible = false;
+        }, 3000);
     }
 }
