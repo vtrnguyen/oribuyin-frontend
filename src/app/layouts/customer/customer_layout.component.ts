@@ -7,6 +7,7 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { AuthService } from '../../core/auth/auth.service';
 import { UsersService } from '../../core/services/users.service';
 import { User } from '../../shared/interfaces/user.interface';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
     selector: 'app-customer-layout',
@@ -25,12 +26,13 @@ export class CustomerLayoutComponent implements OnInit {
     userInfo: User | null = null;
     searchQuery: string = '';
     isUserDropdownOpen: boolean = false;
-    cartItemCount: number = 2;
+    cartItemCount: number = 0;
 
     constructor(
         private router: Router,
         private authService: AuthService,
         private usersService: UsersService,
+        private cartService: CartService,
     ) { }
 
     ngOnInit(): void {
@@ -41,6 +43,7 @@ export class CustomerLayoutComponent implements OnInit {
         });
 
         this.loadUserInfo();
+        this.loadNumberOfCartProduct();
     }
 
     handleSearch(): void {
@@ -89,6 +92,23 @@ export class CustomerLayoutComponent implements OnInit {
             },
             error: (error: any) => {
                 console.log(">>> error when fetching user info:", error);
+            }
+        });
+    }
+
+    private loadNumberOfCartProduct(): void {
+        const userID: number = this.usersService.getCurrentUserID();
+        this.cartService.getNumberOfCartProduct(userID).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.cartItemCount = response.data;
+                    return;
+                }
+
+                this.cartItemCount = 0;
+            },
+            error: (error: any) => {
+                this.cartItemCount = 0;
             }
         })
     }

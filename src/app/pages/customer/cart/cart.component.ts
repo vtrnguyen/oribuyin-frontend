@@ -40,8 +40,6 @@ export class CustomerCartComponent implements OnInit {
                                 image: cartItem.product.image,
                             }
                         }));
-
-                        console.log(">>> check cartItems:", this.cartItems);
                     }
                 },
                 error: (error: any) => {

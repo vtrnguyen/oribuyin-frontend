@@ -18,4 +18,8 @@ export class CartService {
             tap(cartItem => this.cartSubject.next(cartItem)),
         );
     }
+
+    getNumberOfCartProduct(userID: number): Observable<number> {
+        return this.http.get<number>(`${this.cartApiUrl}/count/${userID}`);
+    }
 }
