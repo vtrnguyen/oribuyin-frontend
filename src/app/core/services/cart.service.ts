@@ -22,4 +22,16 @@ export class CartService {
     getNumberOfCartProduct(userID: number): Observable<number> {
         return this.http.get<number>(`${this.cartApiUrl}/count/${userID}`);
     }
+
+    addProductToCart(userID: number, productID: number, quantity: number): Observable<any> {
+        return this.http.post<any>(`${this.cartApiUrl}`, { userID, productID, quantity });
+    }
+
+    updateCartItemQuantity(cartItemID: number, quantity: number): Observable<any> {
+        return this.http.put<any>(`${this.cartApiUrl}/${cartItemID}`, { quantity: quantity });
+    }
+
+    deleteCartItem(cartItemID: number): Observable<any> {
+        return this.http.delete<any>(`${this.cartApiUrl}/${cartItemID}`);
+    }
 }

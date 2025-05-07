@@ -36,13 +36,13 @@
                         <label for="quantity" class="mr-3 text-gray-700 font-semibold">Số lượng:</label>
                         <div class="flex border border-gray-300 rounded-md overflow-hidden">
                             <button type="button" (click)="decreaseQuantity()"
-                                class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none">
+                                class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">
                                 <i class="fa-solid fa-minus"></i>
                             </button>
-                            <input type="number" id="quantity" [(ngModel)]="quantityProduct" min="1"
+                            <input type="text" id="quantity" [(ngModel)]="quantityProduct" min="1"
                                 [max]="product.stockQuantity" class="w-16 text-center border-0 focus:outline-none" />
                             <button type="button" (click)="increaseQuantity()"
-                                class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none">
+                                class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">
                                 <i class="fa-solid fa-plus"></i>
                             </button>
                         </div>

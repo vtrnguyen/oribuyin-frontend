@@ -1,9 +1,12 @@
 <div class="container mx-auto mt-8">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
     <h1 class="text-2xl font-bold mb-4">Giỏ hàng của bạn</h1>
 
     <div *ngIf="cartItems.length > 0; else emptyCart">
         <ul class="space-y-4">
-            <li *ngFor="let item of cartItems" class="bg-white shadow-md rounded-lg overflow-hidden flex items-center">
+            <li *ngFor="let item of cartItems; let i = index"
+                class="bg-white shadow-md rounded-lg overflow-hidden flex items-center">
                 <div class="w-1/4 md:w-1/5 lg:w-1/6 p-4">
                     <div class="relative w-full h-24 md:h-32 overflow-hidden rounded-md">
                         <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image"
@@ -21,16 +24,28 @@
                             (-{{ item.product.discount | number: '1.0-0' }}%)
                         </span>
                     </div>
+                    <p class="text-sm text-gray-500 mt-1">Tồn kho: {{ item.product.stockQuantity }}</p>
                 </div>
                 <div class="w-1/5 md:w-1/6 p-4 flex flex-col items-center">
-                    <div class="flex items-center">
-                        <input type="number" id="quantity-{{item.id}}" [value]="item.quantity" min="1"
-                            class="w-20 border border-gray-300 rounded-md py-1 px-2 text-center">
+                    <label for="quantity-{{item.id}}" class="mb-1 text-gray-600">Số lượng:</label>
+                    <div class="flex border border-gray-300 rounded-md overflow-hidden">
+                        <button type="button" (click)="decreaseQuantity(i)"
+                            class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <input type="text" id="quantity-{{item.id}}" [value]="item.quantity" min="1"
+                            [max]="item.product.stockQuantity" class="w-16 text-center border-0 focus:outline-none"
+                            disabled />
+                        <button type="button" (click)="increaseQuantity(i)"
+                            class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="w-1/6 flex justify-end items-center p-4">
                     <button
-                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all duration-200 cursor-pointer">
+                        class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all duration-200 cursor-pointer"
+                        (click)="removeCartItem(item.id)">
                         <i class="fa-solid fa-trash mr-2"></i>
                         Xóa khỏi giỏ hàng
                     </button>
@@ -39,9 +54,9 @@
         </ul>
 
         <div class="mt-6 py-4 border-t border-gray-300">
-            <div class="flex justify-between font-semibold text-red-700">
+            <div class="flex justify-between font-semibold text-xl">
                 <span>Tổng cộng:</span>
-                <span>{{ calculateTotalPrice() | number: '1.0-0' }} VNĐ</span>
+                <span class="text-red-600">{{ calculateTotalPrice() | number: '1.0-0' }} VNĐ</span>
             </div>
             <button
                 class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-md w-full duration-200 cursor-pointer">
