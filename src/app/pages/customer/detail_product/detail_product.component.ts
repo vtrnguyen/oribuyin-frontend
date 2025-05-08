@@ -7,6 +7,8 @@ import { ProductsService } from "../../../core/services/products.service";
 import { FormsModule } from "@angular/forms";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { Notification } from "../../../shared/types/notification.type";
+import { UsersService } from "../../../core/services/users.service";
+import { CartService } from "../../../core/services/cart.service";
 
 @Component({
     selector: "app-customer-detail-product",
@@ -32,7 +34,9 @@ export class CustomerDetailProductComponent implements OnInit {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private productsService: ProductsService
+        private productsService: ProductsService,
+        private usersService: UsersService,
+        private cartService: CartService
     ) { }
 
     ngOnInit(): void {
@@ -103,7 +107,20 @@ export class CustomerDetailProductComponent implements OnInit {
 
     addToCart(): void {
         if (this.product && this.quantityProduct > 0) {
-            this.showNotification("success", "Thành công", `Đã thêm ${this.quantityProduct} sản phẩm ${this.product.name} vào giỏ hàng`);
+            const userID = this.usersService.getCurrentUserID();
+            const productID = this.product.id;
+
+            this.cartService.addProductToCart(userID, productID, this.quantityProduct).subscribe({
+                next: (response: any) => {
+                    if (response && response.code === 1) {
+                        this.showNotification("success", "Thành công", `Đã thêm ${this.quantityProduct} sản phẩm ${this.product?.name} vào giỏ hàng thành công`);
+                    }
+                },
+                error: (error: any) => {
+                    this.showNotification("error", "Lỗi", `Thêm ${this.quantityProduct} sản phẩm ${this.product?.name} vào giỏ hàng không thành công`);
+                },
+            });
+
         }
     }
 

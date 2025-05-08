@@ -39,7 +39,7 @@
                                 class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">
                                 <i class="fa-solid fa-minus"></i>
                             </button>
-                            <input type="text" id="quantity" [(ngModel)]="quantityProduct" min="1"
+                            <input type="text" disabled id="quantity" [(ngModel)]="quantityProduct" min="1"
                                 [max]="product.stockQuantity" class="w-16 text-center border-0 focus:outline-none" />
                             <button type="button" (click)="increaseQuantity()"
                                 class="px-3 py-2 text-gray-600 hover:bg-gray-100 focus:outline-none cursor-pointer">

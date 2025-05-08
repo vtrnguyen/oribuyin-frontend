@@ -1,1 +1,99 @@
-<h1>Customer Profile</h1>
+<div class="flex min-h-[400px] border rounded-lg overflow-hidden m-5 shadow-md">
+    <aside class="w-64 bg-gray-100 border-r p-4 flex flex-col items-center">
+        <div class="user-info mb-6 flex flex-col items-center">
+            <div class="avatar w-20 h-20 rounded-full overflow-hidden mb-2">
+                <img [src]="currentUser.avatar" alt="Avatar" class="w-full h-full object-cover">
+            </div>
+            <div class="name font-semibold text-lg text-gray-800">{{ currentUser.name }}</div>
+        </div>
+
+        <nav class="w-full">
+            <ul class="nav-list space-y-2">
+                <li *ngFor="let item of navItems" (click)="setActiveContent(item.key)"
+                    [class.bg-blue-500]="activeContent === item.key" [class.text-white]="activeContent === item.key"
+                    class="px-4 py-2 cursor-pointer rounded-md hover:bg-gray-200 hover:text-gray-800 transition duration-200">
+                    {{ item.label }}
+                    <ul *ngIf="item.key === 'account' && isAccountDropdownOpen"
+                        class="dropdown mt-2 space-y-1 border-l ml-2 pl-4">
+                        <li *ngFor="let dropdownItem of accountDropdownItems"
+                            (click)="setActiveContent(dropdownItem.key)"
+                            [class.bg-green-500]="activeContent === dropdownItem.key"
+                            [class.text-white]="activeContent === dropdownItem.key"
+                            class="px-3 py-1 cursor-pointer rounded-md hover:bg-gray-300 hover:text-gray-700 transition duration-200 text-sm">
+                            {{ dropdownItem.label }}
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-6">
+        <ng-container [ngSwitch]="activeContent">
+            <div *ngSwitchCase="'notifications'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Thông báo</h2>
+                <ul class="notification-list space-y-3">
+                    <li *ngFor="let notification of notifications" class="bg-white rounded-md shadow-sm p-4">
+                        <p class="text-gray-700">{{ notification.message }}</p>
+                        <div class="text-gray-500 text-sm mt-1">
+                            {{ notification.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                            <span *ngIf="!notification.isRead" class="ml-2 font-semibold text-blue-500">(Chưa
+                                đọc)</span>
+                        </div>
+                    </li>
+                    <li *ngIf="notifications.length === 0" class="text-gray-500">Không có thông báo nào.</li>
+                </ul>
+            </div>
+
+            <div *ngSwitchCase="'account'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Tài khoản của tôi</h2>
+                <p class="text-gray-600">Chọn một mục bên trái để xem chi tiết.</p>
+            </div>
+
+            <div *ngSwitchCase="'profile'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Hồ sơ</h2>
+                <p class="text-gray-600">Thông tin hồ sơ người dùng sẽ được hiển thị ở đây.</p>
+            </div>
+
+            <div *ngSwitchCase="'address'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Địa chỉ</h2>
+                <p class="text-gray-600">Thông tin địa chỉ giao hàng sẽ được hiển thị ở đây.</p>
+            </div>
+
+            <div *ngSwitchCase="'bank'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Ngân hàng</h2>
+                <p class="text-gray-600">Thông tin tài khoản ngân hàng sẽ được hiển thị ở đây.</p>
+            </div>
+
+            <div *ngSwitchCase="'changePassword'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Đổi mật khẩu</h2>
+                <p class="text-gray-600">Form đổi mật khẩu sẽ được hiển thị ở đây.</p>
+            </div>
+
+            <div *ngSwitchCase="'orders'">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Đơn mua</h2>
+                <ul class="order-list space-y-3">
+                    <li *ngFor="let order of orders" class="bg-white rounded-md shadow-sm p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h3 class="font-semibold text-gray-700">Đơn hàng: {{ order.orderNumber }}</h3>
+                                <p class="text-gray-500 text-sm">Ngày mua: {{ order.orderDate | date:'dd/MM/yyyy' }}</p>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-green-600">{{ order.totalAmount | number:'0,0' }}
+                                    VNĐ</span>
+                                <span class="ml-2 text-blue-500 text-sm">({{ order.status }})</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li *ngIf="orders.length === 0" class="text-gray-500">Không có đơn hàng nào.</li>
+                </ul>
+            </div>
+
+            <div *ngSwitchDefault class="text-gray-600">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Chào mừng đến trang cá nhân</h2>
+                <p>Chọn một mục bên trái để xem chi tiết.</p>
+            </div>
+        </ng-container>
+    </main>
+</div>
