@@ -29,7 +29,7 @@
             <app-product-item-component *ngFor="let product of products"
                 [product]="product"></app-product-item-component>
         </div>
-        <div *ngIf="!products || products.length === 0" class="text-gray-500 italic">
+        <div *ngIf="!products || products.length === 0" class="text-gray-500 text-center">
             Không có sản phẩm nào thuộc danh mục này.
         </div>
 

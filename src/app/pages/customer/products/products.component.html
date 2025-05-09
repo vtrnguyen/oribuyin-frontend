@@ -1,1 +1,111 @@
-<h1>Customer Products</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-4">Tất cả sản phẩm</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <aside class="lg:col-span-1">
+            <div class="bg-white rounded-md shadow-sm p-4 mb-6">
+                <h3 class="font-semibold text-gray-700 mb-3">Danh mục sản phẩm</h3>
+                <ul class="space-y-2">
+                    <li *ngFor="let category of mockCategories" class="flex items-center">
+                        <input type="checkbox" [id]="'category-' + category.id"
+                            class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
+                        <label [for]="'category-' + category.id" class="ml-2 text-gray-600">{{ category.name }} ({{
+                            getCategoryProductCountMock(category.id) }})</label>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-white rounded-md shadow-sm p-4 mb-6">
+                <h3 class="font-semibold text-gray-700 mb-3">Giá</h3>
+                <div class="flex items-center mb-2">
+                    <span class="text-gray-600 mr-2">₫0</span>
+                    <input type="range"
+                        class="form-range w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-0 focus:shadow-none"
+                        [min]="0" [max]="1000" value="0">
+                    <span class="text-gray-600 ml-2">₫1000</span>
+                </div>
+                <div class="flex items-center">
+                    <input type="range"
+                        class="form-range w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-0 focus:shadow-none"
+                        [min]="0" [max]="1000" value="1000">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-md shadow-sm p-4 mb-6">
+                <h3 class="font-semibold text-gray-700 mb-3">Đánh giá</h3>
+                <div class="space-y-2">
+                    <div *ngFor="let star of [5, 4, 3, 2, 1]" class="flex items-center">
+                        <input type="radio" [id]="'rating-' + star" value="{{ star }}"
+                            class="form-radio h-4 w-4 text-yellow-500 rounded focus:ring-yellow-400">
+                        <label [for]="'rating-' + star" class="ml-2 text-gray-600">
+                            <span *ngFor="let i of [].constructor(star); let j = index">
+                                <svg class="w-4 h-4 fill-current text-yellow-500 inline-block" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 15l-5.878 3.09 1.176-6.545L.587 7.645l6.545-.955L10 1l2.868 5.69 6.545.955L14.702 11.545l1.176 6.545z" />
+                                </svg>
+                            </span>
+                            <span *ngFor="let i of [].constructor(5 - star); let j = index">
+                                <svg class="w-4 h-4 fill-current text-gray-300 inline-block" viewBox="0 0 20 20">
+                                    <path
+                                        d="M10 15l-5.878 3.09 1.176-6.545L.587 7.645l6.545-.955L10 1l2.868 5.69 6.545.955L14.702 11.545l1.176 6.545z" />
+                                </svg>
+                            </span>
+                        </label>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="radio" id="rating-all" value="null"
+                            class="form-radio h-4 w-4 text-gray-600 rounded focus:ring-gray-500">
+                        <label for="rating-all" class="ml-2 text-gray-600">Tất cả</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div *ngFor="let product of mockProducts" class="bg-white rounded-md shadow-md overflow-hidden">
+                <a href="#" class="block">
+                    <img [src]="product.image" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-700">{{ product.name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ product.description.substring(0, 50) }}...</p>
+                        <div class="flex items-center mt-2">
+                            <span class="font-bold text-gray-800">₫{{ product.price * (1 - product.discount / 100) |
+                                number:'0,0' }}</span>
+                            <span *ngIf="product.discount > 0" class="text-gray-500 line-through ml-2">₫{{ product.price
+                                | number:'0,0' }}</span>
+                            <span *ngIf="product.discount > 0" class="text-green-600 ml-2">-{{ product.discount
+                                }}%</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div *ngIf="mockProducts.length === 0" class="text-gray-500 col-span-full text-center py-8">Không có
+                sản phẩm nào.</div>
+        </div>
+    </div>
+
+    <div class="mt-8 flex justify-center items-center">
+        <button disabled
+            class="px-3 py-2 rounded-md text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50">
+            Trước
+        </button>
+        <div class="inline-flex rounded-md shadow-sm mx-2">
+            <button
+                class="px-4 py-2 text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 first:rounded-l-md last:rounded-r-md bg-blue-500 text-white">
+                1
+            </button>
+            <button
+                class="px-4 py-2 text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 first:rounded-l-md last:rounded-r-md">
+                2
+            </button>
+            <button
+                class="px-4 py-2 text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 first:rounded-l-md last:rounded-r-md">
+                3
+            </button>
+        </div>
+        <button
+            class="px-3 py-2 rounded-md text-gray-500 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Sau
+        </button>
+    </div>
+</div>
