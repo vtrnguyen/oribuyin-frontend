@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Notification } from "../../../shared/types/notification.type";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
+import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
 
 @Component({
     selector: "app-customer-cart",
@@ -25,7 +26,10 @@ export class CustomerCartComponent implements OnInit {
     notificationTitle: string = "";
     notificationMessage: string = "";
 
-    constructor(private cartService: CartService) { }
+    constructor(
+        private cartService: CartService,
+        private cartStateManagerService: CartStateManagerService
+    ) { }
 
     ngOnInit(): void {
         this.loadAllCartItems();
@@ -101,6 +105,7 @@ export class CustomerCartComponent implements OnInit {
         this.cartService.deleteCartItem(cartItemID).subscribe({
             next: (response: any) => {
                 if (response && response.code === 1) {
+                    this.cartStateManagerService.updateCartItemQuantity$.next();
                     this.showNotification("success", "Thành công", "Đã xóa sản phẩm khỏi giỏ hàng");
                     this.loadAllCartItems();
                 }

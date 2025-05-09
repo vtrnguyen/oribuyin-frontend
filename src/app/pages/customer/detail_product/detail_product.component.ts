@@ -9,6 +9,7 @@ import { NotificationComponent } from "../../../shared/components/notifications/
 import { Notification } from "../../../shared/types/notification.type";
 import { UsersService } from "../../../core/services/users.service";
 import { CartService } from "../../../core/services/cart.service";
+import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
 
 @Component({
     selector: "app-customer-detail-product",
@@ -36,7 +37,8 @@ export class CustomerDetailProductComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private productsService: ProductsService,
         private usersService: UsersService,
-        private cartService: CartService
+        private cartService: CartService,
+        private cartStateManagerService: CartStateManagerService
     ) { }
 
     ngOnInit(): void {
@@ -113,6 +115,7 @@ export class CustomerDetailProductComponent implements OnInit {
             this.cartService.addProductToCart(userID, productID, this.quantityProduct).subscribe({
                 next: (response: any) => {
                     if (response && response.code === 1) {
+                        this.cartStateManagerService.updateCartItemQuantity$.next();
                         this.showNotification("success", "Thành công", `Đã thêm ${this.quantityProduct} sản phẩm ${this.product?.name} vào giỏ hàng thành công`);
                     }
                 },

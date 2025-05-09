@@ -8,6 +8,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { UsersService } from '../../core/services/users.service';
 import { User } from '../../shared/interfaces/user.interface';
 import { CartService } from '../../core/services/cart.service';
+import { CartStateManagerService } from '../../shared/services/cart_state_manager.service';
 
 @Component({
     selector: 'app-customer-layout',
@@ -33,6 +34,7 @@ export class CustomerLayoutComponent implements OnInit {
         private authService: AuthService,
         private usersService: UsersService,
         private cartService: CartService,
+        private cartStateManagerService: CartStateManagerService
     ) { }
 
     ngOnInit(): void {
@@ -44,6 +46,10 @@ export class CustomerLayoutComponent implements OnInit {
 
         this.loadUserInfo();
         this.loadNumberOfCartProduct();
+
+        this.cartStateManagerService.updateCartItemQuantity$.subscribe(() => {
+            this.loadNumberOfCartProduct();
+        });
     }
 
     handleSearch(): void {
