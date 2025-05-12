@@ -31,6 +31,10 @@ export class ProductsService {
         return this.http.get<any>(`${this.productApiUrl}/suggested`);
     }
 
+    getPaginationProducts(page: number, pageSize: number): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/pagination?page=${page}&pageSize=${pageSize}`);
+    }
+
     getProductsByCategoryID(categoryID: number, page: number, pageSize: number): Observable<any> {
         return this.http.get<any>(`${this.productApiUrl}/categories/${categoryID}?page=${page}&pageSize=${pageSize}`);
     }

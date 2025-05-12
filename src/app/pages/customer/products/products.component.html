@@ -10,14 +10,14 @@
                         <input type="checkbox" [id]="'category-' + category.id"
                             class="form-checkbox h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
                         <label [for]="'category-' + category.id" class="ml-2 text-gray-600">{{ category.name }} ({{
-                            getCategoryProductCountMock(category.id) }})</label>
+                            getCategoryProductCount(category.id) }})</label>
                     </li>
                 </ul>
-                <button *ngIf="showMoreButtonVisible" (click)="toggleShowMoreCategories()"
+                <button *ngIf="!showMoreCategories" (click)="toggleShowMoreCategories()"
                     class="mt-2 cursor-pointer text-blue-500 hover:text-blue-700 text-sm focus:outline-none">
                     Xem thêm
                 </button>
-                <button *ngIf="showLessButtonVisible" (click)="toggleShowMoreCategories()"
+                <button *ngIf="showMoreCategories" (click)="toggleShowMoreCategories()"
                     class="mt-2 cursor-pointer text-blue-500 hover:text-blue-700 text-sm focus:outline-none">
                     Thu gọn
                 </button>
@@ -76,10 +76,10 @@
         </aside>
 
         <div class="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div *ngFor="let product of displayedProducts">
+            <div *ngFor="let product of products">
                 <app-product-item-component [product]="product"></app-product-item-component>
             </div>
-            <div *ngIf="displayedProducts.length === 0" class="text-gray-500 col-span-full text-center py-8">Không có
+            <div *ngIf="products.length === 0" class="text-gray-500 col-span-full text-center py-8">Không có
                 sản phẩm nào.</div>
         </div>
     </div>
