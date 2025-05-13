@@ -7,11 +7,7 @@ import { ProductItemComponent } from "../../../shared/components/product/product
 import { CategoriesService } from "../../../core/services/categories.service";
 import { ProductsService } from "../../../core/services/products.service";
 import { Subject, takeUntil } from "rxjs";
-
-interface CategoryWithCount {
-    category: Category;
-    productCount: number;
-}
+import { CategoryWithCount } from "../../../shared/interfaces/category_with_count.interface";
 
 @Component({
     selector: "app-customer-products",
@@ -24,14 +20,16 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
     categoriesWithCount: CategoryWithCount[] = [];
     products: Product[] = [];
 
-    visibleCategoriesCount = 8;
-    showMoreCategories = false;
-
     currentPage = 1;
-    pageSize = 12;
+    pageSize = 9;
     totalRecords = 0;
     totalPages = 0;
     pages: number[] = [];
+
+    selectedCategory: number | null = null;
+    minPrice: number | null = null;
+    maxPrice: number | null = null;
+    selectedRating: number | null = null;
 
     private ngUnsubscribe = new Subject<void>();
 
@@ -41,7 +39,7 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.loadInitialData();
+        this.loadProducts();
     }
 
     ngOnDestroy(): void {
@@ -49,8 +47,15 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
-    private loadInitialData(): void {
-        this.productsService.getPaginationProducts(this.currentPage, this.pageSize)
+    loadProducts(): void {
+        this.productsService.getFilteredProducts(
+            this.currentPage,
+            this.pageSize,
+            this.selectedCategory,
+            this.minPrice,
+            this.maxPrice,
+            this.selectedRating
+        )
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe({
                 next: (productResponse: any) => {
@@ -85,7 +90,7 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
             });
     }
 
-    private loadAndProcessCategories(): void {
+    loadAndProcessCategories(): void {
         this.categoriesService.getCategoryValue()
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe({
@@ -100,7 +105,6 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: (error: any) => {
-                    console.error("Lỗi khi tải danh mục:", error);
                 },
             });
     }
@@ -108,7 +112,7 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
     nextPage(): void {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
-            this.loadInitialData();
+            this.loadProducts();
         } else if (this.totalPages > 5 && this.pages.slice(-1)[0] < this.totalPages) {
             this.generatePageArray();
         }
@@ -117,7 +121,7 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
     previousPage(): void {
         if (this.currentPage > 1) {
             this.currentPage--;
-            this.loadInitialData();
+            this.loadProducts();
         } else if (this.totalPages > 5 && this.pages[0] > 1) {
             this.generatePageArray();
         }
@@ -125,23 +129,24 @@ export class CustomerProductsComponent implements OnInit, OnDestroy {
 
     changePage(page: number): void {
         this.currentPage = page;
-        this.loadInitialData();
+        this.loadProducts();
     }
 
-    get displayedCategories(): Category[] {
-        const displayed = this.showMoreCategories
-            ? this.categoriesWithCount
-            : this.categoriesWithCount.slice(0, this.visibleCategoriesCount);
-        return displayed.map(item => item.category);
+    onCategoryChange(event: any): void {
+        this.selectedCategory = parseInt(event.target.value, 10) || null;
+        this.currentPage = 1;
+        this.loadProducts();
     }
 
-    toggleShowMoreCategories(): void {
-        this.showMoreCategories = !this.showMoreCategories;
+    applyPriceFilter(): void {
+        this.currentPage = 1;
+        this.loadProducts();
     }
 
-    getCategoryProductCount(categoryId: number): number {
-        const categoryItem = this.categoriesWithCount.find(item => item.category.id === categoryId);
-        return categoryItem ? categoryItem.productCount : 0;
+    onRatingChange(event: any): void {
+        this.selectedRating = parseInt(event.target.value, 10) || null;
+        this.currentPage = 1;
+        this.loadProducts();
     }
 
     private generatePageArray(): void {

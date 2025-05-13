@@ -126,7 +126,15 @@ export class CustomerDetailCategoryComponent implements OnInit {
 
     private generatePageArray(): void {
         this.pages = [];
-        for (let i = 1; i <= this.totalPages; i++) {
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage + 1 < maxPagesToShow && endPage === this.totalPages) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
             this.pages.push(i);
         }
     }

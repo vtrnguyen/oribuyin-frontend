@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
 import { Product } from "../../shared/interfaces/product.interface";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 @Injectable({
     providedIn: "root",
@@ -37,6 +37,37 @@ export class ProductsService {
 
     getProductsByCategoryID(categoryID: number, page: number, pageSize: number): Observable<any> {
         return this.http.get<any>(`${this.productApiUrl}/categories/${categoryID}?page=${page}&pageSize=${pageSize}`);
+    }
+
+    getFilteredProducts(
+        page: number,
+        pageSize: number,
+        categoryID?: number | null,
+        minPrice?: number | null,
+        maxPrice?: number | null,
+        rating?: number | null
+    ): Observable<any> {
+        let params = new HttpParams()
+            .set("page", page.toString())
+            .set("pageSize", pageSize.toString());
+
+        if (categoryID !== null && categoryID !== undefined) {
+            params = params.set("categoryID", categoryID.toString());
+        }
+
+        if (minPrice !== null && minPrice !== undefined) {
+            params = params.set("minPrice", minPrice.toString());
+        }
+
+        if (maxPrice !== null && maxPrice !== undefined) {
+            params = params.set("maxPrice", maxPrice.toString());
+        }
+
+        if (rating !== null && rating !== undefined) {
+            params = params.set("rating", rating.toString());
+        }
+
+        return this.http.get<any>(`${this.productApiUrl}/filtered/pagination`, { params });
     }
 
     createProduct(newProduct: any): Observable<any> {

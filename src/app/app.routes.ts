@@ -73,7 +73,7 @@ export const routes: Routes = [
             { path: "detail-category/:id", component: CustomerDetailCategoryComponent, title: "Chi tiết danh mục sản phẩm" },
             { path: "detail-product/:id", component: CustomerDetailProductComponent, title: "Chi tiết sản phẩm" },
             { path: "orders", component: CustomerOrdersComponent, title: "Đơn hàng của tôi" },
-            { path: "products", component: CustomerProductsComponent, title: "Gới ý sản phẩm" },
+            { path: "products", component: CustomerProductsComponent, title: "Gợi ý sản phẩm" },
             { path: "profile", component: CustomerProfileComponent, title: "Thông tin của tôi" },
             { path: "searches", component: CustomerSearchesComponent, title: "Tìm kiếm sản phẩm" },
             { path: "settings", component: CustomerSettingsComponent, title: "Cài đặt" },
