@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { CartItem } from "../../../shared/interfaces/cart_item.interface";
 import { CartService } from "../../../core/services/cart.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Notification } from "../../../shared/types/notification.type";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
+import { CartItemWithSelection } from "../../../shared/interfaces/cart_item_with_selection.interface";
 
 @Component({
     selector: "app-customer-cart",
@@ -19,7 +19,8 @@ import { CartStateManagerService } from "../../../shared/services/cart_state_man
     styleUrls: ["./cart.component.scss"],
 })
 export class CustomerCartComponent implements OnInit {
-    cartItems: CartItem[] = [];
+    cartItems: CartItemWithSelection[] = [];
+    selectAllChecked: boolean = false;
 
     notificationVisible: boolean = false;
     notificationType: Notification = "success";
@@ -45,6 +46,7 @@ export class CustomerCartComponent implements OnInit {
                         this.cartItems = response.data.items.map((cartItem: any) => ({
                             id: cartItem.cart_item_id,
                             quantity: cartItem.quantity,
+                            isSelected: false,
                             product: {
                                 id: cartItem.product.id,
                                 name: cartItem.product.name,
@@ -54,6 +56,7 @@ export class CustomerCartComponent implements OnInit {
                                 image: cartItem.product.image,
                             }
                         }));
+                        this.updateSelectAllState();
                     }
                 },
                 error: (error: any) => {
@@ -116,9 +119,35 @@ export class CustomerCartComponent implements OnInit {
         });
     }
 
-    calculateTotalPrice(): number {
+    toggleSelectAll(): void {
+        this.selectAllChecked = !this.selectAllChecked;
+        this.cartItems.forEach(item => item.isSelected = this.selectAllChecked);
+    }
+
+    updateItemSelected(itemID: number, isSelected: boolean): void {
+        const item = this.cartItems.find(item => item.id === itemID);
+        if (item) {
+            item.isSelected = isSelected;
+        }
+        this.updateSelectAllState();
+    }
+
+    private updateSelectAllState(): void {
+        this.selectAllChecked = this.cartItems.every(item => item.isSelected);
+    }
+
+    checkoutSelectedItems(): void {
+        const selectedItems = this.cartItems.filter(item => item.isSelected);
+        if (selectedItems.length > 0) {
+            console.log("Các sản phẩm được chọn để mua:", selectedItems);
+        } else {
+            this.showNotification("warning", "Chú ý", "Vui lòng chọn ít nhất một sản phẩm để mua.");
+        }
+    }
+
+    calculateSelectedTotalPrice(): number {
         let total = 0;
-        for (const item of this.cartItems) {
+        for (const item of this.cartItems.filter(item => item.isSelected)) {
             const discountedPrice = item.product.price * (1 - (item.product.discount / 100));
             total += discountedPrice * item.quantity;
         }
