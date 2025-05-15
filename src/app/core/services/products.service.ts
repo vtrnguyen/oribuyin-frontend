@@ -70,6 +70,10 @@ export class ProductsService {
         return this.http.get<any>(`${this.productApiUrl}/filtered/pagination`, { params });
     }
 
+    getCheckoutProducts(itemIDs: number[]): Observable<any> {
+        return this.http.post(`${this.productApiUrl}/checkout`, { itemIDs: itemIDs });
+    }
+
     createProduct(newProduct: any): Observable<any> {
         return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
     }

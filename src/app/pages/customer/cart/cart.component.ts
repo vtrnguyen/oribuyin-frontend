@@ -6,6 +6,7 @@ import { Notification } from "../../../shared/types/notification.type";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
 import { CartItemWithSelection } from "../../../shared/interfaces/cart_item_with_selection.interface";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-customer-cart",
@@ -28,6 +29,7 @@ export class CustomerCartComponent implements OnInit {
     notificationMessage: string = "";
 
     constructor(
+        private router: Router,
         private cartService: CartService,
         private cartStateManagerService: CartStateManagerService
     ) { }
@@ -137,9 +139,12 @@ export class CustomerCartComponent implements OnInit {
     }
 
     checkoutSelectedItems(): void {
-        const selectedItems = this.cartItems.filter(item => item.isSelected);
-        if (selectedItems.length > 0) {
-            console.log("Các sản phẩm được chọn để mua:", selectedItems);
+        const selectedItemIds = this.cartItems
+            .filter(item => item.isSelected)
+            .map(item => item.product.id);
+
+        if (selectedItemIds.length > 0) {
+            this.router.navigate(['/checkout'], { queryParams: { items: JSON.stringify(selectedItemIds) } });
         } else {
             this.showNotification("warning", "Chú ý", "Vui lòng chọn ít nhất một sản phẩm để mua.");
         }

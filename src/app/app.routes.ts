@@ -47,6 +47,7 @@ import { AdminAuthGuard } from './core/guards/admin_auth.guard';
 import { CustomerAuthGuard } from './core/guards/customer_auth.guard';
 import { StaffAuthGuard } from './core/guards/staff_auth.guard';
 import { AuthenticatedGuard } from './core/guards/authenticated.guard';
+import { CustomerCheckoutComponent } from './pages/customer/checkout/checkout.component';
 
 export const routes: Routes = [
     {
@@ -74,6 +75,7 @@ export const routes: Routes = [
             { path: "detail-product/:id", component: CustomerDetailProductComponent, title: "Chi tiết sản phẩm" },
             { path: "orders", component: CustomerOrdersComponent, title: "Đơn hàng của tôi" },
             { path: "products", component: CustomerProductsComponent, title: "Gợi ý sản phẩm" },
+            { path: "checkout", component: CustomerCheckoutComponent, title: "Thanh toán" },
             { path: "profile", component: CustomerProfileComponent, title: "Thông tin của tôi" },
             { path: "searches", component: CustomerSearchesComponent, title: "Tìm kiếm sản phẩm" },
             { path: "settings", component: CustomerSettingsComponent, title: "Cài đặt" },
