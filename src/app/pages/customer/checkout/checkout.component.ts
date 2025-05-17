@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProductsService } from "../../../core/services/products.service";
-import { Product } from "../../../shared/interfaces/product.interface";
+import { CheckOutProduct } from "../../../shared/interfaces/checkout_product.interface";
 import { Notification } from "../../../shared/types/notification.type";
 import { CommonModule } from "@angular/common";
 
@@ -16,7 +16,7 @@ import { CommonModule } from "@angular/common";
 })
 export class CustomerCheckoutComponent implements OnInit {
     selectedItemIds: number[] = [];
-    checkoutProducts: Product[] = [];
+    checkoutProducts: CheckOutProduct[] = [];
 
     shippingFee: number = 0;
     discountAmount: number = 0;
@@ -36,7 +36,7 @@ export class CustomerCheckoutComponent implements OnInit {
         this.loadCheckoutProducts();
     }
 
-    calculateProductTotal(product: Product): number {
+    calculateProductTotal(product: CheckOutProduct): number {
         return 0;
     }
 
@@ -59,11 +59,12 @@ export class CustomerCheckoutComponent implements OnInit {
                                 id: product.id,
                                 name: product.name,
                                 description: product.description,
-                                price: product.price,
-                                discount: product.discount,
+                                price: Number(product.price),
+                                discount: Number(product.discount),
                                 stockQuantity: product.stock_quantity,
                                 image: product.image,
                                 categoryID: product.category_id,
+                                quantityToBuy: product.quantity_to_buy,
                             }));
                         }
                     },

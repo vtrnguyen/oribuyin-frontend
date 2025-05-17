@@ -57,16 +57,15 @@
     <div class="bg-white rounded-md shadow-sm p-6 mt-6"
         *ngIf="checkoutProducts && checkoutProducts.length > 0; else noProducts">
         <h2 class="text-lg font-semibold text-gray-700 mb-4">Sản phẩm đã chọn</h2>
-        <div class="grid grid-cols-6 gap-4 mb-2 text-sm font-semibold text-gray-600">
+        <div class="grid grid-cols-5 gap-4 mb-2 text-sm font-semibold text-gray-600">
             <div>Hình ảnh</div>
             <div>Tên sản phẩm</div>
             <div class="text-right">Đơn giá</div>
-            <div class="text-right">Giảm giá</div>
             <div class="text-center">Số lượng</div>
             <div class="text-right">Thành tiền</div>
         </div>
         <ul class="space-y-4">
-            <li *ngFor="let product of checkoutProducts" class="grid grid-cols-6 gap-4 items-center -mx-4">
+            <li *ngFor="let product of checkoutProducts" class="grid grid-cols-5 gap-4 items-center -mx-4">
                 <div class="px-4">
                     <div class="relative w-16 h-16 overflow-hidden rounded-md shadow-sm">
                         <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
@@ -77,15 +76,18 @@
                     <h3 class="text-md font-semibold text-gray-800">{{ product.name }}</h3>
                 </div>
                 <div class="px-4 text-right">
-                    <p class="text-sm text-gray-500 text-red-500">{{ product.price | number: '1.0-0' }} VNĐ</p>
-                </div>
-                <div class="px-4 text-right">
-                    <p *ngIf="product.discount > 0" class="text-sm text-green-600 font-semibold">{{
-                        product.discount | number: '1.0-0' }}%</p>
-                    <p *ngIf="!product.discount" class="text-sm text-gray-500">-</p>
+                    <!-- <p class="text-sm text-gray-500 text-red-500">{{ product.price | number: '1.0-0' }} VNĐ</p> -->
+                    <span class="text-sm text-red-600 font-bold">{{ (product.price * (1 - product.discount / 100)) |
+                        number: '1.0-0' }} VNĐ</span>
+                    <span *ngIf="product.discount > 0" class="text-sm ml-2 text-gray-500 line-through">
+                        {{ product.price | number: '1.0-0' }} VNĐ
+                    </span>
+                    <span *ngIf="product.discount > 0" class="text-sm ml-2 text-green-600 font-semibold">
+                        (-{{ product.discount | number: '1.0-0' }}%)
+                    </span>
                 </div>
                 <div class="px-4 text-center">
-                    <p class="text-sm text-gray-700">1</p>
+                    <p class="text-sm text-gray-700">{{ product.quantityToBuy }}</p>
                 </div>
                 <div class="px-4 text-right text-red-500">
                     <span class="font-semibold text-red-600">{{ calculateProductTotal(product) | number: '1.0-0' }}
