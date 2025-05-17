@@ -18,7 +18,7 @@ export class CustomerCheckoutComponent implements OnInit {
     selectedItemIds: number[] = [];
     checkoutProducts: CheckOutProduct[] = [];
 
-    shippingFee: number = 0;
+    shippingFee: number = 30000;
     discountAmount: number = 0;
     selectedPaymentMethod: string = "";
 
@@ -37,15 +37,19 @@ export class CustomerCheckoutComponent implements OnInit {
     }
 
     calculateProductTotal(product: CheckOutProduct): number {
-        return 0;
+        const priceAfterDiscount = product.price * (1 - product.discount / 100);
+        return priceAfterDiscount * product.quantityToBuy;
     }
 
     calculateSubtotal(): number {
-        return 0;
+        return this.checkoutProducts.reduce((sum, product) => {
+            return sum + this.calculateProductTotal(product);
+        }, 0);
     }
 
     calculateTotalPrice(): number {
-        return 0;
+        const subtotal = this.calculateSubtotal();
+        return subtotal + this.shippingFee - this.discountAmount;
     }
 
     private loadCheckoutProducts(): void {
@@ -64,12 +68,12 @@ export class CustomerCheckoutComponent implements OnInit {
                                 stockQuantity: product.stock_quantity,
                                 image: product.image,
                                 categoryID: product.category_id,
-                                quantityToBuy: product.quantity_to_buy,
+                                quantityToBuy: product.quantity_to_buy || 1,
                             }));
                         }
                     },
                     error: (error: any) => {
-
+                        this.showNotification("error", "Lỗi", "Lỗi khi tải danh sách sản phẩm muốn mua")
                     },
                 });
             }
