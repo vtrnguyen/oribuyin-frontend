@@ -1,55 +1,103 @@
 <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-bold mb-6">Thông tin đặt hàng</h1>
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">
+        Hoàn tất đơn hàng của bạn
+    </h1>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-white rounded-md shadow-sm p-6">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4">Địa chỉ nhận hàng</h2>
-            <div class="mb-4">
-                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Họ và tên:</label>
-                <input type="text" id="name"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Nhập họ và tên">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
+            <div class="flex items-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-blue-600 mr-3" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.657 16.727A8 8 0 016.343 5.273A8 8 0 0117.657 16.727zm0 0L18 18m-8.636-10.936l4.272 4.272m-4.272-4.272a.75.75 0 00-.75-.75h-.001a.75.75 0 00-.75.75c0 .414.336.75.75.75h.001a.75.75 0 00.75-.75zm0 0a.75.75 0 01.75-.75h.001a.75.75 0 01.75.75c0 .414-.336.75-.75.75h.001a.75.75 0 01-.75-.75z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800">Địa chỉ nhận hàng</h2>
             </div>
-            <div class="mb-4">
-                <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Số điện thoại:</label>
-                <input type="text" id="phone"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Nhập số điện thoại">
-            </div>
-            <div class="mb-4">
-                <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Địa chỉ chi tiết:</label>
-                <textarea id="address" rows="3"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    placeholder="Nhập địa chỉ nhận hàng"></textarea>
+            <div class="space-y-5">
+                <div>
+                    <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Họ và tên:</label>
+                    <input type="text" id="name"
+                        class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                        placeholder="Nhập họ và tên của bạn" [(ngModel)]="customerName" />
+                </div>
+                <div>
+                    <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Số điện thoại:</label>
+                    <input type="text" id="phone"
+                        class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                        placeholder="Nhập số điện thoại liên lạc" [(ngModel)]="customerPhone" />
+                </div>
+                <div>
+                    <label for="address" class="block text-gray-700 text-sm font-medium mb-2">Địa chỉ chi tiết:</label>
+                    <textarea id="address" rows="3"
+                        class="form-textarea w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                        placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                        [(ngModel)]="customerAddress"></textarea>
+                </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-md shadow-sm p-6">
-            <h2 class="text-lg font-semibold text-gray-700 mb-4">Phương thức thanh toán</h2>
-            <div class="space-y-2">
-                <div class="flex items-center">
-                    <input type="radio" id="payment-cod" name="paymentMethod" value="cod"
-                        class="form-radio h-4 w-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
-                    <label for="payment-cod" class="ml-2 text-gray-700 cursor-pointer">Thanh toán khi nhận hàng
-                        (COD)</label>
-                </div>
-                <div class="flex items-center">
-                    <input type="radio" id="payment-online" name="paymentMethod" value="online"
-                        class="form-radio h-4 w-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer">
-                    <label for="payment-online" class="ml-2 text-gray-700 cursor-pointer">Thanh toán trực tuyến</label>
-                    <div *ngIf="selectedPaymentMethod === 'online'" class="ml-4 space-y-2">
+        <div class="bg-white rounded-lg shadow-lg p-8 border border-gray-200">
+            <div class="flex items-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-600 mr-3" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                <h2 class="text-2xl font-bold text-gray-800">Phương thức thanh toán</h2>
+            </div>
+            <div class="space-y-4">
+                <label class="flex items-center p-4 border rounded-lg cursor-pointer transition-all duration-200"
+                    [ngClass]="{
+            'border-blue-500 ring-2 ring-blue-200 bg-blue-50': selectedPaymentMethod === 'cod',
+            'border-gray-300 hover:border-gray-400': selectedPaymentMethod !== 'cod'
+          }">
+                    <input type="radio" name="paymentMethod" value="cod" [(ngModel)]="selectedPaymentMethod"
+                        class="form-radio h-5 w-5 text-blue-600 cursor-pointer" />
+                    <div class="ml-4">
+                        <span class="font-semibold text-lg text-gray-800">Thanh toán khi nhận hàng (COD)</span>
+                        <p class="text-sm text-gray-600">Thanh toán bằng tiền mặt khi đơn hàng được giao đến.</p>
+                    </div>
+                </label>
+
+                <label class="block p-4 border rounded-lg cursor-pointer transition-all duration-200" [ngClass]="{
+            'border-blue-500 ring-2 ring-blue-200 bg-blue-50': selectedPaymentMethod === 'online',
+            'border-gray-300 hover:border-gray-400': selectedPaymentMethod !== 'online'
+          }">
+                    <div class="flex items-center">
+                        <input type="radio" id="payment-online" name="paymentMethod" value="online"
+                            [(ngModel)]="selectedPaymentMethod"
+                            class="form-radio h-5 w-5 text-blue-600 cursor-pointer" />
+                        <div class="ml-4">
+                            <span class="font-semibold text-lg text-gray-800">Thanh toán trực tuyến</span>
+                            <p class="text-sm text-gray-600">Thanh toán qua các cổng thanh toán điện tử.</p>
+                        </div>
+                    </div>
+
+                    <div *ngIf="selectedPaymentMethod === 'online'"
+                        class="ml-8 mt-4 space-y-3 p-4 bg-white rounded-md border border-gray-200 shadow-inner">
                         <div class="flex items-center">
                             <input type="radio" id="payment-paypal" name="onlinePayment" value="paypal"
-                                class="form-radio h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
-                            <label for="payment-paypal" class="ml-2 text-gray-700">PayPal</label>
+                                [(ngModel)]="selectedOnlinePaymentMethod" class="form-radio h-4 w-4 text-purple-600" />
+                            <label for="payment-paypal" class="ml-2 text-gray-700 flex items-center">
+                                <img src="https://www.paypalobjects.com/paypal-ui/logos/logo_paypal_256x64.png"
+                                    alt="PayPal" class="h-6 mr-2" />
+                                PayPal
+                            </label>
                         </div>
                         <div class="flex items-center">
                             <input type="radio" id="payment-visa" name="onlinePayment" value="visa"
-                                class="form-radio h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
-                            <label for="payment-visa" class="ml-2 text-gray-700">Visa/Mastercard</label>
+                                [(ngModel)]="selectedOnlinePaymentMethod" class="form-radio h-4 w-4 text-indigo-600" />
+                            <label for="payment-visa" class="ml-2 text-gray-700 flex items-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/800px-Visa_Inc._logo.svg.png"
+                                    alt="Visa" class="h-5 mr-2" />
+                                Visa/Mastercard
+                            </label>
                         </div>
                     </div>
-                </div>
+                </label>
             </div>
         </div>
     </div>
@@ -65,11 +113,14 @@
             <div class="text-right">Thành tiền</div>
         </div>
         <ul class="space-y-4">
-            <li *ngFor="let product of checkoutProducts" class="grid grid-cols-5 gap-4 items-center -mx-4">
+            <li *ngFor="let product of checkoutProducts"
+                class="grid grid-cols-5 gap-4 items-center -mx-4 py-2 border-b border-gray-100 last:border-b-0">
                 <div class="px-4">
                     <div class="relative w-16 h-16 overflow-hidden rounded-md shadow-sm">
-                        <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
-                            [alt]="product.name" class="w-full h-full object-cover">
+                        <img [src]="
+                'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' +
+                product.image
+              " [alt]="product.name" class="w-full h-full object-cover" />
                     </div>
                 </div>
                 <div class="px-4">
@@ -77,19 +128,20 @@
                 </div>
                 <div class="px-4 text-right">
                     <span class="text-sm text-red-600 font-bold">{{ (product.price * (1 - product.discount / 100)) |
-                        number: '1.0-0' }} VNĐ</span>
+                        number : "1.0-0" }}
+                        VNĐ</span>
                     <span *ngIf="product.discount > 0" class="text-sm ml-2 text-gray-500 line-through">
-                        {{ product.price | number: '1.0-0' }} VNĐ
+                        {{ product.price | number : "1.0-0" }} VNĐ
                     </span>
                     <span *ngIf="product.discount > 0" class="text-sm ml-2 text-green-600 font-semibold">
-                        (-{{ product.discount | number: '1.0-0' }}%)
+                        (-{{ product.discount | number : "1.0-0" }}%)
                     </span>
                 </div>
                 <div class="px-4 text-center">
                     <p class="text-sm text-gray-700">{{ product.quantityToBuy }}</p>
                 </div>
                 <div class="px-4 text-right text-red-500">
-                    <span class="font-semibold text-red-600">{{ calculateProductTotal(product) | number: '1.0-0' }}
+                    <span class="font-semibold text-red-600">{{ calculateProductTotal(product) | number : "1.0-0" }}
                         VNĐ</span>
                 </div>
             </li>
@@ -107,28 +159,28 @@
         <div class="space-y-2">
             <div class="flex justify-between">
                 <span class="text-gray-700">Tổng tiền hàng:</span>
-                <span class="font-semibold text-gray-800">{{ calculateSubtotal() | number: '1.0-0' }} VNĐ</span>
+                <span class="font-semibold text-gray-800">{{ calculateSubtotal() | number : "1.0-0" }} VNĐ</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-gray-700">Phí vận chuyển:</span>
-                <span class="font-semibold text-gray-800">{{ shippingFee | number: '1.0-0' }} VNĐ</span>
+                <span class="font-semibold text-gray-800">{{ shippingFee | number : "1.0-0" }} VNĐ</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-gray-700">Voucher giảm giá:</span>
-                <span class="font-semibold text-green-600">- {{ discountAmount | number: '1.0-0' }} VNĐ</span>
+                <span class="font-semibold text-green-600">- {{ discountAmount | number : "1.0-0" }} VNĐ</span>
             </div>
             <div class="border-t border-gray-200 pt-4 flex justify-between font-semibold text-xl text-red-500">
                 <span>Tổng thanh toán:</span>
-                <span>{{ calculateTotalPrice() | number: '1.0-0' }} VNĐ</span>
+                <span>{{ calculateTotalPrice() | number : "1.0-0" }} VNĐ</span>
             </div>
         </div>
     </div>
 
-    <div class="mt-6" *ngIf="checkoutProducts && checkoutProducts.length > 0">
+    <div class="mt-8" *ngIf="checkoutProducts && checkoutProducts.length > 0">
         <button
-            class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-md w-full duration-200 cursor-pointer"
-            type="button">
-            Đặt hàng
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full text-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+            type="button" (click)="placeOrder()">
+            Đặt hàng ngay
         </button>
     </div>
 </div>
