@@ -62,40 +62,17 @@
                     </div>
                 </label>
 
-                <label class="block p-4 border rounded-lg cursor-pointer transition-all duration-200" [ngClass]="{
+                <label class="flex items-center p-4 border rounded-lg cursor-pointer transition-all duration-200"
+                    [ngClass]="{
             'border-blue-500 ring-2 ring-blue-200 bg-blue-50': selectedPaymentMethod === 'online',
             'border-gray-300 hover:border-gray-400': selectedPaymentMethod !== 'online'
           }">
-                    <div class="flex items-center">
-                        <input type="radio" id="payment-online" name="paymentMethod" value="online"
-                            [(ngModel)]="selectedPaymentMethod"
-                            class="form-radio h-5 w-5 text-blue-600 cursor-pointer" />
-                        <div class="ml-4">
-                            <span class="font-semibold text-lg text-gray-800">Thanh toán trực tuyến</span>
-                            <p class="text-sm text-gray-600">Thanh toán qua các cổng thanh toán điện tử.</p>
-                        </div>
-                    </div>
-
-                    <div *ngIf="selectedPaymentMethod === 'online'"
-                        class="ml-8 mt-4 space-y-3 p-4 bg-white rounded-md border border-gray-200 shadow-inner">
-                        <div class="flex items-center">
-                            <input type="radio" id="payment-paypal" name="onlinePayment" value="paypal"
-                                [(ngModel)]="selectedOnlinePaymentMethod" class="form-radio h-4 w-4 text-purple-600" />
-                            <label for="payment-paypal" class="ml-2 text-gray-700 flex items-center">
-                                <img src="https://www.paypalobjects.com/paypal-ui/logos/logo_paypal_256x64.png"
-                                    alt="PayPal" class="h-6 mr-2" />
-                                PayPal
-                            </label>
-                        </div>
-                        <div class="flex items-center">
-                            <input type="radio" id="payment-visa" name="onlinePayment" value="visa"
-                                [(ngModel)]="selectedOnlinePaymentMethod" class="form-radio h-4 w-4 text-indigo-600" />
-                            <label for="payment-visa" class="ml-2 text-gray-700 flex items-center">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/800px-Visa_Inc._logo.svg.png"
-                                    alt="Visa" class="h-5 mr-2" />
-                                Visa/Mastercard
-                            </label>
-                        </div>
+                    <input type="radio" id="payment-online" name="paymentMethod" value="online"
+                        [(ngModel)]="selectedPaymentMethod" class="form-radio h-5 w-5 text-blue-600 cursor-pointer" />
+                    <div class="ml-4">
+                        <span class="font-semibold text-lg text-gray-800">Thanh toán trực tuyến</span>
+                        <p class="text-sm text-gray-600">Chuyển hướng đến cổng thanh toán trực tuyến (ví dụ: VNPay,
+                            Momo).</p>
                     </div>
                 </label>
             </div>
@@ -178,7 +155,7 @@
 
     <div class="mt-8" *ngIf="checkoutProducts && checkoutProducts.length > 0">
         <button
-            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full text-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg w-full text-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
             type="button" (click)="placeOrder()">
             Đặt hàng ngay
         </button>

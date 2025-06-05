@@ -10,11 +10,7 @@ import { NotificationComponent } from "../../../shared/components/notifications/
 @Component({
     selector: "app-customer-checkout",
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        NotificationComponent,
-    ],
+    imports: [CommonModule, FormsModule, NotificationComponent],
     templateUrl: "./checkout.component.html",
     styleUrls: ["./checkout.component.scss"],
 })
@@ -25,7 +21,6 @@ export class CustomerCheckoutComponent implements OnInit {
     customerName: string = "";
     customerPhone: string = "";
     customerAddress: string = "";
-    selectedOnlinePaymentMethod: string = "";
 
     shippingFee: number = 30000;
     discountAmount: number = 0;
@@ -66,14 +61,10 @@ export class CustomerCheckoutComponent implements OnInit {
         console.log("Số điện thoại:", this.customerPhone);
         console.log("Địa chỉ:", this.customerAddress);
         console.log("Phương thức thanh toán chính:", this.selectedPaymentMethod);
-        console.log(
-            "Phương thức thanh toán online (nếu có):",
-            this.selectedOnlinePaymentMethod
-        );
 
         if (!this.customerName || !this.customerPhone || !this.customerAddress) {
             this.showNotification(
-                "warning",
+                "error",
                 "Lỗi",
                 "Vui lòng nhập đầy đủ thông tin nhận hàng."
             );
@@ -82,21 +73,9 @@ export class CustomerCheckoutComponent implements OnInit {
 
         if (!this.selectedPaymentMethod) {
             this.showNotification(
-                "warning",
+                "error",
                 "Lỗi",
                 "Vui lòng chọn phương thức thanh toán."
-            );
-            return;
-        }
-
-        if (
-            this.selectedPaymentMethod === "online" &&
-            !this.selectedOnlinePaymentMethod
-        ) {
-            this.showNotification(
-                "warning",
-                "Lỗi",
-                "Vui lòng chọn hình thức thanh toán trực tuyến (PayPal/Visa)."
             );
             return;
         }
@@ -113,17 +92,13 @@ export class CustomerCheckoutComponent implements OnInit {
             })),
             total: this.calculateTotalPrice(),
             paymentMethod: this.selectedPaymentMethod,
-            onlinePaymentMethod:
-                this.selectedPaymentMethod === "online"
-                    ? this.selectedOnlinePaymentMethod
-                    : null,
         };
 
         if (this.selectedPaymentMethod === "online") {
             this.showNotification(
                 "success",
                 "Đặt hàng",
-                `Chuyển đến cổng thanh toán trực tuyến (${this.selectedOnlinePaymentMethod}).`
+                "Chuyển đến cổng thanh toán trực tuyến."
             );
             console.log("Dữ liệu đặt hàng (Online):", orderData);
         } else if (this.selectedPaymentMethod === "cod") {
@@ -171,7 +146,7 @@ export class CustomerCheckoutComponent implements OnInit {
         });
     }
 
-    private showNotification(
+    showNotification(
         type: Notification,
         title: string,
         message: string
