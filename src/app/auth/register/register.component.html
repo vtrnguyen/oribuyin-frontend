@@ -1,52 +1,68 @@
 <div class="flex h-screen bg-white relative">
-    <div class="hidden lg:flex items-center justify-center flex-1 bg-blue-100 text-blue-800">
-      <img src="images/register.gif" alt="Hình ảnh đăng ký" class="max-w-md" />
-    </div>
-    <div class="w-full lg:w-1/2 flex items-center justify-center">
-      <div class="max-w-md w-full p-6">
-        <h1 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Đăng ký tài khoản</h1>
-        <form action="#" method="POST" class="space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label for="firstName" class="block text-sm font-medium text-gray-700">Họ <span class="text-red-500">*</span></label>
-              <input type="text" id="firstName" name="firstName" placeholder="Họ" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-            </div>
-            <div>
-              <label for="lastName" class="block text-sm font-medium text-gray-700">Tên <span class="text-red-500">*</span></label>
-              <input type="text" id="lastName" name="lastName" placeholder="Tên" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-            </div>
+  <div class="hidden lg:flex items-center justify-center flex-1 bg-blue-100 text-blue-800">
+    <img src="images/register.gif" alt="Hình ảnh đăng ký" class="max-w-md" />
+  </div>
+  <div class="w-full lg:w-1/2 flex items-center justify-center">
+    <div class="max-w-md w-full p-6">
+      <h1 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Đăng ký tài khoản</h1>
+      <form action="#" method="POST" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstName" class="block text-sm font-medium text-gray-700">Họ <span
+                class="text-red-500">*</span></label>
+            <input type="text" id="firstName" name="firstName" placeholder="Họ"
+              class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
           </div>
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-            <input type="email" id="email" name="email" placeholder="ví dụ: your@email.com" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Tên <span
+                class="text-red-500">*</span></label>
+            <input type="text" id="lastName" name="lastName" placeholder="Tên"
+              class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
           </div>
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700">Số điện thoại <span class="text-red-500">*</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="Số điện thoại" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-          </div>
-          <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Tên đăng nhập <span class="text-red-500">*</span></label>
-            <input type="text" id="username" name="username" placeholder="Tên đăng nhập" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-          </div>
-          <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu <span class="text-red-500">*</span></label>
-            <input type="password" id="password" name="password" placeholder="••••••••••" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-          </div>
-          <div>
-            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu <span class="text-red-500">*</span></label>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••••" class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
-          </div>
-          <div>
-            <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 cursor-pointer">Đăng ký</button>
-          </div>
-        </form>
-        <div class="mt-4 text-sm text-gray-600 text-center">
-          <p>Đã có tài khoản? <a href="/login" class="text-blue-700 hover:underline">Đăng nhập tại đây</a>
-          </p>
         </div>
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Email <span
+              class="text-red-500">*</span></label>
+          <input type="email" id="email" name="email" placeholder="your@email.com"
+            class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+        </div>
+        <div>
+          <label for="phone" class="block text-sm font-medium text-gray-700">Số điện thoại <span
+              class="text-red-500">*</span></label>
+          <input type="tel" id="phone" name="phone" placeholder="Số điện thoại"
+            class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+        </div>
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700">Tên đăng nhập <span
+              class="text-red-500">*</span></label>
+          <input type="text" id="username" name="username" placeholder="Tên đăng nhập"
+            class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu <span
+              class="text-red-500">*</span></label>
+          <input type="password" id="password" name="password" placeholder="••••••••••"
+            class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+        </div>
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu <span
+              class="text-red-500">*</span></label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••••"
+            class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
+        </div>
+        <div>
+          <button type="submit"
+            class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 cursor-pointer">Đăng
+            ký</button>
+        </div>
+      </form>
+      <div class="mt-4 text-sm text-gray-600 text-center">
+        <p>Đã có tài khoản? <a href="/login" class="text-blue-700 hover:underline">Đăng nhập tại đây</a>
+        </p>
       </div>
     </div>
-    <div class="absolute bottom-4 left-4 text-sm text-gray-500 hidden lg:block font-bold">
-      &copy; 2025 Bản quyền sở hữu thuộc về Origin Dev.
-    </div>
+  </div>
+  <div class="absolute bottom-4 left-4 text-sm text-gray-500 hidden lg:block font-bold">
+    &copy; 2025 Bản quyền sở hữu thuộc về Origin Dev.
+  </div>
 </div>

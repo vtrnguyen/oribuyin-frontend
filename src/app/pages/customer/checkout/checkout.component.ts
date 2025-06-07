@@ -1,11 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ProductsService } from "../../../core/services/products.service";
 import { CheckOutProduct } from "../../../shared/interfaces/checkout_product.interface";
 import { Notification } from "../../../shared/types/notification.type";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
+import { OrderService } from "../../../core/services/order.service";
+import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
 
 @Component({
     selector: "app-customer-checkout",
@@ -31,9 +33,16 @@ export class CustomerCheckoutComponent implements OnInit {
     notificationTitle: string = "";
     notificationMessage: string = "";
 
+    vietQRUrl: string = "";
+    showQRModal: boolean = false;
+    pendingOrderData: any = null;
+
     constructor(
         private activatedRoute: ActivatedRoute,
-        private productsService: ProductsService
+        private productsService: ProductsService,
+        private orderService: OrderService,
+        private router: Router,
+        private cartStateManagerService: CartStateManagerService,
     ) { }
 
     ngOnInit(): void {
@@ -57,14 +66,9 @@ export class CustomerCheckoutComponent implements OnInit {
     }
 
     placeOrder(): void {
-        console.log("Họ và tên:", this.customerName);
-        console.log("Số điện thoại:", this.customerPhone);
-        console.log("Địa chỉ:", this.customerAddress);
-        console.log("Phương thức thanh toán chính:", this.selectedPaymentMethod);
-
         if (!this.customerName || !this.customerPhone || !this.customerAddress) {
             this.showNotification(
-                "error",
+                "warning",
                 "Lỗi",
                 "Vui lòng nhập đầy đủ thông tin nhận hàng."
             );
@@ -73,7 +77,7 @@ export class CustomerCheckoutComponent implements OnInit {
 
         if (!this.selectedPaymentMethod) {
             this.showNotification(
-                "error",
+                "warning",
                 "Lỗi",
                 "Vui lòng chọn phương thức thanh toán."
             );
@@ -81,33 +85,40 @@ export class CustomerCheckoutComponent implements OnInit {
         }
 
         const orderData = {
-            customerInfo: {
-                name: this.customerName,
-                phone: this.customerPhone,
-                address: this.customerAddress,
-            },
+            shipping_address: this.customerAddress,
+            payment_method: this.selectedPaymentMethod,
             products: this.checkoutProducts.map((p) => ({
                 product_id: p.id,
                 quantity: p.quantityToBuy,
             })),
-            total: this.calculateTotalPrice(),
-            paymentMethod: this.selectedPaymentMethod,
+            voucher_discount: this.discountAmount,
+            shipping_fee: this.shippingFee,
         };
 
-        if (this.selectedPaymentMethod === "online") {
-            this.showNotification(
-                "success",
-                "Đặt hàng",
-                "Chuyển đến cổng thanh toán trực tuyến."
-            );
-            console.log("Dữ liệu đặt hàng (Online):", orderData);
-        } else if (this.selectedPaymentMethod === "cod") {
-            this.showNotification(
-                "success",
-                "Đặt hàng",
-                "Đặt hàng thành công, vui lòng chuẩn bị tiền mặt khi nhận hàng."
-            );
-            console.log("Dữ liệu đặt hàng (COD):", orderData);
+        if (this.selectedPaymentMethod === "cod") {
+            this.orderService.createOrder(orderData).subscribe({
+                next: (response) => {
+                    this.cartStateManagerService.updateCartItemQuantity$.next();
+                    this.resetCheckoutInfo();
+                    this.showNotification(
+                        "success",
+                        "Đặt hàng",
+                        "Đặt hàng thành công, vui lòng chuẩn bị tiền mặt khi nhận hàng.",
+                    );
+                    setTimeout(() => {
+                        this.router.navigate(['/orders']);
+                    }, 1200);
+                },
+                error: (error) => {
+                    this.showNotification(
+                        "error",
+                        "Lỗi",
+                        "Đặt hàng thất bại. Vui lòng thử lại."
+                    );
+                },
+            })
+        } else if (this.selectedPaymentMethod === "online") {
+            this.getVietQR(orderData);
         }
     }
 
@@ -144,6 +155,60 @@ export class CustomerCheckoutComponent implements OnInit {
                     });
             }
         });
+    }
+
+    getVietQR(orderData: any): void {
+        const BANK_ID = "MB";
+        const ACCOUNT_NO = "0337917367";
+        const ACCOUNT_NAME = "VO TRUNG NGUYEN";
+        const TEMPLATE = "compact2";
+
+        const AMOUNT = this.calculateTotalPrice();
+        const DESCRIPTION = encodeURIComponent(`THANH TOAN DON HANG`);
+
+        this.vietQRUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${AMOUNT}&addInfo=${DESCRIPTION}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+        this.showQRModal = true;
+        this.pendingOrderData = orderData;
+    }
+
+    confirmOnlinePayment(): void {
+        if (!this.pendingOrderData) return;
+
+        this.orderService.createOrder(this.pendingOrderData).subscribe({
+            next: (response) => {
+                this.cartStateManagerService.updateCartItemQuantity$.next();
+                this.resetCheckoutInfo();
+                this.showQRModal = false;
+                this.showNotification(
+                    "success",
+                    "Đặt hàng",
+                    "Đặt hàng thành công! Cảm ơn bạn đã thanh toán online."
+                );
+                setTimeout(() => {
+                    this.router.navigate(["/orders"]);
+                }, 1200);
+            },
+            error: (error) => {
+                this.showNotification(
+                    "error",
+                    "Lỗi",
+                    "Không thể tạo đơn hàng. Vui lòng thử lại."
+                );
+            },
+        });
+    }
+
+    private resetCheckoutInfo(): void {
+        this.customerName = "";
+        this.customerPhone = "";
+        this.customerAddress = "";
+        this.selectedPaymentMethod = "";
+        this.checkoutProducts = [];
+        this.selectedItemIds = [];
+        this.discountAmount = 0;
+        this.shippingFee = 30000;
+        this.vietQRUrl = "";
+        this.pendingOrderData = null;
     }
 
     showNotification(
