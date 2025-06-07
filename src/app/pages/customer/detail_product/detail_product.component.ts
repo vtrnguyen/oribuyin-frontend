@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Product } from "../../../shared/interfaces/product.interface";
 import { Review } from "../../../shared/interfaces/review.interface";
 import { ProductsService } from "../../../core/services/products.service";
@@ -35,6 +35,7 @@ export class CustomerDetailProductComponent implements OnInit {
 
     constructor(
         private activatedRoute: ActivatedRoute,
+        private router: Router,
         private productsService: ProductsService,
         private usersService: UsersService,
         private cartService: CartService,
@@ -129,7 +130,7 @@ export class CustomerDetailProductComponent implements OnInit {
 
     buyNow(): void {
         if (this.product && this.quantityProduct > 0) {
-            this.showNotification("success", "Thành công", `Đã chọn mua ${this.quantityProduct} sản phẩm ${this.product.name}`);
+            this.router.navigate(["/checkout"], { queryParams: { items: JSON.stringify([this.product.id]) } });
         }
     }
 
