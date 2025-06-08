@@ -38,19 +38,19 @@
             </div>
             <div class="space-y-5">
                 <div>
-                    <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Họ và tên:</label>
+                    <label for="name" class="block text-gray-700 text-sm font-medium mb-2">Họ và tên người nhận:</label>
                     <input type="text" id="name"
                         class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
-                        placeholder="Nhập họ và tên của bạn" [(ngModel)]="customerName" />
+                        placeholder="Nhập họ và tên của bạn" [(ngModel)]="customerName" disabled="" />
                 </div>
                 <div>
                     <label for="phone" class="block text-gray-700 text-sm font-medium mb-2">Số điện thoại:</label>
                     <input type="text" id="phone"
                         class="form-input w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
-                        placeholder="Nhập số điện thoại liên lạc" [(ngModel)]="customerPhone" />
+                        placeholder="Nhập số điện thoại liên lạc" [(ngModel)]="customerPhone" disabled="" />
                 </div>
                 <div>
-                    <label for="address" class="block text-gray-700 text-sm font-medium mb-2">Địa chỉ chi tiết:</label>
+                    <label for="address" class="block text-gray-700 text-sm font-medium mb-2">Địa chỉ nhận hàng:</label>
                     <textarea id="address" rows="3"
                         class="form-textarea w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
                         placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"

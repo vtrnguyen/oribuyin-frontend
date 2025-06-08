@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { OrderService } from "../../../core/services/order.service";
 import { CommonModule } from "@angular/common";
+import { UsersService } from "../../../core/services/users.service";
 
 @Component({
     selector: "app-customer-orders",
@@ -16,8 +17,9 @@ export class CustomerOrdersComponent implements OnInit {
     orderTabs = [
         { label: "Tất cả", value: "all" },
         { label: "Chờ xác nhận", value: "pending" },
-        { label: "Đang vận chuyển", value: "shipping" },
-        { label: "Đã hoàn thành", value: "completed" },
+        { label: "Đã xác nhận", value: "confirmed" },
+        { label: "Đang vận chuyển", value: "shipped" },
+        { label: "Đã hoàn thành", value: "delivered" },
         { label: "Đã hủy", value: "cancelled" },
     ];
     selectedTab: string = "all";
@@ -27,10 +29,13 @@ export class CustomerOrdersComponent implements OnInit {
         return this.orders.filter(order => order.status === this.selectedTab);
     }
 
-    constructor(private orderService: OrderService) { }
+    constructor(
+        private orderService: OrderService,
+        private usersService: UsersService
+    ) { }
 
     ngOnInit(): void {
-        const userId = Number(localStorage.getItem("user_id"));
+        const userId = this.usersService.getCurrentUserID();
         this.orderService.getOrdersByUserId(userId).subscribe((res: any) => {
             if (res && res.code === 1) {
                 this.orders = res.data;

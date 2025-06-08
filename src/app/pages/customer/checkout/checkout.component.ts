@@ -8,6 +8,7 @@ import { FormsModule } from "@angular/forms";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { OrderService } from "../../../core/services/order.service";
 import { CartStateManagerService } from "../../../shared/services/cart_state_manager.service";
+import { UsersService } from "../../../core/services/users.service";
 
 @Component({
     selector: "app-customer-checkout",
@@ -41,12 +42,14 @@ export class CustomerCheckoutComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private productsService: ProductsService,
         private orderService: OrderService,
+        private usersService: UsersService,
         private router: Router,
-        private cartStateManagerService: CartStateManagerService,
+        private cartStateManagerService: CartStateManagerService
     ) { }
 
     ngOnInit(): void {
         this.loadCheckoutProducts();
+        this.loadUserInfo();
     }
 
     calculateProductTotal(product: CheckOutProduct): number {
@@ -155,6 +158,27 @@ export class CustomerCheckoutComponent implements OnInit {
                     });
             }
         });
+    }
+
+    private loadUserInfo(): void {
+        const userID = this.usersService.getCurrentUserID();
+
+        if (userID) {
+            this.usersService.getUserByID(userID).subscribe({
+                next: (response: any) => {
+                    if (response && response.code === 1) {
+                        this.customerName = `${response.data[0].first_name} ${response.data[0].last_name}`;
+                        this.customerAddress = response.data[0].address;
+                        this.customerPhone = response.data[0].phone_number;
+                    }
+                },
+                error: (error: any) => {
+                    this.customerName = "";
+                    this.customerAddress = "";
+                    this.customerPhone = "";
+                },
+            });
+        }
     }
 
     getVietQR(orderData: any): void {

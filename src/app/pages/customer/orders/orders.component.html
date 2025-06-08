@@ -2,13 +2,13 @@
     <div class="flex gap-4 mb-8 border-b pb-2">
         <button *ngFor="let tab of orderTabs" (click)="selectedTab = tab.value"
             [ngClass]="selectedTab === tab.value ? 'border-b-4 border-blue-600 text-blue-700 font-bold' : 'text-gray-600'"
-            class="px-4 py-2 text-lg focus:outline-none transition cursor-pointer">
+            class="px-4 py-2 text-lg focus:outline-none transition-all cursor-pointer">
             {{ tab.label }}
         </button>
     </div>
 
     <div *ngIf="filteredOrders.length > 0; else noOrders">
-        <div *ngFor="let order of filteredOrders" class="bg-white rounded-xl shadow-md mb-6 p-6 border">
+        <div *ngFor="let order of filteredOrders" class="bg-white rounded-xl shadow-lg mb-6 p-6">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
                     <span class="font-semibold text-gray-700">Mã đơn: #{{ order.id }}</span>
@@ -18,13 +18,15 @@
                     <span class="px-3 py-1 rounded-full text-sm font-semibold" [ngClass]="{
                             'bg-yellow-100 text-yellow-700': order.status === 'pending',
                             'bg-blue-100 text-blue-700': order.status === 'confirmed',
-                            'bg-green-100 text-green-700': order.status === 'completed',
+                            'bg-gray-100 text-black-700': order.status === 'shipped',
+                            'bg-green-100 text-green-700': order.status === 'delivered',
                             'bg-red-100 text-red-700': order.status === 'cancelled'
                         }">
                         {{
                         order.status === 'pending' ? 'Chờ xác nhận' :
-                        order.status === 'confirmed' ? 'Đang vận chuyển' :
-                        order.status === 'completed' ? 'Đã hoàn thành' :
+                        order.status === 'confirmed' ? 'Đã xác nhận' :
+                        order.status === 'shipped' ? 'Đang vận chuyển' :
+                        order.status === 'delivered' ? 'Đã hoàn thành' :
                         order.status === 'cancelled' ? 'Đã hủy' : order.status
                         }}
                     </span>
@@ -33,46 +35,46 @@
             <div class="divide-y">
                 <div *ngFor="let item of order.order_items" class="flex items-center py-4">
                     <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image"
-                        alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-lg border mr-4" />
+                        alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-lg mr-4" />
                     <div class="flex-1">
                         <div class="font-medium text-gray-800">{{ item.product.name }}</div>
                         <div class="text-gray-500 text-sm">Số lượng: {{ item.quantity }}</div>
                     </div>
                     <div class="font-semibold text-blue-700 text-lg">
-                        {{ item.price_at_order_time | number:'1.0-0' }}₫
+                        {{ item.price_at_order_time | number:'1.0-0' }} VNĐ
                     </div>
                 </div>
             </div>
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mt-4">
                 <div>
                     <span class="text-gray-600">Tổng tiền: </span>
-                    <span class="text-xl font-bold text-red-600">{{ order.total_amount | number:'1.0-0' }}₫</span>
+                    <span class="text-xl font-bold text-red-600">{{ order.total_amount | number:'1.0-0' }} VNĐ</span>
                 </div>
                 <div class="flex gap-2 mt-3 md:mt-0">
                     <button *ngIf="order.status === 'pending'"
-                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                         (click)="cancelOrder(order.id)">
                         Hủy đơn
                     </button>
-                    <button *ngIf="order.status === 'confirmed'"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                    <button *ngIf="order.status === 'shipped'"
+                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                         (click)="trackOrder(order.id)">
                         Theo dõi đơn
                     </button>
-                    <ng-container *ngIf="order.status === 'completed'">
+                    <ng-container *ngIf="order.status === 'delivered'">
                         <button
-                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                             (click)="reorder(order)">
                             Mua lại
                         </button>
                         <button
-                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                             (click)="reviewOrder(order)">
                             Đánh giá
                         </button>
                     </ng-container>
                     <button *ngIf="order.status === 'cancelled'"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                         (click)="reorder(order)">
                         Mua lại
                     </button>
