@@ -11,6 +11,10 @@ export class OrderService {
 
     constructor(private http: HttpClient) { }
 
+    getOrdersByUserId(userId: number): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}/${userId}`);
+    }
+
     createOrder(order: CreateOrderDto): Observable<any> {
         return this.http.post<any>(`${this.orderApiUrl}`, order);
     }
