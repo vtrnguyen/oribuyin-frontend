@@ -235,7 +235,7 @@ export class CustomerCheckoutComponent implements OnInit {
         this.pendingOrderData = null;
     }
 
-    showNotification(
+    private showNotification(
         type: Notification,
         title: string,
         message: string
