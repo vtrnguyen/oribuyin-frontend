@@ -1,4 +1,7 @@
 <div class="container mx-auto px-4 py-8">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
+
     <div class="flex gap-4 mb-8 border-b pb-2">
         <button *ngFor="let tab of orderTabs" (click)="selectedTab = tab.value"
             [ngClass]="selectedTab === tab.value ? 'border-b-4 border-blue-600 text-blue-700 font-bold' : 'text-gray-600'"
@@ -56,14 +59,23 @@
                         (click)="cancelOrder(order.id)">
                         Hủy đơn
                     </button>
-                    <button *ngIf="order.status === 'shipped'"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
-                        (click)="trackOrder(order.id)">
-                        Theo dõi đơn
-                    </button>
-                    <ng-container *ngIf="order.status === 'delivered'">
+
+                    <ng-container *ngIf="order.status === 'shipped'">
+                        <button
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
+                            (click)="trackOrder(order.id)">
+                            Theo dõi đơn
+                        </button>
                         <button
                             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
+                            (click)="confirmedReceipt(order.id)">
+                            Đã nhận được hàng
+                        </button>
+                    </ng-container>
+
+                    <ng-container *ngIf="order.status === 'delivered'">
+                        <button
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold cursor-pointer transition-all duration-200"
                             (click)="reorder(order)">
                             Mua lại
                         </button>
@@ -87,4 +99,82 @@
             Không có đơn hàng nào.
         </div>
     </ng-template>
+</div>
+
+<!-- review modal -->
+<div *ngIf="showReviewModal" class="fixed inset-0 z-50 flex items-center justify-center"
+    style="background: rgba(0,0,0,0.18); backdrop-filter: blur(2px);">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-12 relative">
+        <button class="absolute top-5 right-6 text-gray-500 hover:text-gray-700 text-3xl cursor-pointer"
+            (click)="closeReviewModal()">&times;</button>
+        <div class="flex items-center mb-10">
+            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + reviewProduct?.image"
+                alt="{{ reviewProduct?.name }}" class="w-32 h-32 object-cover rounded-xl mr-8" />
+            <div>
+                <div class="font-bold text-2xl text-gray-800 mb-2">{{ reviewProduct?.name }}</div>
+            </div>
+        </div>
+        <div class="mb-8">
+            <label class="block text-gray-700 font-semibold mb-3 text-lg">Chất lượng sản phẩm</label>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <ng-container *ngFor="let star of [1,2,3,4,5]">
+                        <svg (click)="setRating(star)"
+                            [ngClass]="reviewRating >= star ? 'text-yellow-400' : 'text-gray-300'"
+                            class="w-10 h-10 cursor-pointer transition-colors duration-150" fill="currentColor"
+                            viewBox="0 0 20 20">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118l-3.385-2.46c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.967z" />
+                        </svg>
+                    </ng-container>
+                </div>
+                <span class="ml-2 text-lg font-semibold text-gray-600">
+                    {{
+                    reviewRating === 1 ? 'Tệ' :
+                    reviewRating === 2 ? 'Không hài lòng' :
+                    reviewRating === 3 ? 'Bình thường' :
+                    reviewRating === 4 ? 'Hài lòng' :
+                    reviewRating === 5 ? 'Rất hài lòng' : ''
+                    }}
+                </span>
+            </div>
+        </div>
+        <div class="mb-10">
+            <label class="block text-gray-700 font-semibold mb-3 text-lg">Bình luận</label>
+            <textarea [(ngModel)]="reviewComment" rows="5"
+                class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none text-lg"></textarea>
+        </div>
+        <button (click)="submitReview()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl text-lg shadow-lg transition-all duration-200 cursor-pointer">
+            Gửi đánh giá
+        </button>
+    </div>
+</div>
+
+<!-- track order modal -->
+<div *ngIf="showTrackModal" class="fixed inset-0 z-50 flex items-center justify-center"
+    style="background: rgba(0,0,0,0.18); backdrop-filter: blur(2px);">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-8 relative">
+        <button class="absolute top-5 right-6 text-gray-500 hover:text-gray-700 text-3xl cursor-pointer"
+            (click)="closeTrackModal()">&times;</button>
+        <h2 class="text-2xl font-bold mb-6 text-blue-700 text-center">Theo dõi đơn hàng</h2>
+        <div class="w-full h-[400px] rounded-xl overflow-hidden border">
+            <iframe width="100%" height="400" frameborder="0" style="border:0" [src]="trackMapUrl" allowfullscreen>
+            </iframe>
+        </div>
+        <div class="mt-6 flex flex-col md:flex-row md:justify-between gap-4">
+            <div>
+                <span class="font-semibold text-gray-700 me-1">Vị trí xe hàng:</span>
+                <span class="text-gray-600">40 Đường Số 3, Trường Thạnh, Thủ Đức, Hồ Chí Minh</span>
+            </div>
+            <div>
+                <span class="font-semibold text-gray-700 me-1">Vị trí của bạn:</span>
+                <span class="text-gray-600">{{ userAddress }}</span>
+            </div>
+            <div *ngIf="distanceKm !== null">
+                <span class="font-semibold text-gray-700 me-1">Khoảng cách:</span>
+                <span class="text-blue-600 font-bold">{{ distanceKm | number:'1.1-2' }} km</span>
+            </div>
+        </div>
+    </div>
 </div>

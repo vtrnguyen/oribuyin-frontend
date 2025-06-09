@@ -18,4 +18,8 @@ export class OrderService {
     createOrder(order: CreateOrderDto): Observable<any> {
         return this.http.post<any>(`${this.orderApiUrl}`, order);
     }
+
+    updateOrder(orderID: number, status: string): Observable<any> {
+        return this.http.put<any>(`${this.orderApiUrl}/${orderID}/status`, { status });
+    }
 }
