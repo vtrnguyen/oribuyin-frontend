@@ -54,7 +54,6 @@ export class CustomerLayoutComponent implements OnInit {
 
     handleSearch(): void {
         if (this.searchQuery.trim()) {
-            console.log(`Search for: ${this.searchQuery}`);
             this.router.navigate(['/searches'], { queryParams: { q: this.searchQuery } });
             this.searchQuery = '';
         }

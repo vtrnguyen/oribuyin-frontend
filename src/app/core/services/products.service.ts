@@ -74,6 +74,10 @@ export class ProductsService {
         return this.http.post(`${this.productApiUrl}/checkout`, { itemIDs: itemIDs });
     }
 
+    searchProductsByName(keyword: string): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/search?keyword=${keyword}`);
+    }
+
     createProduct(newProduct: any): Observable<any> {
         return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
     }
