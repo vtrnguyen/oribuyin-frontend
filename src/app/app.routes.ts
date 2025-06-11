@@ -48,6 +48,10 @@ import { CustomerAuthGuard } from './core/guards/customer_auth.guard';
 import { StaffAuthGuard } from './core/guards/staff_auth.guard';
 import { AuthenticatedGuard } from './core/guards/authenticated.guard';
 import { CustomerCheckoutComponent } from './pages/customer/checkout/checkout.component';
+import { CustomerContactComponent } from './pages/customer/contact/contact.component';
+import { CustomerFAQComponent } from './pages/customer/faq/faq.component';
+import { CustomerTermsComponent } from './pages/customer/terms/terms.component';
+import { CustomerPrivacyComponent } from './pages/customer/privacy/privacy.component';
 
 export const routes: Routes = [
     {
@@ -79,6 +83,10 @@ export const routes: Routes = [
             { path: "profile", component: CustomerProfileComponent, title: "Thông tin của tôi" },
             { path: "searches", component: CustomerSearchesComponent, title: "Tìm kiếm sản phẩm" },
             { path: "settings", component: CustomerSettingsComponent, title: "Cài đặt" },
+            { path: "contact", component: CustomerContactComponent, title: "Liên hệ chúng tôi" },
+            { path: "faq", component: CustomerFAQComponent, title: "Những câu hỏi thường gặp" },
+            { path: "terms", component: CustomerTermsComponent, title: "Điều khiển và Điều kiện" },
+            { path: "privacy", component: CustomerPrivacyComponent, title: "Chính sách bảo mật" },
         ],
     },
 
