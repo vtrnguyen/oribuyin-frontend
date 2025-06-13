@@ -8,6 +8,7 @@ import { CustomerLayoutComponent } from './layouts/customer/customer_layout.comp
 // Auth components
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
+import {ForgotPasswordComponent} from './auth/forgot_password/forgot_password.component';
 
 // Admin components
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
@@ -63,6 +64,11 @@ export const routes: Routes = [
         path: "register",
         component: RegisterComponent,
         canActivate: [AuthenticatedGuard],
+    },
+    {
+      path: "forgot-password",
+      component: ForgotPasswordComponent,
+      canActivate: [AuthenticatedGuard],
     },
 
     // customer
