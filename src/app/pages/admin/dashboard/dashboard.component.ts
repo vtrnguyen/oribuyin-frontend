@@ -4,6 +4,7 @@ import { ProductsService } from "../../../core/services/products.service";
 import { CommonModule } from "@angular/common";
 import { Notification } from "../../../shared/types/notification.type";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
+import { OrderService } from "../../../core/services/order.service";
 
 @Component({
     selector: "app-admin-dashboard",
@@ -18,6 +19,8 @@ import { NotificationComponent } from "../../../shared/components/notifications/
 export class AdminDashboardComponent implements OnInit {
     userCounter: number = 0;
     productCounter: number = 0;
+    recentOrders: any[] = [];
+    currentMonthRevenue: number = 0;
 
     notificationVisible: boolean = false;
     notificationType: Notification = "success";
@@ -27,12 +30,15 @@ export class AdminDashboardComponent implements OnInit {
 
     constructor(
         private usersService: UsersService,
-        private productsService: ProductsService
-    ) {}
+        private productsService: ProductsService,
+        private ordersService: OrderService,
+    ) { }
 
     ngOnInit(): void {
         this.getNumberOfUsers();
         this.getNumberOfProducts();
+        this.getRecentOrders();
+        this.getCurrentMonthRevenue();
     }
 
     private getNumberOfUsers(): void {
@@ -43,7 +49,7 @@ export class AdminDashboardComponent implements OnInit {
                 }
             },
             error: (error: any) => {
-                this.showNotification("error", "Lỗi", "Không thể tải số lượng người dùng");
+                this.userCounter = 0;
             }
         });
     }
@@ -56,8 +62,36 @@ export class AdminDashboardComponent implements OnInit {
                 }
             },
             error: (error: any) => {
-                this.showNotification("error", "Lỗi", "Không thể tải số lượng sản phẩm");
+                this.productCounter = 0;
             }
+        });
+    }
+
+    private getRecentOrders(): void {
+        this.ordersService.getRecentOrders().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.recentOrders = response.data;
+                }
+            },
+            error: (error: any) => {
+                this.recentOrders = [];
+            },
+        });
+    }
+
+    private getCurrentMonthRevenue(): void {
+        this.ordersService.getCurrentMonthRevenue().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.currentMonthRevenue = response.data;
+                } else {
+                    this.currentMonthRevenue = 0;
+                }
+            },
+            error: (error: any) => {
+                this.currentMonthRevenue = 0;
+            },
         });
     }
 

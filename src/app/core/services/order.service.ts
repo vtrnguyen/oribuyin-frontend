@@ -11,8 +11,20 @@ export class OrderService {
 
     constructor(private http: HttpClient) { }
 
+    getAllOrders(): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}`);
+    }
+
+    getRecentOrders(): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}/recent`);
+    }
+
     getOrdersByUserId(userId: number): Observable<any> {
         return this.http.get<any>(`${this.orderApiUrl}/${userId}`);
+    }
+
+    getCurrentMonthRevenue(): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}/current-month-revenue`);
     }
 
     createOrder(order: CreateOrderDto): Observable<any> {
