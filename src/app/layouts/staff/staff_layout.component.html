@@ -1,6 +1,8 @@
-<div class="min-h-screen bg-gray-200 flex overflow-hidden">
-    <aside
-        class="bg-[#f8f4f3] text-gray-700 w-72 flex flex-col fixed top-0 left-0 h-screen z-20 transition-transform duration-300 ease-in-out md:flex md:translate-x-0">
+<div class="min-h-screen bg-gray-200 flex">
+    <aside class="bg-[#f8f4f3] text-gray-700 w-72 flex flex-col fixed top-0 left-0 h-screen z-20
+        transition-transform duration-300 ease-in-out
+        md:translate-x-0" [class.translate-x-0]="isSidebarOpen" [class.-translate-x-full]="!isSidebarOpen">
+
         <div class="p-4 flex items-center gap-2">
             <h1 class="text-2xl font-semibold">OriBuyin</h1>
             <span class="bg-[#F84525] text-white py-1 px-2 rounded-md">
@@ -9,32 +11,42 @@
         </div>
         <nav class="flex-grow p-4 shadow-md space-y-1">
             <a routerLink="/staff" routerLinkActive="bg-gray-700 text-white" [routerLinkActiveOptions]="{ exact: true }"
-                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+                (click)="closeSidebar()">
                 <i class="fas fa-chart-line mr-2"></i> Thông tin chung
             </a>
             <a routerLink="/staff/stocks" routerLinkActive="bg-gray-700 text-white"
                 [routerLinkActiveOptions]="{ exact: true }"
-                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
-                <i class="fas fa-shopping-cart mr-2"></i> Nhập kho
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+                (click)="closeSidebar()">
+                <i class="fas fa-boxes-stacked mr-2"></i> Nhập kho
             </a>
             <a routerLink="/staff/orders" routerLinkActive="bg-gray-700 text-white"
                 [routerLinkActiveOptions]="{ exact: true }"
-                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
-                <i class="fas fa-shopping-cart mr-2"></i> Đơn hàng
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+                (click)="closeSidebar()">
+                <i class="fas fa-receipt mr-2"></i> Đơn hàng
             </a>
             <a routerLink="/staff/reports" routerLinkActive="bg-gray-700 text-white"
                 [routerLinkActiveOptions]="{ exact: true }"
-                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer">
+                class="block py-3 px-8 hover:bg-gray-700 hover:text-white rounded-md transition duration-300 cursor-pointer"
+                (click)="closeSidebar()">
                 <i class="fas fa-chart-bar mr-2"></i> Báo cáo
             </a>
         </nav>
     </aside>
 
+    <div *ngIf="isSidebarOpen && isMobileScreen" class="fixed inset-0 **bg-transparent** z-10 md:hidden"
+        (click)="closeSidebar()"></div>
     <div class="flex-grow flex flex-col">
-        <header
-            class="bg-[#f8f4f3] shadow-md py-4 px-8 flex justify-end items-center md:justify-end fixed top-0 left-72 w-[calc(100%-18rem)] z-10">
-            <div class="relative">
-                <button class="flex flex-col items-end focus:outline-none cursor-pointer" id="staffMenuButton"
+        <header class="bg-[#f8f4f3] shadow-md py-4 px-8 flex justify-between items-center fixed top-0 z-10
+            w-full md:w-[calc(100%-18rem)] md:left-72">
+            <button class="md:hidden text-gray-700 focus:outline-none cursor-pointer" (click)="toggleSidebar()">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <div class="relative ml-auto">
+                <button #staffMenuButton class="flex flex-col items-end focus:outline-none cursor-pointer"
                     (click)="toggleStaffMenu()">
                     <div class="flex items-center">
                         <img src="images/avatar.webp" alt="Ảnh của nhân viên" class="rounded-full w-10 h-10 mr-2">
@@ -45,25 +57,28 @@
                         <i class="fas fa-chevron-down ml-2 text-gray-500"></i>
                     </div>
                 </button>
-                <div id="staffMenu" *ngIf="isStaffMenuOpen"
+                <div #staffMenu *ngIf="isStaffMenuOpen"
                     class="absolute top-full right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-10">
                     <a routerLink="/staff/profile"
-                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                        (click)="isStaffMenuOpen = false">
                         <i class="fas fa-user mr-2"></i> Hồ sơ
                     </a>
                     <a routerLink="/staff/settings"
-                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                        (click)="isStaffMenuOpen = false">
                         <i class="fas fa-cog mr-2"></i> Cài đặt
                     </a>
                     <a (click)="logout()"
-                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer">
+                        class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition duration-300 cursor-pointer"
+                        (click)="isStaffMenuOpen = false">
                         <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
                     </a>
                 </div>
             </div>
         </header>
 
-        <main class="mt-16 md:ml-72 p-6 overflow-y-auto h-[calc(100vh-4rem)]">
+        <main class="flex-1 p-6 mt-[4.5rem] md:ml-72 md:mt-16 overflow-y-auto">
             <router-outlet></router-outlet>
         </main>
     </div>

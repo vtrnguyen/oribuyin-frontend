@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, AfterViewInit, OnDestroy } from "@angular/core"; // Import OnDestroy
 import { Category } from "../../../shared/interfaces/category.interface";
 import { CategoriesService } from "../../../core/services/categories.service";
 import { Notification } from "../../../shared/types/notification.type";
@@ -21,7 +21,7 @@ import { ProductItemComponent } from "../../../shared/components/product/product
     templateUrl: "./home.component.html",
     styleUrls: ["./home.component.scss"],
 })
-export class CustomerHomeComponent implements OnInit {
+export class CustomerHomeComponent implements OnInit, AfterViewInit, OnDestroy {
     categories: Category[] = [];
 
     notificationVisible: boolean = false;
@@ -31,6 +31,16 @@ export class CustomerHomeComponent implements OnInit {
 
     suggestedProducts: Product[] = [];
 
+    slides: string[] = [
+        'images/slide_1.webp',
+        'images/slide_2.webp',
+        'images/slide_3.avif',
+        'images/slide_4.avif',
+        'images/slide_5.avif',
+    ];
+    currentSlideIndex: number = 0;
+    private slideInterval: any;
+
     constructor(
         private categoriesService: CategoriesService,
         private productsService: ProductsService
@@ -39,6 +49,40 @@ export class CustomerHomeComponent implements OnInit {
     ngOnInit(): void {
         this.loadAllCategories();
         this.loadSuggestedProducts();
+    }
+
+    ngAfterViewInit(): void {
+        this.startSlideShow();
+    }
+
+    ngOnDestroy(): void {
+        this.stopSlideShow();
+    }
+
+    startSlideShow(): void {
+        this.stopSlideShow();
+        this.slideInterval = setInterval(() => {
+            this.nextSlide();
+        }, 3000);
+    }
+
+    stopSlideShow(): void {
+        if (this.slideInterval) {
+            clearInterval(this.slideInterval);
+        }
+    }
+
+    nextSlide(): void {
+        this.currentSlideIndex = (this.currentSlideIndex + 1) % this.slides.length;
+    }
+
+    prevSlide(): void {
+        this.currentSlideIndex = (this.currentSlideIndex - 1 + this.slides.length) % this.slides.length;
+    }
+
+    goToSlide(index: number): void {
+        this.currentSlideIndex = index;
+        this.startSlideShow();
     }
 
     private loadAllCategories(): void {

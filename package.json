@@ -10,7 +10,6 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/cdk": "^19.2.10",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",
@@ -21,7 +20,10 @@
     "@angular/router": "^19.2.7",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@tailwindcss/postcss": "^4.1.4",
+    "chart.js": "^4.4.9",
+    "flowbite": "^3.1.2",
     "ng-click-outside": "^9.0.1",
+    "ng2-charts": "^8.0.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.1.4",
