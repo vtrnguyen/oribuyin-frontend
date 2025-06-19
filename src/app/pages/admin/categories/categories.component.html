@@ -1,14 +1,12 @@
 <div class="p-6">
-    <app-notification-component
-        [isVisible]="notificationVisible"
-        [type]="notificationType"
-        [title]="notificationTitle"
-        [message]="notificationMessage"
-    ></app-notification-component>
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
 
     <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-semibold text-gray-900">Quản lý danh mục sản phẩm</h1>
-        <button class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200" type="button" (click)="openAddCategoryModal()">
+        <button
+            class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
+            type="button" (click)="openAddCategoryModal()">
             <i class="fas fa-plus mr-2"></i> Thêm danh mục
         </button>
     </div>
@@ -19,20 +17,33 @@
                 <i class="fa-solid fa-magnifying-glass text-gray-500"></i>
             </div>
             <input type="text"
-                   class="shadow appearance-none border border-gray-200 rounded w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                   placeholder="Tìm kiếm theo tên"
-                   [(ngModel)]="searchCategoryName"
-                   (ngModelChange)="filterCategories()">
+                class="shadow appearance-none border border-gray-200 rounded w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
+                placeholder="Tìm kiếm theo tên" [(ngModel)]="searchCategoryName" (ngModelChange)="filterCategories()">
         </div>
+    </div>
+
+    <div class="my-4 flex justify-between items-center">
+        <button
+            class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
+            (click)="downloadCategoryInfo()">
+            Tải xuống
+        </button>
+        <span class="text-sm text-gray-700">Tổng số danh mục sản phẩm: <span class="font-bold">{{ totalCategories
+                }}</span></span>
     </div>
 
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hình ảnh</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mô tả</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hình ảnh
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mô tả
+                    </th>
                     <th scope="col" class="relative px-6 py-3">
                         <span class="sr-only">Hành động</span>
                     </th>
@@ -47,7 +58,9 @@
                 <tr *ngFor="let category of filteredCategories; let i = index">
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex-shrink-0 h-10 w-10">
-                            <img class="h-10 w-10 object-cover rounded" [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image" [alt]="category.name">
+                            <img class="h-10 w-10 object-cover rounded"
+                                [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image"
+                                [alt]="category.name">
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -57,23 +70,25 @@
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div class="relative inline-block text-left">
                             <div>
-                                <button
-                                    #actionsMenuButton
-                                    type="button"
+                                <button #actionsMenuButton type="button"
                                     class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer"
-                                    aria-expanded="false"
-                                    aria-haspopup="true"
-                                    (click)="toggleActionsMenu(category, actionsMenuButton)"
-                                >
+                                    aria-expanded="false" aria-haspopup="true"
+                                    (click)="toggleActionsMenu(category, actionsMenuButton)">
                                     <i class="fas fa-ellipsis-h"></i>
                                 </button>
                             </div>
 
-                            <div *ngIf="selectedCategory === category && isActionsMenuOpen" (clickOutside)="closeActionMenu()" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
+                            <div *ngIf="selectedCategory === category && isActionsMenuOpen"
+                                (clickOutside)="closeActionMenu()"
+                                class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                                role="menu" aria-orientation="vertical" aria-labelledby="options-menu-button">
                                 <div class="py-1" role="menuitem">
-                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="openViewCategoryModal(category)">Xem</a>
-                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" (click)="openEditCategoryModal(category)">Chỉnh sửa</a>
-                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer" (click)="openDeleteCategoryModal(category)">Xóa</a>
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                        (click)="openViewCategoryModal(category)">Xem</a>
+                                    <a class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                        (click)="openEditCategoryModal(category)">Chỉnh sửa</a>
+                                    <a class="block px-4 py-2 text-sm text-red-700 hover:bg-red-100 cursor-pointer"
+                                        (click)="openDeleteCategoryModal(category)">Xóa</a>
                                 </div>
                             </div>
                         </div>
@@ -83,64 +98,62 @@
         </table>
     </div>
 
-    <div class="mt-4 flex justify-between items-center">
-        <button class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200" (click)="downloadCategoryInfo()">
-            Tải xuống
-        </button>
-        <span class="text-sm text-gray-700">Tổng số danh mục sản phẩm: <span class="font-bold">{{ totalCategories }}</span></span>
-    </div>
-
     <!-- add category modal -->
     <div *ngIf="isAddCategoryModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl" (clickOutside)="closeAddCategoryModal()">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl"
+                (clickOutside)="closeAddCategoryModal()">
                 <form class="p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Thêm thông tin danh mục</h2>
-    
+
                     <div class="mb-4">
-                        <label for="newCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh mục:</label>
+                        <label for="newCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh
+                            mục:</label>
                         <div class="flex items-center gap-4">
                             <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 shrink-0">
-                                <img src="images/default_category.png" alt="Preview category image" class="object-cover rounded-full w-full h-full">
+                                <img src="images/default_category.png" alt="Preview category image"
+                                    class="object-cover rounded-full w-full h-full">
                             </div>
-    
+
                             <div class="flex-1">
                                 <input
                                     class="block w-full shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                                    aria-describedby="file_input_help"
-                                    id="newCategoryImage"
-                                    type="file"
-                                    >
+                                    aria-describedby="file_input_help" id="newCategoryImage" type="file">
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                                     SVG, PNG, hoặc JPG (tối đa 800x400px).
                                 </p>
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="mb-4">
                         <label for="newCategoryName" class="block text-gray-700 text-sm font-bold mb-2">
                             Tên danh mục:
                         </label>
-                        <input type="text" id="newCategoryName" [(ngModel)]="newCategoryName" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên danh mục">
+                        <input type="text" id="newCategoryName" [(ngModel)]="newCategoryName" name="name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Nhập tên danh mục">
                     </div>
-    
+
                     <div class="mb-6">
                         <label for="newCategoryDescription" class="block text-gray-700 text-sm font-bold mb-2">
                             Mô tả danh mục:
                         </label>
-                        <textarea id="newCategoryDescription" [(ngModel)]="newCategoryDescription" name="description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mô tả danh mục"></textarea>
+                        <textarea id="newCategoryDescription" [(ngModel)]="newCategoryDescription" name="description"
+                            rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Nhập mô tả danh mục"></textarea>
                     </div>
-    
+
                     <div class="flex justify-end">
                         <button type="button"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
-                                (click)="closeAddCategoryModal()">
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                            (click)="closeAddCategoryModal()">
                             Hủy
                         </button>
                         <button type="button"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
-                                (click)="addCategory()">
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                            (click)="addCategory()">
                             Thêm
                         </button>
                     </div>
@@ -152,54 +165,59 @@
     <!-- update category modal -->
     <div *ngIf="isEditCategoryModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl" (clickOutside)="closeEditCategoryModal()">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl"
+                (clickOutside)="closeEditCategoryModal()">
                 <form class="p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Cập nhật thông tin danh mục</h2>
-    
+
                     <div class="mb-4">
-                        <label for="updateCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh mục:</label>
+                        <label for="updateCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh
+                            mục:</label>
                         <div class="flex items-center gap-4">
                             <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 shrink-0">
-                                <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + updateCategoryImage" alt="Preview category image" class="object-cover rounded-full w-full h-full">
+                                <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + updateCategoryImage"
+                                    alt="Preview category image" class="object-cover rounded-full w-full h-full">
                             </div>
-    
+
                             <div class="flex-1">
                                 <input
                                     class="block w-full shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
-                                    aria-describedby="file_input_help"
-                                    id="updateCategoryImage"
-                                    type="file"
-                                    >
+                                    aria-describedby="file_input_help" id="updateCategoryImage" type="file">
                                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">
                                     SVG, PNG, hoặc JPG (tối đa 800x400px).
                                 </p>
                             </div>
                         </div>
                     </div>
-    
+
                     <div class="mb-4">
                         <label for="updateCategoryName" class="block text-gray-700 text-sm font-bold mb-2">
                             Tên danh mục:
                         </label>
-                        <input type="text" id="updateCategoryName" [(ngModel)]="updateCategoryName" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập tên danh mục">
+                        <input type="text" id="updateCategoryName" [(ngModel)]="updateCategoryName" name="name"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Nhập tên danh mục">
                     </div>
-    
+
                     <div class="mb-6">
                         <label for="updateCategoryDescription" class="block text-gray-700 text-sm font-bold mb-2">
                             Mô tả danh mục:
                         </label>
-                        <textarea id="updateCategoryDescription" [(ngModel)]="updateCategoryDescription" name="description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Nhập mô tả danh mục"></textarea>
+                        <textarea id="updateCategoryDescription" [(ngModel)]="updateCategoryDescription"
+                            name="description" rows="3"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            placeholder="Nhập mô tả danh mục"></textarea>
                     </div>
-    
+
                     <div class="flex justify-end">
                         <button type="button"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
-                                (click)="closeEditCategoryModal()">
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer transition-all duration-200"
+                            (click)="closeEditCategoryModal()">
                             Hủy
                         </button>
                         <button type="button"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
-                                (click)="updateCategory()">
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer duration-200"
+                            (click)="updateCategory()">
                             Lưu
                         </button>
                     </div>
@@ -211,26 +229,29 @@
     <!-- view category modal -->
     <div *ngIf="isViewCategoryModalOpen" class="fixed z-50 inset-0 overflow-y-auto bg-black/60 transition-opacity">
         <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl" (clickOutside)="closeViewCategoryModal()">
+            <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl"
+                (clickOutside)="closeViewCategoryModal()">
                 <div class="p-6">
                     <h2 class="text-xl font-semibold text-gray-900 mb-6">Thông tin danh mục sản phẩm</h2>
-    
+
                     <div class="mb-4 flex justify-start items-center gap-3">
                         <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100">
-                            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + selectedCategory?.image" [alt]="'Hình ảnh của danh mục ' + selectedCategory?.name" class="object-cover rounded-full w-full h-full">
+                            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + selectedCategory?.image"
+                                [alt]="'Hình ảnh của danh mục ' + selectedCategory?.name"
+                                class="object-cover rounded-full w-full h-full">
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800">{{ selectedCategory?.name }}</h3>
                     </div>
-    
+
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold">Mô tả:</label>
                         <p class="py-2 text-gray-700 leading-tight">{{ selectedCategory?.description }}</p>
                     </div>
-    
+
                     <div class="flex justify-end mt-6">
                         <button type="button"
-                                class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
-                                (click)="closeViewCategoryModal()">
+                            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
+                            (click)="closeViewCategoryModal()">
                             Đóng
                         </button>
                     </div>
@@ -246,7 +267,8 @@
                 <form class="px-6 py-4" (clickOutside)="closeDeleteCategoryModal()">
                     <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin danh mục sản phẩm</h2>
 
-                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa danh mục "{{ selectedCategory?.name }}" không?</p>
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa danh mục "{{ selectedCategory?.name }}"
+                        không?</p>
 
                     <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">
                         <span><i class="fa-solid fa-triangle-exclamation mr-1"></i> Cảnh báo</span>
@@ -256,8 +278,7 @@
                     <div class="flex justify-end">
                         <button type="submit"
                             class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2 cursor-pointer duration-200"
-                            (click)="deleteCategory()"
-                        >
+                            (click)="deleteCategory()">
                             Xác nhận xóa
                         </button>
                         <button type="button"

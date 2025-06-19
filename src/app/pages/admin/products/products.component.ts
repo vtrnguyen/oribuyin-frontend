@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { NotificationComponent } from "../../../shared/components/notifications/notification.component";
 import { Notification } from "../../../shared/types/notification.type";
 import { CategoriesService } from "../../../core/services/categories.service";
@@ -8,6 +8,7 @@ import { ProductsService } from "../../../core/services/products.service";
 import { ClickOutsideModule } from "ng-click-outside";
 import { FormsModule } from "@angular/forms";
 import * as XLSX from "xlsx";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
     selector: "app-admin-products",
@@ -21,13 +22,18 @@ import * as XLSX from "xlsx";
     templateUrl: "./products.component.html",
     styleUrls: ["./products.component.scss"],
 })
-export class AdminProductsComponent implements OnInit {
+export class AdminProductsComponent implements OnInit, OnDestroy {
     products: Product[] = [];
-    totalProducts: number = 0;
     categoryValues: any[] = [];
     selectedProduct: Product | null = null;
     actionsMenuButton: any;
-    
+
+    currentPage = 1;
+    pageSize = 20;
+    totalRecords = 0;
+    totalPages = 0;
+    pages: number[] = [];
+
     isActionsMenuOpen: boolean = false;
     isAddProductModalOpen: boolean = false;
     isViewProductModalOpen: boolean = false;
@@ -48,14 +54,14 @@ export class AdminProductsComponent implements OnInit {
         discount: number | null;
         categoryID: number | null;
     } = {
-        name: "",
-        description: "",
-        image: "",
-        price: null,
-        stockQuantity: null,
-        discount: null,
-        categoryID: null,
-    };
+            name: "",
+            description: "",
+            image: "",
+            price: null,
+            stockQuantity: null,
+            discount: null,
+            categoryID: null,
+        };
 
     editingProductID: number | null = null;
     editingProductName: string = "";
@@ -66,16 +72,104 @@ export class AdminProductsComponent implements OnInit {
     editingProductDiscount: number | null = null;
     editingProductCategoryID: number | null = null;
 
+    private ngUnsubscribe = new Subject<void>();
+
     constructor(
         private productsService: ProductsService,
         private categoriesService: CategoriesService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
-        this.loadAllProducts();
+        this.loadProducts();
         this.loadCategoryValues();
     }
-    
+
+    ngOnDestroy(): void {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
+
+    private loadProducts(): void {
+        this.productsService.getFilteredProducts(
+            this.currentPage,
+            this.pageSize,
+            null,
+            null,
+            null,
+            null
+        )
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe({
+                next: (response: any) => {
+                    if (response && response.code === 1) {
+                        this.products = response.data.map((product: any) => ({
+                            id: product.id,
+                            name: product.name,
+                            description: product.description,
+                            price: product.price,
+                            discount: product.discount,
+                            stockQuantity: product.stock_quantity,
+                            image: product.image,
+                            categoryID: product.category_id,
+                        } as Product));
+                        this.totalRecords = response.total_records;
+                        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+                        this.generatePageArray();
+                    } else if (response) {
+                        this.products = [];
+                        this.totalRecords = 0;
+                        this.totalPages = 0;
+                        this.pages = [];
+                    }
+                },
+                error: (error: any) => {
+                    this.products = [];
+                    this.totalRecords = 0;
+                    this.totalPages = 0;
+                    this.pages = [];
+                    this.showNotification("error", "Lỗi", "Không thể tải được thông tin sản phẩm.");
+                },
+            });
+    }
+
+    nextPage(): void {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.loadProducts();
+        } else if (this.totalPages > 5 && this.pages.slice(-1)[0] < this.totalPages) {
+            this.generatePageArray();
+        }
+    }
+
+    previousPage(): void {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.loadProducts();
+        } else if (this.totalPages > 5 && this.pages[0] > 1) {
+            this.generatePageArray();
+        }
+    }
+
+    changePage(page: number): void {
+        this.currentPage = page;
+        this.loadProducts();
+    }
+
+    private generatePageArray(): void {
+        this.pages = [];
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(this.totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage + 1 < maxPagesToShow && endPage === this.totalPages) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            this.pages.push(i);
+        }
+    }
+
     downloadProductInfo(): void {
         const data = this.products.map(product => ({
             "Mã sản phẩm": product.id,
@@ -110,7 +204,7 @@ export class AdminProductsComponent implements OnInit {
         this.isActionsMenuOpen = false;
         this.selectedProduct = null;
     }
-    
+
     openAddProductModal(): void {
         this.isAddProductModalOpen = true;
     }
@@ -197,7 +291,7 @@ export class AdminProductsComponent implements OnInit {
         this.productsService.createProduct(newProductInfo).subscribe({
             next: (response: any) => {
                 if (response && response.code === 1) {
-                    this.loadAllProducts();
+                    this.loadProducts(); // Load lại sản phẩm sau khi thêm
                     this.closeAddProductModal();
                     this.showNotification("success", "Thành công", "Tạo mới sản phẩm thành công");
                 }
@@ -241,7 +335,7 @@ export class AdminProductsComponent implements OnInit {
                 if (response && response.code === 1) {
                     this.showNotification('success', 'Thành công', 'Cập nhật sản phẩm thành công');
                     this.closeEditProductModal();
-                    this.loadAllProducts();
+                    this.loadProducts();
                 }
             },
             error: (error: any) => {
@@ -259,7 +353,7 @@ export class AdminProductsComponent implements OnInit {
         this.productsService.deleteProduct(this.selectedProduct.id).subscribe({
             next: (response: any) => {
                 if (response && response.code === 1) {
-                    this.loadAllProducts();
+                    this.loadProducts(); // Load lại sản phẩm sau khi xóa
                     this.showNotification("success", "Thành công", `Đã xóa sản phẩm ${this.selectedProduct?.name}`);
                     this.closeDeleteProductModal();
                 }
@@ -300,28 +394,6 @@ export class AdminProductsComponent implements OnInit {
         this.editingProductStockQuantity = null;
         this.editingProductDiscount = null;
         this.editingProductCategoryID = null;
-    }
-
-    private loadAllProducts(): void {
-        this.productsService.getAllProducts().subscribe({
-            next: (response: any) => {
-                this.products = response.data.map((product: any) => ({
-                    id: product.id,
-                    name: product.name,
-                    description: product.description,
-                    price: product.price,
-                    discount: product.discount,
-                    stockQuantity: product.stock_quantity,
-                    image: product.image,
-                    categoryID: product.category_id,
-                }));
-
-                this.totalProducts = this.products.length;
-            },
-            error: (error: any) => {
-                this.showNotification("error", "Lỗi", "Không thể tải được thông tin sản phẩm");
-            },
-        });
     }
 
     private loadCategoryValues(): void {

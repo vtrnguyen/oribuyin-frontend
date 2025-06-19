@@ -30,6 +30,15 @@
         </div>
     </div>
 
+    <div class="my-4 flex justify-between items-center">
+        <button
+            class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
+            (click)="downloadProductInfo()">
+            Tải xuống
+        </button>
+        <span class="text-sm text-gray-700">Tổng số sản phẩm: <span class="font-bold">{{ totalRecords }}</span></span>
+    </div>
+
     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -107,14 +116,34 @@
             </tbody>
         </table>
     </div>
-
-    <div class="mt-4 flex justify-between items-center">
-        <button
-            class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
-            (click)="downloadProductInfo()">
-            Tải xuống
-        </button>
-        <span class="text-sm text-gray-700">Tổng số sản phẩm: <span class="font-bold">{{ totalProducts }}</span></span>
+    <div *ngIf="totalRecords > pageSize" class="my-4 flex justify-center">
+        <nav aria-label="Page navigation">
+            <ul class="inline-flex items-center -space-x-px">
+                <li>
+                    <button (click)="previousPage()" [disabled]="currentPage === 1"
+                        class="py-2 px-3 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                        [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === 1}">
+                        <span class="sr-only">Trước</span>
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                </li>
+                <li *ngFor="let page of pages" [ngClass]="{'active': page === currentPage}">
+                    <button (click)="changePage(page)"
+                        class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                        [ngClass]="{'bg-blue-500 text-white hover:bg-blue-700': page === currentPage}">
+                        {{ page }}
+                    </button>
+                </li>
+                <li>
+                    <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                        class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer transition-all duration-200"
+                        [ngClass]="{'opacity-50 cursor-not-allowed': currentPage === totalPages}">
+                        <span class="sr-only">Sau</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </li>
+            </ul>
+        </nav>
     </div>
 
     <!-- view product modal -->
