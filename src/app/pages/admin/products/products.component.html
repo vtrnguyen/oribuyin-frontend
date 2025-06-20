@@ -18,11 +18,12 @@
             </div>
             <input type="text"
                 class="shadow appearance-none border border-gray-200 rounded w-full py-2 pl-10 pr-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white"
-                placeholder="Tìm kiếm theo tên">
+                placeholder="Tìm kiếm theo tên" [(ngModel)]="searchName" (keyup.enter)="filterProducts()">
         </div>
         <div class="relative mr-4">
             <select
-                class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
+                class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white"
+                [(ngModel)]="filterCategoryID" (change)="filterProducts()">
                 <option value="">Danh mục sản phẩm</option>
                 <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}
                 </option>

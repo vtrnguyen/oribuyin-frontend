@@ -45,7 +45,8 @@ export class ProductsService {
         categoryID?: number | null,
         minPrice?: number | null,
         maxPrice?: number | null,
-        rating?: number | null
+        rating?: number | null,
+        searchName?: string | null
     ): Observable<any> {
         let params = new HttpParams()
             .set("page", page.toString())
@@ -65,6 +66,10 @@ export class ProductsService {
 
         if (rating !== null && rating !== undefined) {
             params = params.set("rating", rating.toString());
+        }
+
+        if (searchName && searchName.trim() !== "") {
+            params = params.set("searchName", searchName.trim());
         }
 
         return this.http.get<any>(`${this.productApiUrl}/filtered/pagination`, { params });

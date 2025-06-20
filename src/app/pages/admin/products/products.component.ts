@@ -34,6 +34,9 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     totalPages = 0;
     pages: number[] = [];
 
+    searchName: string = "";
+    filterCategoryID: number | null = null;
+
     isActionsMenuOpen: boolean = false;
     isAddProductModalOpen: boolean = false;
     isViewProductModalOpen: boolean = false;
@@ -93,10 +96,11 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         this.productsService.getFilteredProducts(
             this.currentPage,
             this.pageSize,
+            this.filterCategoryID,
             null,
             null,
             null,
-            null
+            this.searchName && this.searchName.trim() !== "" ? this.searchName : null,
         )
             .pipe(takeUntil(this.ngUnsubscribe))
             .subscribe({
@@ -130,6 +134,11 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
                     this.showNotification("error", "Lỗi", "Không thể tải được thông tin sản phẩm.");
                 },
             });
+    }
+
+    filterProducts(): void {
+        this.currentPage = 1;
+        this.loadProducts();
     }
 
     nextPage(): void {
@@ -362,9 +371,6 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
                 this.showNotification("error", "Lỗi", `Không thể xóa sản phẩm ${this.selectedProduct?.name}`);
             },
         });
-    }
-
-    filterProducts(): void {
     }
 
     getCategoryName(categoryID: number | null): string {
