@@ -1,1 +1,160 @@
-<h1>Admin Reports</h1>
+<div class="admin-reports p-6 min-h-screen">
+    <h1 class="text-2xl font-semibold text-gray-900 mb-6">Báo cáo bán hàng</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="md:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Tùy chọn lọc</h2>
+
+            <div class="mb-5">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input type="radio" class="form-radio text-blue-600 h-5 w-5" name="reportType" value="sales"
+                        checked>
+                    <span class="ml-2 text-lg text-gray-800 font-medium">Báo cáo bán hàng</span>
+                </label>
+            </div>
+
+            <div class="mb-5">
+                <h3 class="text-md font-semibold text-gray-600 mb-3">Lọc theo ngày</h3>
+                <div class="grid grid-cols-2 gap-2">
+                    <button (click)="selectedDateFilter = 'today'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'today',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'today'
+                            }">
+                        Hôm nay
+                    </button>
+                    <button (click)="selectedDateFilter = 'yesterday'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'yesterday',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'yesterday'
+                            }">
+                        Hôm qua
+                    </button>
+                    <button (click)="selectedDateFilter = 'last7days'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'last7days',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'last7days'
+                            }">
+                        7 ngày trước
+                    </button>
+                    <button (click)="selectedDateFilter = 'thisMonth'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'thisMonth',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'thisMonth'
+                            }">
+                        Tháng này
+                    </button>
+                    <button (click)="selectedDateFilter = 'lastMonth'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'lastMonth',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'lastMonth'
+                            }">
+                        Tháng trước
+                    </button>
+                    <button (click)="selectedDateFilter = 'thisQuarter'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'thisQuarter',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'thisQuarter'
+                            }">
+                        Quý này
+                    </button>
+                    <button (click)="selectedDateFilter = 'custom'; applyDateFilter()" [ngClass]="{
+                                'cursor-pointer w-full py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200 col-span-2': true,
+                                'bg-blue-600 text-white shadow-md': selectedDateFilter === 'custom',
+                                'bg-gray-200 text-gray-700 hover:bg-gray-300': selectedDateFilter !== 'custom'
+                            }">
+                        Lựa chọn khác
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="selectedDateFilter === 'custom'" class="mt-4 p-4 border border-gray-200 rounded-md bg-gray-50">
+                <label for="startDate" class="block text-sm font-medium text-gray-700 mb-1">Từ ngày:</label>
+                <input type="date" id="startDate" [(ngModel)]="customStartDate" (change)="applyDateFilter()"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+
+                <label for="endDate" class="block text-sm font-medium text-gray-700 mt-3 mb-1">Đến ngày:</label>
+                <input type="date" id="endDate" [(ngModel)]="customEndDate" (change)="applyDateFilter()"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2">
+            </div>
+
+            <div class="mt-6">
+                <button (click)="resetFilters()"
+                    class="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
+                    Reset bộ lọc
+                </button>
+            </div>
+        </div>
+
+        <div class="md:col-span-3 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Tổng quan báo cáo bán hàng</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg shadow">
+                    <p class="text-sm text-gray-500">Tổng doanh thu</p>
+                    <p class="text-2xl font-bold text-blue-700 mt-1">{{ totalRevenue | number : '1.0-0' }} VNĐ</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg shadow">
+                    <p class="text-sm text-gray-500">Tổng đơn hàng</p>
+                    <p class="text-2xl font-bold text-green-700 mt-1">{{ totalOrders }}</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg shadow">
+                    <p class="text-sm text-gray-500">Số lượng sản phẩm đã bán</p>
+                    <p class="text-2xl font-bold text-yellow-700 mt-1">{{ totalItemsSold }}</p>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-700 mb-3">Chi tiết đơn hàng</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full leading-normal shadow-md rounded-lg overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th
+                                class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Mã đơn hàng</th>
+                            <th
+                                class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Ngày đặt</th>
+                            <th
+                                class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Khách hàng</th>
+                            <th
+                                class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Tổng tiền</th>
+                            <th
+                                class="px-5 py-3 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let order of filteredSalesData">
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">#{{ order.orderId }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ order.orderDate |
+                                date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ order.customerName }}
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-red-600 font-medium">{{
+                                order.totalAmount | number : '1.0-0' }} VNĐ</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <span [ngClass]="{
+                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
+                                    'bg-green-100 text-green-800': order.status === 'Hoàn thành',
+                                    'bg-yellow-100 text-yellow-800': order.status === 'Đang xử lý',
+                                    'bg-red-100 text-red-800': order.status === 'Đã hủy'
+                                }">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr *ngIf="filteredSalesData.length === 0">
+                            <td colspan="5"
+                                class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center text-gray-500">
+                                Không có dữ liệu bán hàng cho khoảng thời gian này.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
