@@ -27,6 +27,21 @@ export class OrderService {
         return this.http.get<any>(`${this.orderApiUrl}/current-month-revenue`);
     }
 
+    getOrdersByTimeRange(
+        range: string,
+        custom_start?: string,
+        custom_end?: string
+    ): Observable<any> {
+        let params: any = { range };
+
+        if (range === "custom" && custom_start && custom_end) {
+            params.custom_start = custom_start;
+            params.custom_end = custom_end;
+        }
+
+        return this.http.get<any>(`${this.orderApiUrl}/by-time-range`, { params });
+    }
+
     createOrder(order: CreateOrderDto): Observable<any> {
         return this.http.post<any>(`${this.orderApiUrl}`, order);
     }
