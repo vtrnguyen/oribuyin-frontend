@@ -136,14 +136,7 @@
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm text-red-600 font-medium">{{
                                 order.totalAmount | number : '1.0-0' }} VNĐ</td>
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                <span [ngClass]="{
-                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full': true,
-                                    'bg-green-100 text-green-800': order.status === 'Hoàn thành',
-                                    'bg-yellow-100 text-yellow-800': order.status === 'Đang xử lý',
-                                    'bg-red-100 text-red-800': order.status === 'Đã hủy'
-                                }">
-                                    {{ order.status }}
-                                </span>
+                                <app-order-status-badge [status]="order.status"></app-order-status-badge>
                             </td>
                         </tr>
                         <tr *ngIf="filteredSalesData.length === 0">

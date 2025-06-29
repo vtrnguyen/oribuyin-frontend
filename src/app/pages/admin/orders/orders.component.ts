@@ -7,6 +7,7 @@ import { OrderService } from "../../../core/services/order.service";
 import { DetailOrder } from "../../../shared/interfaces/detail_order.interface";
 import { ClickOutsideModule } from "ng-click-outside";
 import * as XLSX from "xlsx";
+import { OrderStatusBadgeComponent } from "../../../shared/components/order_status_badge/order_status_badge.component";
 
 @Component({
     selector: "app-admin-orders",
@@ -17,6 +18,7 @@ import * as XLSX from "xlsx";
         DatePipe,
         NotificationComponent,
         ClickOutsideModule,
+        OrderStatusBadgeComponent,
     ],
     templateUrl: "./orders.component.html",
     styleUrls: ["./orders.component.scss"],

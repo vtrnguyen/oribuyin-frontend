@@ -73,20 +73,7 @@
                 number:'1.0-0' }}
                 VNĐ</td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <span class="px-2 py-1 font-semibold leading-tight rounded-full" [ngClass]="{
-                                             'text-green-700 bg-green-100': order.status === 'delivered',
-                                             'text-blue-700 bg-blue-100': order.status === 'confirmed' || order.status === 'shipped',
-                                             'text-yellow-700 bg-yellow-100': order.status === 'pending',
-                                             'text-red-700 bg-red-100': order.status === 'cancelled'
-                                         }">
-                  {{
-                  order.status === 'pending' ? 'Chờ xác nhận' :
-                  order.status === 'confirmed' ? 'Đã xác nhận' :
-                  order.status === 'shipped' ? 'Đang giao' :
-                  order.status === 'delivered' ? 'Đã hoàn thành' :
-                  order.status === 'cancelled' ? 'Đã hủy' : order.status
-                  }}
-                </span>
+                <app-order-status-badge [status]="order.status"></app-order-status-badge>
               </td>
             </tr>
             <tr *ngIf="recentOrders.length === 0">

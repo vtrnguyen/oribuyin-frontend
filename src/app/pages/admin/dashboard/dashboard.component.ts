@@ -4,6 +4,7 @@ import { ProductsService } from "../../../core/services/products.service";
 import { CommonModule } from "@angular/common";
 import { OrderService } from "../../../core/services/order.service";
 import { Chart, registerables } from "chart.js";
+import { OrderStatusBadgeComponent } from "../../../shared/components/order_status_badge/order_status_badge.component";
 
 Chart.register(...registerables);
 
@@ -17,6 +18,7 @@ interface MonthlyRevenue {
     standalone: true,
     imports: [
         CommonModule,
+        OrderStatusBadgeComponent,
     ],
     templateUrl: "./dashboard.component.html",
     styleUrls: ["./dashboard.component.scss"],
@@ -42,11 +44,10 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         this.getNumberOfProducts();
         this.getRecentOrders();
         this.getCurrentMonthRevenue();
-        this.initializeMonthlyRevenue(); // Đổi tên method này
+        this.initializeMonthlyRevenue();
     }
 
     ngAfterViewInit(): void {
-        // Đảm bảo chart được render sau khi view đã sẵn sàng
         setTimeout(() => {
             this.renderRevenueChart();
         }, 100);
@@ -112,7 +113,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
 
-    // Đổi tên method và loại bỏ setTimeout trong đây
     private initializeMonthlyRevenue(): void {
         this.monthlyRevenueData = [
             { month: "Tháng 1", revenue: 120000000 },
@@ -131,7 +131,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     private renderRevenueChart(): void {
-        // Kiểm tra xem ViewChild đã sẵn sàng chưa
         if (!this.revenueChartRef || !this.revenueChartRef.nativeElement) {
             console.error('Chart canvas element not found');
             return;

@@ -2,6 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { OrderService } from "../../../core/services/order.service";
+import { ORDER_STATUS } from "../../../shared/constants/order_status.constant";
+import { PAYMENT_STATUS } from "../../../shared/constants/payment_status.constant";
+import { OrderStatusBadgeComponent } from "../../../shared/components/order_status_badge/order_status_badge.component";
 
 @Component({
     selector: "app-admin-reports",
@@ -9,6 +12,7 @@ import { OrderService } from "../../../core/services/order.service";
     imports: [
         CommonModule,
         FormsModule,
+        OrderStatusBadgeComponent,
     ],
     templateUrl: "./reports.component.html",
     styleUrls: ["./reports.component.scss"],
@@ -74,8 +78,10 @@ export class AdminReportsComponent implements OnInit {
                         orderId: order.id,
                         orderDate: order.order_date,
                         customerName: order.customer?.first_name + ' ' + order.customer?.last_name,
-                        totalAmount: order.total_amount,
-                        status: this.mapStatus(order.status)
+                        totalAmount: Number(order.total_amount),
+                        status: order.status,
+                        paymentStatus: order.payment_status,
+                        productItemQuantity: order.product_item_quantity,
                     }));
                 } else {
                     this.filteredSalesData = [];
@@ -90,12 +96,13 @@ export class AdminReportsComponent implements OnInit {
         });
     }
 
-    private mapStatus(status: string): string {
+    mapStatus(status: string): string {
         switch (status) {
-            case 'completed': return 'Hoàn thành';
-            case 'processing': return 'Đang xử lý';
-            case 'shipped': return 'Đang giao';
-            case 'cancelled': return 'Đã hủy';
+            case ORDER_STATUS.PENDING: return 'Đang chờ';
+            case ORDER_STATUS.CONFIRMED: return 'Đã xác nhận';
+            case ORDER_STATUS.SHIPPED: return 'Đang giao';
+            case ORDER_STATUS.DELIVERED: return 'Đã giao';
+            case ORDER_STATUS.CANCELLED: return 'Đã hủy';
             default: return status;
         }
     }
@@ -106,10 +113,10 @@ export class AdminReportsComponent implements OnInit {
         this.totalItemsSold = 0;
 
         this.filteredSalesData.forEach(order => {
-            if (order.status === 'Hoàn thành') {
+            this.totalOrders++;
+            if (order.status === ORDER_STATUS.DELIVERED && order.paymentStatus === PAYMENT_STATUS.PAID) {
                 this.totalRevenue += order.totalAmount;
-                this.totalOrders++;
-                this.totalItemsSold += 1;
+                this.totalItemsSold += order.productItemQuantity;
             }
         });
     }
