@@ -124,7 +124,6 @@ export const routes: Routes = [
             { path: "dashboard", redirectTo: "", pathMatch: "full" },
             { path: "stocks", component: StaffStocksComponent, title: "Nhập kho" },
             { path: "orders", component: StaffOrdersComponent, title: "Đơn hàng" },
-            { path: "reports", component: StaffReportsComponent, title: "Báo cáo" },
             { path: "profile", component: StaffProfileComponent, title: "Thông tin cá nhân" },
             { path: "settings", component: StaffSettingsComponent, title: "Cài đặt" },
         ]
