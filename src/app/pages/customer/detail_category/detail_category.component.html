@@ -3,7 +3,7 @@
         [message]="notificationMessage"></app-notification-component>
 
     <section class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Thông tin danh mục</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Thông tin nhóm sản phẩm</h2>
         <div *ngIf="category" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
             <div class="flex justify-center item">
                 <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + category.image"
@@ -16,21 +16,21 @@
             </div>
         </div>
         <div *ngIf="!category" class="text-gray-500 text-center">
-            Không tìm thấy thông tin danh mục sản phẩm.
+            Không tìm thấy thông tin nhóm sản phẩm.
         </div>
     </section>
 
     <hr class="h-px my-8 bg-gray-400 border-0 dark:bg-gray-700">
 
     <section>
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Sản phẩm thuộc danh mục</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Sản phẩm thuộc nhóm</h2>
         <div *ngIf="products && products.length > 0"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <app-product-item-component *ngFor="let product of products"
                 [product]="product"></app-product-item-component>
         </div>
         <div *ngIf="!products || products.length === 0" class="text-gray-500 text-center">
-            Không có sản phẩm nào thuộc danh mục này.
+            Không có sản phẩm nào thuộc nhóm này.
         </div>
 
         <div *ngIf="totalRecords > pageSize" class="mt-8 flex justify-center">

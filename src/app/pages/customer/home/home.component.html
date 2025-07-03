@@ -71,7 +71,7 @@
 
     <section class="mb-8">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Danh mục sản phẩm</h2>
+            <h2 class="text-2xl font-bold text-gray-800">Nhóm sản phẩm</h2>
         </div>
         <div class="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-10 gap-2"
             *ngIf="categories && categories.length > 0; else noCategories">
@@ -90,7 +90,7 @@
             </ng-container>
         </div>
         <ng-template #noCategories>
-            <p class="text-gray-500 text-center">Hiện chưa có danh mục sản phẩm nào.</p>
+            <p class="text-gray-500 text-center">Hiện chưa có nhóm sản phẩm nào.</p>
         </ng-template>
     </section>
 

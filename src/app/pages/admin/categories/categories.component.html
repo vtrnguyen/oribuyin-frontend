@@ -3,11 +3,11 @@
         [message]="notificationMessage"></app-notification-component>
 
     <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-semibold text-gray-900">Quản lý danh mục sản phẩm</h1>
+        <h1 class="text-2xl font-semibold text-gray-900">Quản lý nhóm sản phẩm</h1>
         <button
             class="bg-blue-700 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline cursor-pointer transition-all duration-200"
             type="button" (click)="openAddCategoryModal()">
-            <i class="fas fa-plus mr-2"></i> Thêm danh mục
+            <i class="fas fa-plus mr-2"></i> Thêm nhóm sản phẩm
         </button>
     </div>
 
@@ -28,7 +28,7 @@
             (click)="downloadCategoryInfo()">
             Tải xuống
         </button>
-        <span class="text-sm text-gray-700">Tổng số danh mục sản phẩm: <span class="font-bold">{{ totalCategories
+        <span class="text-sm text-gray-700">Tổng số nhóm sản phẩm: <span class="font-bold">{{ totalCategories
                 }}</span></span>
     </div>
 
@@ -52,7 +52,7 @@
             <tbody class="bg-white divide-y divide-gray-200">
                 <tr *ngIf="filteredCategories.length === 0">
                     <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
-                        Không có danh mục sản phẩm nào.
+                        Không có nhóm sản phẩm nào.
                     </td>
                 </tr>
                 <tr *ngFor="let category of filteredCategories; let i = index">
@@ -104,11 +104,11 @@
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl"
                 (clickOutside)="closeAddCategoryModal()">
                 <form class="p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Thêm thông tin danh mục</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Thêm thông tin nhóm sản phẩm</h2>
 
                     <div class="mb-4">
-                        <label for="newCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh
-                            mục:</label>
+                        <label for="newCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh nhóm sản
+                            phẩm:</label>
                         <div class="flex items-center gap-4">
                             <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-100 shrink-0">
                                 <img src="images/default_category.png" alt="Preview category image"
@@ -128,21 +128,21 @@
 
                     <div class="mb-4">
                         <label for="newCategoryName" class="block text-gray-700 text-sm font-bold mb-2">
-                            Tên danh mục:
+                            Tên nhóm sản phẩm:
                         </label>
                         <input type="text" id="newCategoryName" [(ngModel)]="newCategoryName" name="name"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Nhập tên danh mục">
+                            placeholder="Nhập tên nhóm sản phẩm">
                     </div>
 
                     <div class="mb-6">
                         <label for="newCategoryDescription" class="block text-gray-700 text-sm font-bold mb-2">
-                            Mô tả danh mục:
+                            Mô tả nhóm sản phẩm:
                         </label>
                         <textarea id="newCategoryDescription" [(ngModel)]="newCategoryDescription" name="description"
                             rows="3"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Nhập mô tả danh mục"></textarea>
+                            placeholder="Nhập mô tả nhóm sản phẩm"></textarea>
                     </div>
 
                     <div class="flex justify-end">
@@ -168,7 +168,7 @@
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-3xl"
                 (clickOutside)="closeEditCategoryModal()">
                 <form class="p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Cập nhật thông tin danh mục</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Cập nhật thông tin nhóm sản phẩm</h2>
 
                     <div class="mb-4">
                         <label for="updateCategoryImage" class="block text-gray-700 text-sm font-bold mb-2">Ảnh danh
@@ -192,21 +192,21 @@
 
                     <div class="mb-4">
                         <label for="updateCategoryName" class="block text-gray-700 text-sm font-bold mb-2">
-                            Tên danh mục:
+                            Tên nhóm sản phẩm:
                         </label>
                         <input type="text" id="updateCategoryName" [(ngModel)]="updateCategoryName" name="name"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Nhập tên danh mục">
+                            placeholder="Nhập tên nhóm sản phẩm">
                     </div>
 
                     <div class="mb-6">
                         <label for="updateCategoryDescription" class="block text-gray-700 text-sm font-bold mb-2">
-                            Mô tả danh mục:
+                            Mô tả nhóm sản phẩm:
                         </label>
                         <textarea id="updateCategoryDescription" [(ngModel)]="updateCategoryDescription"
                             name="description" rows="3"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            placeholder="Nhập mô tả danh mục"></textarea>
+                            placeholder="Nhập mô tả nhóm sản phẩm"></textarea>
                     </div>
 
                     <div class="flex justify-end">
@@ -232,12 +232,12 @@
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-2xl"
                 (clickOutside)="closeViewCategoryModal()">
                 <div class="p-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Thông tin danh mục sản phẩm</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6">Thông tin nhóm sản phẩm</h2>
 
                     <div class="mb-4 flex justify-start items-center gap-3">
                         <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-100">
                             <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/' + selectedCategory?.image"
-                                [alt]="'Hình ảnh của danh mục ' + selectedCategory?.name"
+                                [alt]="'Hình ảnh của nhóm sản phẩm ' + selectedCategory?.name"
                                 class="object-cover rounded-full w-full h-full">
                         </div>
                         <h3 class="text-lg font-semibold text-gray-800">{{ selectedCategory?.name }}</h3>
@@ -265,9 +265,9 @@
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-xl">
                 <form class="px-6 py-4" (clickOutside)="closeDeleteCategoryModal()">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin danh mục sản phẩm</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin nhóm sản phẩm</h2>
 
-                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa danh mục "{{ selectedCategory?.name }}"
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa nhóm sản phẩm "{{ selectedCategory?.name }}"
                         không?</p>
 
                     <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">

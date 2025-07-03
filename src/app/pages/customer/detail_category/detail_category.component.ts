@@ -81,7 +81,7 @@ export class CustomerDetailCategoryComponent implements OnInit {
                                 };
                                 return this.productsService.getProductsByCategoryID(categoryID, this.currentPage, this.pageSize);
                             } else {
-                                this.showNotification("error", "Lỗi", "Không tải được thông tin danh mục");
+                                this.showNotification("error", "Lỗi", "Không tải được thông tin nhóm sản phẩm");
                                 return of(null);
                             }
                         }),

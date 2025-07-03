@@ -50,7 +50,7 @@ export class AdminCategoriesComponent implements OnInit {
     notificationTitle: string = '';
     notificationMessage: string = '';
 
-    constructor(private categoriesService: CategoriesService) {}
+    constructor(private categoriesService: CategoriesService) { }
 
     ngOnInit(): void {
         this.loadAllCategories();
@@ -87,16 +87,16 @@ export class AdminCategoriesComponent implements OnInit {
                 if (response && response.code === 1) {
                     this.loadAllCategories();
                     this.closeAddCategoryModal();
-                    this.showNotification('success', 'Thành công', 'Tạo mới danh mục sản phẩm thành công.');
+                    this.showNotification('success', 'Thành công', 'Tạo mới nhóm sản phẩm thành công.');
                 }
             },
             error: (error: any) => {
                 if (error.error?.subcode === 1) {
-                    this.showNotification('error', 'Lỗi', 'Tên danh mục sản phẩm đã tồn tại!');
+                    this.showNotification('error', 'Lỗi', 'Tên nhóm sản phẩm đã tồn tại!');
                     return;
                 }
 
-                this.showNotification('error', 'Lỗi', 'Tạo mới danh mục sản phẩm không thành công.');
+                this.showNotification('error', 'Lỗi', 'Tạo mới nhóm sản phẩm không thành công.');
             }
         })
     }
@@ -108,7 +108,7 @@ export class AdminCategoriesComponent implements OnInit {
         }
 
         if (!this.updateCategoryID) {
-            this.showNotification("error", "Lỗi", "Không tồn tại danh mục muốn cập nhật");
+            this.showNotification("error", "Lỗi", "Không tồn tại nhóm sản phẩm muốn cập nhật");
             return;
         }
 
@@ -123,16 +123,16 @@ export class AdminCategoriesComponent implements OnInit {
                 if (response && response.code === 1) {
                     this.loadAllCategories();
                     this.closeEditCategoryModal();
-                    this.showNotification("success", "Thành công", "Cập nhật thông tin danh mục sản phẩm thành công");
+                    this.showNotification("success", "Thành công", "Cập nhật thông tin nhóm sản phẩm thành công");
                 }
             },
             error: (error: any) => {
                 if (error.error?.subcode === 1) {
-                    this.showNotification("error", "Lỗi", "Tên danh mục đã tồn tại!");
+                    this.showNotification("error", "Lỗi", "Tên nhóm sản phẩm đã tồn tại!");
                     return;
                 }
 
-                this.showNotification("error", "Lỗi", "Cập nhật thông tin danh mục sản phẩm không thành công.");
+                this.showNotification("error", "Lỗi", "Cập nhật thông tin nhóm sản phẩm không thành công.");
             },
         });
     }
@@ -147,12 +147,12 @@ export class AdminCategoriesComponent implements OnInit {
             next: (response: any) => {
                 if (response && response.code === 1) {
                     this.loadAllCategories();
-                    this.showNotification("success", "Thành công", `Đã xóa danh mục ${this.selectedCategory?.name}`);
+                    this.showNotification("success", "Thành công", `Đã xóa nhóm sản phẩm ${this.selectedCategory?.name}`);
                     this.closeDeleteCategoryModal();
                 }
             },
             error: (error: any) => {
-                this.showNotification("error", "Lỗi", `Không thể xóa danh mục ${this.selectedCategory?.name}`);
+                this.showNotification("error", "Lỗi", `Không thể xóa nhóm sản phẩm ${this.selectedCategory?.name}`);
             }
         });
     }
@@ -232,8 +232,8 @@ export class AdminCategoriesComponent implements OnInit {
 
     downloadCategoryInfo(): void {
         const data = this.categories.map(category => ({
-            "Mã danh mục sản phẩm": category.id,
-            "Tên danh mục": category.name,
+            "Mã nhóm sản phẩm": category.id,
+            "Tên nhóm sản phẩm": category.name,
             "Mô tả": category.description,
             "Đường dẫn hình ảnh": `https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/categories/${category.image}`,
         }));

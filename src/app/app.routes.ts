@@ -8,7 +8,7 @@ import { CustomerLayoutComponent } from './layouts/customer/customer_layout.comp
 // Auth components
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
-import {ForgotPasswordComponent} from './auth/forgot_password/forgot_password.component';
+import { ForgotPasswordComponent } from './auth/forgot_password/forgot_password.component';
 
 // Admin components
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
@@ -66,9 +66,9 @@ export const routes: Routes = [
         canActivate: [AuthenticatedGuard],
     },
     {
-      path: "forgot-password",
-      component: ForgotPasswordComponent,
-      canActivate: [AuthenticatedGuard],
+        path: "forgot-password",
+        component: ForgotPasswordComponent,
+        canActivate: [AuthenticatedGuard],
     },
 
     // customer
@@ -81,7 +81,7 @@ export const routes: Routes = [
             { path: "home", redirectTo: "", pathMatch: "full" },
             { path: "about", component: CustomerAboutComponent, title: "Thông tin về OriAuto" },
             { path: "cart", component: CustomerCartComponent, title: "Giỏ hàng" },
-            { path: "detail-category/:id", component: CustomerDetailCategoryComponent, title: "Chi tiết danh mục sản phẩm" },
+            { path: "detail-category/:id", component: CustomerDetailCategoryComponent, title: "Chi tiết nhóm sản phẩm" },
             { path: "detail-product/:id", component: CustomerDetailProductComponent, title: "Chi tiết sản phẩm" },
             { path: "orders", component: CustomerOrdersComponent, title: "Đơn hàng của tôi" },
             { path: "products", component: CustomerProductsComponent, title: "Gợi ý sản phẩm" },
@@ -105,7 +105,7 @@ export const routes: Routes = [
             { path: "", component: AdminDashboardComponent, title: "Thông tin chung" },
             { path: "dashboard", redirectTo: "", pathMatch: "full" },
             { path: "users", component: AdminUsersComponent, title: "Người dùng" },
-            { path: "categories", component: AdminCategoriesComponent, title: "Danh mục sản phẩm" },
+            { path: "categories", component: AdminCategoriesComponent, title: "Nhóm sản phẩm" },
             { path: "products", component: AdminProductsComponent, title: "Sản phẩm" },
             { path: "orders", component: AdminOrdersComponent, title: "Đơn hàng" },
             { path: "reports", component: AdminReportsComponent, title: "Báo cáo" },

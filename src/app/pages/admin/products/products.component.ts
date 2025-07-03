@@ -188,7 +188,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
             "Tồn kho": product.stockQuantity,
             "Mô tả": product.description,
             "Hình ảnh": `https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/${product.image}`,
-            "Danh mục sản phẩm": this.getCategoryName(product.categoryID),
+            "Nhóm sản phẩm": this.getCategoryName(product.categoryID),
         }));
 
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
@@ -410,7 +410,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
                 }
             },
             error: (error: any) => {
-                this.showNotification("error", "Lỗi", "Không thể tải danh sách danh mục sản phẩm");
+                this.showNotification("error", "Lỗi", "Không thể tải danh sách nhóm sản phẩm");
             },
         });
     }

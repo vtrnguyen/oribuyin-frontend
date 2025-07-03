@@ -24,7 +24,7 @@
             <select
                 class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white"
                 [(ngModel)]="filterCategoryID" (change)="filterProducts()">
-                <option value="">Danh mục sản phẩm</option>
+                <option value="">Nhóm sản phẩm</option>
                 <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{ categoryValue.name }}
                 </option>
             </select>
@@ -204,7 +204,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-bold">Danh mục:</label>
+                            <label class="block text-gray-700 text-sm font-bold">Nhóm sản phẩm:</label>
                             <p class="py-2 text-gray-700 leading-tight">
                                 {{ getCategoryName(selectedProduct?.categoryID ?? null) }}
                             </p>
@@ -284,11 +284,11 @@
 
                     <div class="mb-4">
                         <label for="productCategory" class="block text-gray-700 text-sm font-bold mb-2">
-                            Danh mục sản phẩm:
+                            Nhóm sản phẩm:
                         </label>
                         <select id="productCategory" [(ngModel)]="newProduct.categoryID" name="categoryID"
                             class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
-                            <option value="" disabled>Chọn danh mục</option>
+                            <option value="" disabled>Chọn nhóm sản phẩm</option>
                             <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{
                                 categoryValue.name }}</option>
                         </select>
@@ -391,12 +391,12 @@
 
                     <div class="mb-4">
                         <label for="editProductCategory" class="block text-gray-700 text-sm font-bold mb-2">
-                            Danh mục sản phẩm:
+                            Nhóm sản phẩm:
                         </label>
                         <select id="editProductCategory" [(ngModel)]="editingProductCategoryID"
                             name="editProductCategory"
                             class="shadow border border-gray-200 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer bg-white">
-                            <option value="" disabled>Chọn danh mục</option>
+                            <option value="" disabled>Chọn nhóm</option>
                             <option *ngFor="let categoryValue of categoryValues" [value]="categoryValue.id">{{
                                 categoryValue.name }}</option>
                         </select>
@@ -426,7 +426,8 @@
                 <form class="px-6 py-4" (clickOutside)="closeDeleteProductModal()">
                     <h2 class="text-xl font-semibold text-gray-900 mb-2">Xóa thông tin sản phẩm</h2>
 
-                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa danh mục "{{ selectedProduct?.name }}" không?
+                    <p class="mb-4 text-[#6B7280]">Bạn có thực sự muốn xóa nhóm sản phẩm "{{ selectedProduct?.name }}"
+                        không?
                     </p>
 
                     <div class="mb-6 rounded-md bg-[#fef4dc] p-4 text-[#b43403]">

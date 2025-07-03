@@ -98,7 +98,7 @@ export class CustomerHomeComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             },
             error: (error: any) => {
-                this.showNotification("error", "Lỗi", "Không tải được danh sách danh mục sản phẩm");
+                this.showNotification("error", "Lỗi", "Không tải được danh sách nhóm sản phẩm");
             },
         });
     }
