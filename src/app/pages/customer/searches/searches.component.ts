@@ -53,7 +53,16 @@ export class CustomerSearchesComponent implements OnInit, OnDestroy {
                             this.totalRecords = res.data.length;
                             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
                             const start = (this.currentPage - 1) * this.pageSize;
-                            this.products = res.data.slice(start, start + this.pageSize);
+                            this.products = res.data.slice(start, start + this.pageSize).map((suggestedProduct: any) => ({
+                                id: suggestedProduct.id,
+                                name: suggestedProduct.name,
+                                description: suggestedProduct.description,
+                                price: suggestedProduct.price,
+                                discount: suggestedProduct.discount,
+                                stockQuantity: suggestedProduct.stock_quantity,
+                                image: suggestedProduct.image,
+                                categoryID: suggestedProduct.category_id,
+                            }));
                             this.generatePageArray();
                         } else {
                             this.products = [];
