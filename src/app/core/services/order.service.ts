@@ -42,6 +42,10 @@ export class OrderService {
         return this.http.get<any>(`${this.orderApiUrl}/by-time-range`, { params });
     }
 
+    getTotalOfPendingOrders(): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}/count-pending`);
+    }
+
     createOrder(order: CreateOrderDto): Observable<any> {
         return this.http.post<any>(`${this.orderApiUrl}`, order);
     }

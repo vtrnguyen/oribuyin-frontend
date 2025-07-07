@@ -79,6 +79,14 @@ export class ProductsService {
         return this.http.post(`${this.productApiUrl}/checkout`, { itemIDs: itemIDs });
     }
 
+    getTotalStock(): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/total-stock`);
+    }
+
+    getTotalAlmostOutOfStockQuantity(): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/almost-out-of-stock`);
+    }
+
     searchProductsByName(keyword: string): Observable<any> {
         return this.http.get<any>(`${this.productApiUrl}/search?keyword=${keyword}`);
     }

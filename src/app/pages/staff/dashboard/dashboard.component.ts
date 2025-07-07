@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { ProductsService } from "../../../core/services/products.service";
+import { OrderService } from "../../../core/services/order.service";
 
 interface Order {
     id: string;
@@ -94,8 +96,12 @@ export class StaffDashboardComponent implements OnInit {
         { name: "CN", orders: 5, percentage: 25 }
     ];
 
+    constructor(
+        private productsService: ProductsService,
+        private ordersService: OrderService
+    ) { }
+
     ngOnInit(): void {
-        // Initialize data or call services to load real data
         this.loadDashboardData();
     }
 
@@ -110,8 +116,53 @@ export class StaffDashboardComponent implements OnInit {
     }
 
     private loadDashboardData(): void {
-        // TODO: Call services to load real data from API
-        // This is mock data for demonstration
-        console.log('Loading dashboard data...');
+        this.loadTotalStock();
+        this.loadTotalAlmostOutOfStockQuantity();
+        this.loadTotalPendingOrders();
+    }
+
+    private loadTotalStock(): void {
+        this.productsService.getTotalStock().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.totalInventory = response.data;
+                } else {
+                    this.totalInventory = 0;
+                }
+            },
+            error: (error: any) => {
+                this.totalInventory = 0;
+            },
+        });
+    }
+
+    private loadTotalAlmostOutOfStockQuantity(): void {
+        this.productsService.getTotalAlmostOutOfStockQuantity().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.lowStockItems = response.data;
+                } else {
+                    this.lowStockItems = 0;
+                }
+            },
+            error: (error: any) => {
+                this.lowStockItems = 0;
+            },
+        });
+    }
+
+    private loadTotalPendingOrders(): void {
+        this.ordersService.getTotalOfPendingOrders().subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.pendingOrders = response.data;
+                } else {
+                    this.pendingOrders = 0;
+                }
+            },
+            error: (error: any) => {
+                this.pendingOrders = 0;
+            },
+        });
     }
 }
