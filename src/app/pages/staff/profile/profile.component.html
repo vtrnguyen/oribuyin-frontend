@@ -1,1 +1,117 @@
-<h1>Staff Profile</h1>
+<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md p-8 mt-8">
+    <app-notification-component [isVisible]="notificationVisible" [type]="notificationType" [title]="notificationTitle"
+        [message]="notificationMessage"></app-notification-component>
+
+    <div class="flex items-center mb-8">
+        <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/avatar/' + user.avatar"
+            alt="Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-blue-400 mr-6" />
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1">
+                {{ user.first_name }} {{ user.last_name }}
+            </h2>
+            <p class="text-gray-500">{{ user.email }}</p>
+        </div>
+    </div>
+    <form *ngIf="editMode; else viewMode" (ngSubmit)="saveProfile()">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Họ</label>
+                <input [(ngModel)]="editUser.first_name" name="first_name"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Tên</label>
+                <input [(ngModel)]="editUser.last_name" name="last_name"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Email</label>
+                <input [(ngModel)]="editUser.email" name="email"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required type="email" />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Số điện thoại</label>
+                <input [(ngModel)]="editUser.phone_number" name="phone_number"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required />
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Giới tính</label>
+                <select [(ngModel)]="editUser.gender" name="gender"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="male">Nam</option>
+                    <option value="female">Nữ</option>
+                    <option value="other">Khác</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Ngày sinh</label>
+                <input [(ngModel)]="editUser.birth_day" name="birth_day"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    type="date" />
+            </div>
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="block text-gray-700 font-semibold mb-1">Địa chỉ</label>
+                <input [(ngModel)]="editUser.address" name="address"
+                    class="form-input w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+        </div>
+        <div class="flex justify-end gap-4 mt-8">
+            <button type="button"
+                class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 cursor-pointer transition-all duration-200"
+                (click)="cancelEdit()">Hủy</button>
+            <button type="submit"
+                class="px-6 py-2 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 cursor-pointer transition-all duration-200">Lưu</button>
+        </div>
+    </form>
+    <ng-template #viewMode>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Họ:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.first_name }}</span>
+            </div>
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Tên:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.last_name }}</span>
+            </div>
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Email:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.email }}</span>
+            </div>
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Số điện thoại:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.phone_number }}</span>
+            </div>
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Giới tính:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">
+                    {{ user.gender === 'male' ? 'Nam' : user.gender === 'female' ? 'Nữ' : 'Khác' }}
+                </span>
+            </div>
+            <div class="flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Ngày sinh:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.birth_day | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="md:col-span-2 flex flex-col gap-1 mb-2">
+                <label class="text-gray-600 font-semibold">Địa chỉ:</label>
+                <span class="font-semibold text-gray-800 bg-gray-100 rounded px-3 py-2 border border-gray-200">{{
+                    user.address }}</span>
+            </div>
+        </div>
+        <div class="flex justify-end mt-8">
+            <button
+                class="px-6 py-2 rounded bg-blue-600 text-white font-bold hover:bg-blue-700 cursor-pointer transition-all duration-200"
+                (click)="editProfile()">
+                Chỉnh sửa
+            </button>
+        </div>
+    </ng-template>
+</div>
