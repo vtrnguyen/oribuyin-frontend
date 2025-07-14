@@ -253,8 +253,8 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
     }
 
     openDeleteProductModal(product: Product): void {
-        this.selectedProduct = product;
         this.closeActionMenu();
+        this.selectedProduct = product;
         this.isDeleteProductModalOpen = true;
     }
 
@@ -300,7 +300,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         this.productsService.createProduct(newProductInfo).subscribe({
             next: (response: any) => {
                 if (response && response.code === 1) {
-                    this.loadProducts(); // Load lại sản phẩm sau khi thêm
+                    this.loadProducts();
                     this.closeAddProductModal();
                     this.showNotification("success", "Thành công", "Tạo mới sản phẩm thành công");
                 }
@@ -362,7 +362,7 @@ export class AdminProductsComponent implements OnInit, OnDestroy {
         this.productsService.deleteProduct(this.selectedProduct.id).subscribe({
             next: (response: any) => {
                 if (response && response.code === 1) {
-                    this.loadProducts(); // Load lại sản phẩm sau khi xóa
+                    this.loadProducts();
                     this.showNotification("success", "Thành công", `Đã xóa sản phẩm ${this.selectedProduct?.name}`);
                     this.closeDeleteProductModal();
                 }
