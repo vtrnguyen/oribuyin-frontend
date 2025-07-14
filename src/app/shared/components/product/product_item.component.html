@@ -2,7 +2,7 @@
     [title]="product.name">
     <a [routerLink]="['/detail-product', product.id]" class="block h-full">
         <div class="w-full h-40 md:h-52 lg:h-64 p-2">
-            <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
+            <img [src]="product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image : 'images/oribuyin_logo.png'"
                 [alt]="product.name" class="w-full h-full object-contain">
         </div>
         <div class="p-3 flex flex-col flex-grow">
