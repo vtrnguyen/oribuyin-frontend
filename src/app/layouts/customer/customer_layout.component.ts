@@ -9,6 +9,7 @@ import { UsersService } from '../../core/services/users.service';
 import { User } from '../../shared/interfaces/user.interface';
 import { CartService } from '../../core/services/cart.service';
 import { CartStateManagerService } from '../../shared/services/cart_state_manager.service';
+import { ChatbotCustomerComponent } from '../../shared/components/chatbot/chatbot-customer.component';
 
 @Component({
     selector: 'app-customer-layout',
@@ -19,6 +20,7 @@ import { CartStateManagerService } from '../../shared/services/cart_state_manage
         CommonModule,
         FormsModule,
         ClickOutsideModule,
+        ChatbotCustomerComponent,
     ],
     templateUrl: './customer_layout.component.html',
     styleUrls: ['./customer_layout.component.scss'],

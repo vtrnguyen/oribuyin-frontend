@@ -1,0 +1,36 @@
+<button *ngIf="!isChatbotOpen" (click)="openChatbot()" aria-label="Mở chat bot"
+    class="fixed bottom-6 right-6 z-50 rounded-full w-20 h-20 flex items-center justify-center transition-all duration-300 focus:outline-none cursor-pointer chatbot-float-animate">
+    <img src="images/oribuyin_chatbot.png" alt="Chatbot" class="w-20 h-20 object-contain" />
+</button>
+
+<div *ngIf="isChatbotOpen" class="fixed inset-0 z-50 flex items-end justify-end pointer-events-none">
+    <div class="w-full h-full" (click)="closeChatbot()"></div>
+    <div class="pointer-events-auto fixed bottom-6 right-6 w-full max-w-sm bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
+        [ngClass]="{'animate-zoom-in': chatbotAnimation === 'in', 'animate-zoom-out': chatbotAnimation === 'out'}"
+        style="height: 600px;">
+        <div class="bg-[#38b6ff] text-white px-4 py-3 flex items-center justify-between">
+            <span class="font-semibold text-lg"><i class="fa-solid fa-robot mr-2"></i> Chat Bot OriBuyin</span>
+            <button (click)="closeChatbot()"
+                class="text-white hover:text-gray-200 text-xl focus:outline-none cursor-pointer">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+        <div class="flex-1 p-4 overflow-y-auto">
+            <div *ngFor="let msg of chatbotMessages"
+                [ngClass]="{'text-right': msg.from === 'user', 'text-left': msg.from === 'bot'}" class="mb-3">
+                <div [ngClass]="{'bg-blue-100 text-blue-800': msg.from === 'user', 'bg-gray-100 text-gray-700': msg.from === 'bot', 'break-all': true}"
+                    class="inline-block px-4 py-2 rounded-lg max-w-xs">
+                    {{ msg.text }}
+                </div>
+            </div>
+        </div>
+        <form (ngSubmit)="sendChatbotMessage()" class="flex items-center p-3 border-t border-gray-100 bg-gray-50">
+            <input [(ngModel)]="chatbotInput" name="chatbotInput" autocomplete="off" placeholder="Nhập tin nhắn..."
+                class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none" />
+            <button type="submit"
+                class="ml-2 bg-[#38b6ff] hover:bg-[#1e90ff] text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer outline-none">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+</div>
