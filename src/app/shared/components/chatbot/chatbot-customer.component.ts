@@ -24,9 +24,19 @@ export class ChatbotCustomerComponent {
     chatbotMessages: Array<{ from: 'user' | 'bot', text: string, loading?: boolean }> = [
     ];
 
+    isRecording = false;
+    recordTime = 0;
+    audioBars: number[] = [8, 16, 12, 20, 10, 18, 14, 22];
+    private recordInterval: any;
+    private recognition: any;
+
+
     // scroll message to bottom properties
     private shouldScrollToBottom = false;
     @ViewChild('chatScroll') chatScroll!: ElementRef<HTMLDivElement>;
+
+    // speech recognition properties
+    private isRecognitionStopping = false;
 
     constructor(private geminiChat: GeminiChatService) { }
 
@@ -79,6 +89,59 @@ export class ChatbotCustomerComponent {
         this.chatbotMessages = [
         ];
         this.isSettingOpen = false;
+    }
+
+    toggleVoiceInput() {
+        if (this.isRecording) {
+            this.isRecording = false;
+            clearInterval(this.recordInterval);
+
+            if (this.recognition) {
+                this.isRecognitionStopping = true;
+                this.recognition.stop();
+            }
+        } else {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Trình duyệt của bạn không hỗ trợ nhận diện giọng nói!');
+                return;
+            }
+
+            if (this.isRecognitionStopping) return;
+
+            this.isRecording = true;
+            this.recordTime = 0;
+            this.audioBars = [8, 16, 12, 20, 10, 18, 14, 22];
+
+            this.recordInterval = setInterval(() => {
+                this.recordTime += 1000;
+                this.audioBars = this.audioBars.map(() => Math.floor(Math.random() * 20) + 8);
+            }, 1000);
+
+            this.recognition = new (window as any).webkitSpeechRecognition();
+            this.recognition.lang = 'vi-VN';
+            this.recognition.interimResults = false;
+            this.recognition.maxAlternatives = 1;
+
+            this.recognition.onresult = (event: any) => {
+                const transcript = event.results[0][0].transcript;
+                this.chatbotInput = transcript;
+            };
+
+            this.recognition.onerror = () => {
+                alert('Không thể nhận diện giọng nói. Vui lòng thử lại!');
+                this.isRecording = false;
+                clearInterval(this.recordInterval);
+                this.isRecognitionStopping = false;
+            };
+
+            this.recognition.onend = () => {
+                this.isRecording = false;
+                clearInterval(this.recordInterval);
+                this.isRecognitionStopping = false;
+            };
+
+            this.recognition.start();
+        }
     }
 
     private scrollToBottom() {

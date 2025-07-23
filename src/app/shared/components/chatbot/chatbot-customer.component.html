@@ -5,12 +5,12 @@
 
 <div *ngIf="isChatbotOpen" class="fixed inset-0 z-50 flex items-end justify-end pointer-events-none">
     <div class="w-full h-full" (click)="closeChatbot()"></div>
-    <div class="pointer-events-auto fixed bottom-6 right-6 w-full max-w-sm bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
+    <div class="pointer-events-auto fixed bottom-6 right-6 w-full max-w-md bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden"
         [ngClass]="{'animate-zoom-in': chatbotAnimation === 'in', 'animate-zoom-out': chatbotAnimation === 'out'}"
         style="height: 600px;">
         <div class="bg-[#38b6ff] text-white px-4 py-3 flex items-center justify-between">
             <span class="font-semibold text-lg"><i class="fa-solid fa-robot mr-2"></i> Chat Bot OriBuyin</span>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-3">
                 <div class="relative">
                     <button (click)="toggleSetting()"
                         class="text-white hover:text-gray-200 text-xl focus:outline-none cursor-pointer">
@@ -52,8 +52,25 @@
             </div>
         </div>
         <form (ngSubmit)="sendChatbotMessage()" class="flex items-center p-3 border-t border-gray-100 bg-gray-50">
-            <input [(ngModel)]="chatbotInput" name="chatbotInput" autocomplete="off" placeholder="Nhập tin nhắn..."
-                class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none" />
+            <ng-container *ngIf="isRecording; else normalInput">
+                <div class="flex-1 flex flex-col items-center justify-center">
+                    <div class="flex gap-1 items-end h-8 mb-1">
+                        <div *ngFor="let bar of audioBars" [style.height]="bar + 'px'" class="w-1 bg-[#38b6ff] rounded">
+                        </div>
+                    </div>
+                    <span class="text-sm text-gray-500">{{ recordTime | date:'mm:ss' }}</span>
+                </div>
+            </ng-container>
+            <ng-template #normalInput>
+                <input [(ngModel)]="chatbotInput" name="chatbotInput" autocomplete="off" placeholder="Nhập tin nhắn..."
+                    class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none" />
+            </ng-template>
+            <button type="button" (click)="toggleVoiceInput()" class="ml-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer outline-none flex items-center justify-center
+        w-[42px] h-[42px] min-w-[42px] min-h-[42px]"
+                [ngClass]="isRecording ? 'bg-red-500 hover:bg-red-600 text-white' : 'bg-transparent text-[#38b6ff] hover:text-[#1e90ff]'">
+                <i class="fa-solid" [ngClass]="isRecording ? 'fa-stop' : 'fa-microphone'"
+                    style="font-size: 1.25rem;"></i>
+            </button>
             <button type="submit"
                 class="ml-2 bg-[#38b6ff] hover:bg-[#1e90ff] text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer outline-none">
                 <i class="fa-solid fa-paper-plane"></i>
