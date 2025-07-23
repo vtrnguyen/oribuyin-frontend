@@ -36,10 +36,15 @@
                 <img src="images/oribuyin_chatbot.png" alt="Chatbot Logo" class="w-16 h-16 mb-2" />
                 Bắt đầu trò chuyện cùng OriBuyin Chatbot!
             </div>
-            <div *ngFor="let msg of chatbotMessages"
-                [ngClass]="{'text-right': msg.from === 'user', 'text-left': msg.from === 'bot'}" class="mb-3">
-                <div [ngClass]="{'bg-blue-100 text-blue-800': msg.from === 'user', 'bg-gray-100 text-gray-700': msg.from === 'bot', 'break-words': true}"
-                    class="inline-block px-4 py-2 rounded-lg max-w-xs">
+            <div *ngFor="let msg of chatbotMessages; let i = index" [ngClass]="{
+    'text-right justify-end': msg.from === 'user',
+    'text-left justify-start': msg.from === 'bot'
+}" class="mb-3 flex items-center group">
+                <div [ngClass]="{
+        'bg-blue-100 text-blue-800': msg.from === 'user',
+        'bg-gray-100 text-gray-700': msg.from === 'bot',
+        'break-words': true
+    }" class="inline-block px-4 py-2 rounded-lg max-w-xs relative">
                     <ng-container *ngIf="msg.loading; else normalMsg">
                         <span class="loader-dot"></span>
                         <span class="loader-dot"></span>
@@ -48,6 +53,24 @@
                     <ng-template #normalMsg>
                         {{ msg.text }}
                     </ng-template>
+                    <div *ngIf="msg.from === 'user'"
+                        class="absolute left-1/2 -translate-x-1/2 mt-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50">
+                        <button (mouseenter)="hoverEdit = i" (mouseleave)="hoverEdit = null" (click)="editMessage(i)"
+                            class="relative px-2 py-1 rounded bg-gray-100 hover:bg-blue-100 text-sm font-medium shadow cursor-pointer flex flex-col items-center">
+                            <i class="fa-solid fa-pen text-gray-500"></i>
+                            <span *ngIf="hoverEdit === i"
+                                class="absolute left-1/2 -translate-x-1/2 top-full mt-1 px-2 py-1 bg-white rounded shadow text-xs text-blue-600 whitespace-nowrap z-50">Chỉnh
+                                sửa</span>
+                        </button>
+                        <button (mouseenter)="hoverCopy = i" (mouseleave)="hoverCopy = null"
+                            (click)="copyMessage(msg.text)"
+                            class="relative px-2 py-1 rounded bg-gray-100 hover:bg-green-100 text-sm font-medium shadow cursor-pointer flex flex-col items-center">
+                            <i class="fa-solid fa-clone text-gray-500"></i>
+                            <span *ngIf="hoverCopy === i"
+                                class="absolute left-1/2 -translate-x-1/2 top-full mt-1 px-2 py-1 bg-white rounded shadow text-xs text-green-600 whitespace-nowrap z-50">Sao
+                                chép</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

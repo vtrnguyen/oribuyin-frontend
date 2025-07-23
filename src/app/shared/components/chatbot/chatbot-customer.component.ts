@@ -38,6 +38,13 @@ export class ChatbotCustomerComponent {
     // speech recognition properties
     private isRecognitionStopping = false;
 
+    // editting message properties
+    msgMenuIndex: number | null = null;
+    @ViewChild('chatInput') chatInput!: ElementRef<HTMLTextAreaElement>;
+    editIndex: number | null = null;
+    hoverEdit: number | null = null;
+    hoverCopy: number | null = null;
+
     constructor(private geminiChat: GeminiChatService) { }
 
     ngAfterViewChecked() {
@@ -50,6 +57,7 @@ export class ChatbotCustomerComponent {
     sendChatbotMessage(): void {
         const input = this.chatbotInput.trim();
         if (!input) return;
+
         this.chatbotMessages.push({ from: 'user', text: input });
         this.chatbotInput = '';
         this.chatbotMessages.push({ from: 'bot', text: '', loading: true });
@@ -154,6 +162,24 @@ export class ChatbotCustomerComponent {
             event.preventDefault();
             this.closeChatbot();
         }
+    }
+
+    toggleMsgMenu(index: number) {
+        this.msgMenuIndex = this.msgMenuIndex === index ? null : index;
+    }
+
+    editMessage(index: number) {
+        this.chatbotInput = this.chatbotMessages[index].text;
+        this.msgMenuIndex = null;
+        setTimeout(() => {
+            if (this.chatInput) {
+                this.chatInput.nativeElement.focus();
+            }
+        }, 0);
+    }
+
+    copyMessage(text: string) {
+        navigator.clipboard.writeText(text);
     }
 
     private scrollToBottom() {
