@@ -13,7 +13,7 @@ export class AuthInterceptor implements HttpInterceptor {
         const accessToken = localStorage.getItem("access_token");
         let authRequest = req;
 
-        if (accessToken) {
+        if (accessToken && !req.url.includes('generativelanguage.googleapis.com')) {
             authRequest = req.clone({
                 headers: req.headers.set("Authorization", `Bearer ${accessToken}`),
             });

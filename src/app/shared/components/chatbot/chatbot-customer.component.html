@@ -10,17 +10,44 @@
         style="height: 600px;">
         <div class="bg-[#38b6ff] text-white px-4 py-3 flex items-center justify-between">
             <span class="font-semibold text-lg"><i class="fa-solid fa-robot mr-2"></i> Chat Bot OriBuyin</span>
-            <button (click)="closeChatbot()"
-                class="text-white hover:text-gray-200 text-xl focus:outline-none cursor-pointer">
-                <i class="fa-solid fa-times"></i>
-            </button>
+            <div class="flex items-center gap-2">
+                <div class="relative">
+                    <button (click)="toggleSetting()"
+                        class="text-white hover:text-gray-200 text-xl focus:outline-none cursor-pointer">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                    <div *ngIf="isSettingOpen" (clickOutside)="toggleSetting()"
+                        class="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg z-10 border border-gray-200">
+                        <button (click)="clearChat()"
+                            class="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 cursor-pointer">Xóa
+                            đoạn
+                            chat</button>
+                    </div>
+                </div>
+                <button (click)="closeChatbot()"
+                    class="text-white hover:text-gray-200 text-xl focus:outline-none cursor-pointer">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
         </div>
-        <div class="flex-1 p-4 overflow-y-auto">
+        <div class="flex-1 p-4 overflow-y-auto" #chatScroll>
+            <div *ngIf="chatbotMessages.length === 0"
+                class="flex flex-col items-center justify-center text-center h-full text-gray-400 text-base">
+                <img src="images/oribuyin_chatbot.png" alt="Chatbot Logo" class="w-16 h-16 mb-2" />
+                Bắt đầu trò chuyện cùng OriBuyin Chatbot!
+            </div>
             <div *ngFor="let msg of chatbotMessages"
                 [ngClass]="{'text-right': msg.from === 'user', 'text-left': msg.from === 'bot'}" class="mb-3">
-                <div [ngClass]="{'bg-blue-100 text-blue-800': msg.from === 'user', 'bg-gray-100 text-gray-700': msg.from === 'bot', 'break-all': true}"
+                <div [ngClass]="{'bg-blue-100 text-blue-800': msg.from === 'user', 'bg-gray-100 text-gray-700': msg.from === 'bot', 'break-words': true}"
                     class="inline-block px-4 py-2 rounded-lg max-w-xs">
-                    {{ msg.text }}
+                    <ng-container *ngIf="msg.loading; else normalMsg">
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                        <span class="loader-dot"></span>
+                    </ng-container>
+                    <ng-template #normalMsg>
+                        {{ msg.text }}
+                    </ng-template>
                 </div>
             </div>
         </div>
