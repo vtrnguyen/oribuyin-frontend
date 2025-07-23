@@ -62,8 +62,10 @@
                 </div>
             </ng-container>
             <ng-template #normalInput>
-                <input [(ngModel)]="chatbotInput" name="chatbotInput" autocomplete="off" placeholder="Nhập tin nhắn..."
-                    class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none" />
+                <textarea [(ngModel)]="chatbotInput" name="chatbotInput" autocomplete="off"
+                    placeholder="Nhập tin nhắn..."
+                    class="flex-1 px-3 py-2 rounded-lg border border-gray-300 focus:outline-none resize-none" rows="1"
+                    (keydown)="onInputKeydown($event)"></textarea>
             </ng-template>
             <button type="button" (click)="toggleVoiceInput()" class="ml-2 px-4 py-2 rounded-lg font-semibold transition-all duration-200 cursor-pointer outline-none flex items-center justify-center
         w-[42px] h-[42px] min-w-[42px] min-h-[42px]"

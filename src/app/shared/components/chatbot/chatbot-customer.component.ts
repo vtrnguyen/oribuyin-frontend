@@ -144,6 +144,18 @@ export class ChatbotCustomerComponent {
         }
     }
 
+    onInputKeydown(event: KeyboardEvent) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            this.sendChatbotMessage();
+        }
+
+        if (event.key === 'Escape' && !event.shiftKey) {
+            event.preventDefault();
+            this.closeChatbot();
+        }
+    }
+
     private scrollToBottom() {
         try {
             this.chatScroll.nativeElement.scrollTop = this.chatScroll.nativeElement.scrollHeight;
