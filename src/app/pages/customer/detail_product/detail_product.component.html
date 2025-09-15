@@ -6,8 +6,8 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
             <div>
                 <div class="w-full h-120 object-contain rounded-md">
-                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image"
-                        [alt]="product.name" class="w-full h-full object-contain">
+                    <img [src]="product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image : 'images/oribuyin_logo.png'"
+                        class="w-full h-full object-contain">
                 </div>
             </div>
             <div>
