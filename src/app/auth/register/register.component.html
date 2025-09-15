@@ -5,55 +5,73 @@
   <div class="w-full lg:w-1/2 flex items-center justify-center">
     <div class="max-w-md w-full p-6">
       <h1 class="text-3xl font-semibold mb-6 text-blue-700 text-center">Đăng ký tài khoản</h1>
-      <form action="#" method="POST" class="space-y-4">
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div *ngIf="errorMessage" class="text-red-600 mb-2">{{ errorMessage }}</div>
+        <div *ngIf="successMessage" class="text-green-600 mb-2">{{ successMessage }}</div>
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="firstName" class="block text-sm font-medium text-gray-700">Họ <span
                 class="text-red-500">*</span></label>
-            <input type="text" id="firstName" name="firstName" placeholder="Họ"
+            <input type="text" id="firstName" name="firstName" placeholder="Họ" [(ngModel)]="registerData.first_name"
+              [ngModelOptions]="{standalone: true}"
               class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
           </div>
           <div>
             <label for="lastName" class="block text-sm font-medium text-gray-700">Tên <span
                 class="text-red-500">*</span></label>
-            <input type="text" id="lastName" name="lastName" placeholder="Tên"
+            <input type="text" id="lastName" name="lastName" placeholder="Tên" [(ngModel)]="registerData.last_name"
+              [ngModelOptions]="{standalone: true}"
               class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
           </div>
         </div>
+
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email <span
               class="text-red-500">*</span></label>
-          <input type="email" id="email" name="email" placeholder="your@email.com"
+          <input type="email" id="email" name="email" placeholder="your@email.com" [(ngModel)]="registerData.email"
+            [ngModelOptions]="{standalone: true}"
             class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
         </div>
+
         <div>
           <label for="phone" class="block text-sm font-medium text-gray-700">Số điện thoại <span
               class="text-red-500">*</span></label>
-          <input type="tel" id="phone" name="phone" placeholder="Số điện thoại"
+          <input type="tel" id="phone" name="phone" placeholder="Số điện thoại" [(ngModel)]="registerData.phone_number"
+            [ngModelOptions]="{standalone: true}"
             class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
         </div>
+
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700">Tên đăng nhập <span
               class="text-red-500">*</span></label>
           <input type="text" id="username" name="username" placeholder="Tên đăng nhập"
+            [(ngModel)]="registerData.user_name" [ngModelOptions]="{standalone: true}"
             class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
         </div>
+
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu <span
               class="text-red-500">*</span></label>
           <input type="password" id="password" name="password" placeholder="••••••••••"
+            [(ngModel)]="registerData.password" [ngModelOptions]="{standalone: true}"
             class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
         </div>
+
         <div>
           <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Xác nhận mật khẩu <span
               class="text-red-500">*</span></label>
           <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••••"
+            [(ngModel)]="confirmPassword" [ngModelOptions]="{standalone: true}"
             class="mt-1 p-2 w-full border rounded-md focus:border-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 transition-colors duration-300">
         </div>
+
         <div>
-          <button type="submit"
-            class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 cursor-pointer">Đăng
-            ký</button>
+          <button type="submit" [disabled]="loading"
+            class="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300 cursor-pointer">
+            <span *ngIf="!loading">Đăng ký</span>
+            <span *ngIf="loading">Đang xử lý...</span>
+          </button>
         </div>
       </form>
       <div class="mt-4 text-sm text-gray-600 text-center">
