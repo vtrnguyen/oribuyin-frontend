@@ -37,7 +37,7 @@
             </div>
             <div class="divide-y">
                 <div *ngFor="let item of order.order_items" class="flex items-center py-4">
-                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image"
+                    <img [src]="item.product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image : 'images/oribuyin_logo.png'"
                         alt="{{ item.product.name }}" class="w-20 h-20 object-cover rounded-lg mr-4" />
                     <div class="flex-1">
                         <div class="font-medium text-gray-800">{{ item.product.name }}</div>

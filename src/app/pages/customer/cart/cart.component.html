@@ -20,8 +20,8 @@
                 </div>
                 <div class="w-1/4 md:w-1/5 lg:w-1/6 p-4">
                     <div class="relative w-full h-24 md:h-32 overflow-hidden rounded-md">
-                        <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image"
-                            [alt]="item.product.name" class="w-full h-full object-cover">
+                        <img [src]="item.product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image : 'images/oribuyin_logo.png'"
+                            class="w-full h-full object-contain">
                     </div>
                 </div>
                 <div class="flex-grow p-4">
