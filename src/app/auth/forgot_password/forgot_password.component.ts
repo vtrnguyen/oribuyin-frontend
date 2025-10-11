@@ -1,53 +1,117 @@
-import { Component } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms'; // Import NgForm
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { AuthService } from "../../core/auth/auth.service";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+
+type Step = "request" | "verify" | "reset";
 
 @Component({
-  selector: "app-auth-forgot-password",
   standalone: true,
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
+  selector: "app-forgot-password",
+  imports: [CommonModule, FormsModule],
   templateUrl: "./forgot_password.component.html",
-  styleUrls: ["./forgot_password.component.scss"]
+  styleUrls: ["./forgot_password.component.scss"],
 })
-export class ForgotPasswordComponent {
-  // Define a data model for the form
-  forgotPasswordData = {
-    identifier: '' // This will hold either email or username
-  };
+export class ForgotPasswordComponent implements OnInit {
+  identifier: string = "";
+  username: string = "";
+  email: string = "";
+  code: string = ""; // OTP
+  newPassword: string = "";
+  confirmPassword: string = "";
 
-  errorMessage: string | null = null; // To display error messages
+  step: Step = "request";
+  loading = false;
+  message = "";
+  error = "";
 
-  constructor() { }
+  // server-issued token after OTP verify
+  resetToken: string | null = null;
 
-  // Method to handle form submission
-  onSubmit(form: NgForm): void {
-    if (form.valid) {
-      console.log('Forgot password request submitted:', this.forgotPasswordData);
-      // In a real application, you would send this data to your backend API
-      // Example: this.authService.requestPasswordReset(this.forgotPasswordData.identifier).subscribe({
-      //   next: (response) => {
-      //     this.errorMessage = 'Yêu cầu đã được gửi. Vui lòng kiểm tra email của bạn.';
-      //     // Redirect to a success page or show a success message
-      //   },
-      //   error: (err) => {
-      //     this.errorMessage = err.error.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
-      //   }
-      // });
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
-      // For demonstration, simulate a success or error
-      if (this.forgotPasswordData.identifier.includes('@')) {
-        this.errorMessage = 'Yêu cầu đặt lại mật khẩu đã được gửi đến email của bạn.';
-      } else {
-        this.errorMessage = 'Nếu tài khoản tồn tại, hướng dẫn đặt lại mật khẩu đã được gửi.';
-      }
-      // Clear the form after submission (optional)
-      // form.resetForm();
+  ngOnInit(): void { }
 
-    } else {
-      this.errorMessage = 'Vui lòng nhập email hoặc tên đăng nhập hợp lệ.';
+  private clearAlerts() {
+    this.message = "";
+    this.error = "";
+  }
+
+  async submitRequest() {
+    this.clearAlerts();
+    if (!this.identifier) {
+      this.error = "Vui lòng nhập tên đăng nhập hoặc email";
+      return;
     }
+    this.loading = true;
+    try {
+      const res: any = await this.authService.forgotPassword(this.identifier);
+      this.message = this.identifier.includes("@") ?
+        `OTP đã được gửi đến email ${this.identifier}` :
+        `OTP đã được gửi đến email đã đăng ký của tài khoản ${this.identifier}`;
+      this.step = "verify";
+    } catch (err: any) {
+      this.error = "Yêu cầu thất bại";
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async submitVerify() {
+    this.clearAlerts();
+    if (!this.identifier || !this.code) {
+      this.error = "Vui lòng cung cấp tên đăng nhập và OTP";
+      return;
+    }
+    this.loading = true;
+    try {
+      const res: any = await this.authService.verifyOtp(this.identifier, this.code);
+      this.message = "OTP đã được xác nhận";
+      this.resetToken = res?.reset_token || null;
+      this.step = "reset";
+    } catch (err: any) {
+      this.error = "Xác thực thất bại";
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async submitReset() {
+    this.clearAlerts();
+    if (!this.newPassword || !this.confirmPassword) {
+      this.error = "Vui lòng nhập và xác nhận mật khẩu mới";
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      this.error = "Mật khẩu không khớp";
+      return;
+    }
+    if (!this.resetToken) {
+      this.error = "Thiếu mã thông báo đặt lại. Vui lòng xác thực lại OTP";
+      this.step = "verify";
+      return;
+    }
+
+    this.loading = true;
+    try {
+      const res: any = await this.authService.resetPassword(this.resetToken, this.newPassword);
+      this.message = "Mật khẩu đã được đặt lại thành công";
+      setTimeout(() => this.router.navigate(["/login"]), 1200);
+    } catch (err: any) {
+      this.error = err?.error?.message || err?.message || "Đặt lại mật khẩu thất bại";
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  backToRequest() {
+    this.step = "request";
+    this.code = "";
+    this.resetToken = null;
+    this.clearAlerts();
   }
 }
