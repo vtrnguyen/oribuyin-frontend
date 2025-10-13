@@ -114,10 +114,8 @@
                 class="grid grid-cols-5 gap-4 items-center -mx-4 py-2 border-b border-gray-100 last:border-b-0">
                 <div class="px-4">
                     <div class="relative w-16 h-16 overflow-hidden rounded-md shadow-sm">
-                        <img [src]="
-                'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' +
-                product.image
-              " [alt]="product.name" class="w-full h-full object-cover" />
+                        <img [src]="product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + product.image : 'images/oribuyin_logo.png'"
+                            [alt]="product.name" class="w-full h-full object-cover" />
                     </div>
                 </div>
                 <div class="px-4">
