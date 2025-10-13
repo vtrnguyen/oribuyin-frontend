@@ -10,6 +10,7 @@ import { User } from '../../shared/interfaces/user.interface';
 import { CartService } from '../../core/services/cart.service';
 import { CartStateManagerService } from '../../shared/services/cart_state_manager.service';
 import { ChatbotCustomerComponent } from '../../shared/components/chatbot/chatbot-customer.component';
+import { ProductsService } from '../../core/services/products.service';
 
 @Component({
     selector: 'app-customer-layout',
@@ -27,16 +28,23 @@ import { ChatbotCustomerComponent } from '../../shared/components/chatbot/chatbo
 })
 export class CustomerLayoutComponent implements OnInit {
     userInfo: User | null = null;
-    searchQuery: string = '';
     isUserDropdownOpen: boolean = false;
     cartItemCount: number = 0;
+
+    // search properties
+    searchQuery: string = '';
+    isSearchFocused: boolean = false;
+    topSearchKeywords: { keyword: string; count: number }[] = [];
+    searchHistory: string[] = [];
+    showSearchPanel: boolean = false;
 
     constructor(
         private router: Router,
         private authService: AuthService,
         private usersService: UsersService,
         private cartService: CartService,
-        private cartStateManagerService: CartStateManagerService
+        private cartStateManagerService: CartStateManagerService,
+        private productsService: ProductsService,
     ) { }
 
     ngOnInit(): void {
@@ -48,17 +56,40 @@ export class CustomerLayoutComponent implements OnInit {
 
         this.loadUserInfo();
         this.loadNumberOfCartProduct();
+        this.loadTopSearchKeywords();
 
         this.cartStateManagerService.updateCartItemQuantity$.subscribe(() => {
             this.loadNumberOfCartProduct();
         });
     }
 
+    onSearchFocus(): void {
+        this.isSearchFocused = true;
+        this.showSearchPanel = true;
+        this.loadSearchHistory();
+    }
+
+    onSearchBlur(): void {
+        // Delay to allow click events on suggestions to fire
+        setTimeout(() => {
+            this.isSearchFocused = false;
+            this.showSearchPanel = false;
+        }, 200);
+    }
+
     handleSearch(): void {
         if (this.searchQuery.trim()) {
             this.router.navigate(['/searches'], { queryParams: { q: this.searchQuery } });
             this.searchQuery = '';
+            this.showSearchPanel = false;
         }
+    }
+
+    searchWithKeyword(keyword: string): void {
+        this.searchQuery = keyword;
+        this.router.navigate(['/searches'], { queryParams: { q: keyword } });
+        this.searchQuery = '';
+        this.showSearchPanel = false;
     }
 
     toggleUserDropdown(): void {
@@ -118,5 +149,31 @@ export class CustomerLayoutComponent implements OnInit {
                 this.cartItemCount = 0;
             }
         })
+    }
+
+    private loadTopSearchKeywords(): void {
+        this.productsService.getTopSearches(10).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.topSearchKeywords = response.data;
+                }
+            },
+            error: (error: any) => {
+                console.log(">>> error when fetching top search keywords:", error);
+            },
+        });
+    }
+
+    private loadSearchHistory(): void {
+        this.productsService.getSearchHistory(10).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1) {
+                    this.searchHistory = [...new Set(response.data as string[])];
+                }
+            },
+            error: (error: any) => {
+                console.log(">>> error when fetching search history:", error);
+            }
+        });
     }
 }

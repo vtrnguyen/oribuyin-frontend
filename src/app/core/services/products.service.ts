@@ -91,6 +91,14 @@ export class ProductsService {
         return this.http.get<any>(`${this.productApiUrl}/search?keyword=${keyword}`);
     }
 
+    getTopSearches(limit: number = 10): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/search/top?limit=${limit}`);
+    }
+
+    getSearchHistory(limit: number = 10): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/search/history?limit=${limit}`);
+    }
+
     createProduct(newProduct: any): Observable<any> {
         return this.http.post<any>(`${this.productApiUrl}`, { newProduct });
     }

@@ -1,6 +1,6 @@
 <div class="flex flex-col min-h-screen">
     <header class="sticky top-0 z-50 transition-all duration-300 bg-white/95 backdrop-blur-sm shadow-md">
-        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto pt-4 pb-2 px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <a routerLink="/" class="flex items-center">
@@ -9,17 +9,49 @@
                     </a>
                 </div>
 
-                <div class="hidden md:flex flex-1 max-w-xl mx-4">
-                    <form class="relative w-full" (ngSubmit)="handleSearch()">
-                        <input type="text" placeholder="Tìm kiếm sản phẩm..."
-                            class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
-                            [(ngModel)]="searchQuery" name="searchQuery" />
-                        <button type="submit"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors cursor-pointer"
-                            aria-label="Search">
-                            <i class="fa-solid fa-search text-lg"></i>
-                        </button>
-                    </form>
+                <!-- desktop search section -->
+                <div class="hidden md:flex flex-1 max-w-2xl mx-4">
+                    <div class="w-full relative">
+                        <form class="relative w-full" (ngSubmit)="handleSearch()">
+                            <input type="text" placeholder="Tìm kiếm sản phẩm..."
+                                class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                [(ngModel)]="searchQuery" name="searchQuery" (focus)="onSearchFocus()"
+                                (blur)="onSearchBlur()" autocomplete="off" />
+                            <button type="submit"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors cursor-pointer"
+                                aria-label="Search">
+                                <i class="fa-solid fa-search text-lg"></i>
+                            </button>
+                        </form>
+
+                        <!-- search history panel -->
+                        <div *ngIf="showSearchPanel && searchHistory.length > 0 && isSearchFocused"
+                            class="absolute top-10 left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                            <div class="p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-sm font-semibold text-gray-700">
+                                        Lịch sử tìm kiếm
+                                    </h3>
+                                </div>
+                                <div class="space-y-1">
+                                    <button *ngFor="let keyword of searchHistory" (click)="searchWithKeyword(keyword)"
+                                        class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-md transition-colors flex items-center cursor-pointer">
+                                        {{ keyword }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- top search keywords -->
+                        <div *ngIf="topSearchKeywords.length > 0" class="mt-2">
+                            <div class="flex flex-wrap">
+                                <button *ngFor="let item of topSearchKeywords" (click)="searchWithKeyword(item.keyword)"
+                                    class="px-3 py-1 text-xs text-gray-700 flex items-center gap-1 cursor-pointer capitalize">
+                                    {{ item.keyword }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex items-center space-x-4">
@@ -80,17 +112,50 @@
                 </div>
             </div>
 
+            <!-- mobile search -->
             <div class="mt-4 md:hidden">
-                <form class="relative w-full" (ngSubmit)="handleSearch()">
-                    <input type="text" placeholder="Tìm kiếm sản phẩm..."
-                        class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        [(ngModel)]="searchQuery" name="searchQuery" />
-                    <button type="submit"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors"
-                        aria-label="Search">
-                        <i class="fa-solid fa-search text-lg"></i>
-                    </button>
-                </form>
+                <div class="relative">
+                    <form class="relative w-full" (ngSubmit)="handleSearch()">
+                        <input type="text" placeholder="Tìm kiếm sản phẩm..."
+                            class="input pr-10 w-full py-2 pl-3 text-gray-700 rounded-md border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            [(ngModel)]="searchQuery" name="searchQuery" (focus)="onSearchFocus()"
+                            (blur)="onSearchBlur()" autocomplete="off" />
+                        <button type="submit"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors"
+                            aria-label="Search">
+                            <i class="fa-solid fa-search text-lg"></i>
+                        </button>
+                    </form>
+
+                    <!-- search history panel for mobile -->
+                    <div *ngIf="showSearchPanel && searchHistory.length > 0 && isSearchFocused"
+                        class="absolute top-10 left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-y-auto">
+                        <div class="p-3">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-sm font-semibold text-gray-700">
+                                    Lịch sử tìm kiếm
+                                </h3>
+                            </div>
+                            <div class="space-y-1">
+                                <button *ngFor="let keyword of searchHistory" (click)="searchWithKeyword(keyword)"
+                                    class="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 rounded-md transition-colors flex items-center">
+                                    {{ keyword }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- top search keywords for mobile -->
+                    <div *ngIf="topSearchKeywords.length > 0" class="mt-2">
+                        <div class="flex flex-wrap gap-2">
+                            <button *ngFor="let item of topSearchKeywords.slice(0, 6)"
+                                (click)="searchWithKeyword(item.keyword)"
+                                class="px-3 py-1 text-xs text-gray-700 flex items-center gap-1 capitalize cursor-pointer">
+                                {{ item.keyword }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
