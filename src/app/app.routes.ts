@@ -9,6 +9,7 @@ import { CustomerLayoutComponent } from './layouts/customer/customer_layout.comp
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot_password/forgot_password.component';
+import { GoogleSuccessComponent } from './auth/google-success/google-success.component';
 
 // Admin components
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
@@ -69,6 +70,11 @@ export const routes: Routes = [
         path: "forgot-password",
         component: ForgotPasswordComponent,
         canActivate: [AuthenticatedGuard],
+    },
+    // Google OAuth success handler (popup redirect)
+    {
+        path: 'auth/google/success',
+        component: GoogleSuccessComponent,
     },
 
     // customer

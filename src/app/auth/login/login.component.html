@@ -29,7 +29,8 @@
         </div>
 
         <div class="text-right mt-2">
-          <a href="/forgot-password" class="text-sm text-blue-700 hover:underline focus:outline-none focus:underline">Quên mật
+          <a href="/forgot-password"
+            class="text-sm text-blue-700 hover:underline focus:outline-none focus:underline">Quên mật
             khẩu?</a>
         </div>
 
@@ -55,7 +56,7 @@
       <div class="mt-4 flex flex-col lg:flex-row items-center justify-between">
         <!-- Google Button -->
         <div class="w-full lg:w-1/2 mb-2 lg:mb-0">
-          <button type="button"
+          <button type="button" (click)="onGoogleSignIn()"
             class="w-full flex justify-center items-center gap-2 bg-white text-sm text-gray-600 p-2 rounded-md hover:bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors duration-300 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4">
               <path fill="#fbbb00"

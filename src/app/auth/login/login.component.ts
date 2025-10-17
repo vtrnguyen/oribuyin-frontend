@@ -26,7 +26,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
@@ -47,23 +47,37 @@ export class LoginComponent {
         const role = res.account.role;
 
         if (role === "admin") {
-            this.router.navigate(["/admin"]);
-            return;
+          this.router.navigate(["/admin"]);
+          return;
         }
 
         if (role === "staff") {
-            this.router.navigate(["/staff"]);
-            return;
+          this.router.navigate(["/staff"]);
+          return;
         }
 
         if (role === "customer") {
-            this.router.navigate(["/"]);
-            return;
+          this.router.navigate(["/"]);
+          return;
         }
       },
       error: (err) => {
         this.errorMessage = "Tên đăng nhập hoặc mật khẩu không chính xác!";
       }
     });
+  }
+
+  onGoogleSignIn(): void {
+    this.authService.signInWithGooglePopup()
+      .then(() => {
+        const role = localStorage.getItem('role');
+        if (role === 'admin') { this.router.navigate(['/admin']); return; }
+        if (role === 'staff') { this.router.navigate(['/staff']); return; }
+        this.router.navigate(['/']);
+      })
+      .catch(err => {
+        console.error('Google sign-in error', err);
+        this.errorMessage = 'Đăng nhập bằng Google thất bại.';
+      });
   }
 }

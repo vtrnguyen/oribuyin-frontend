@@ -35,19 +35,53 @@ export class AuthService {
         this.router.navigate(["/login"]);
     }
 
-    // Forgot-password flow endpoints
-    // request OTP (identifier = email or username)
     forgotPassword(identifier: string): Promise<any> {
         return lastValueFrom(this.http.post(`${this.authApiUrl}/forgot-password`, { identifier }));
     }
 
-    // verify OTP -> returns reset_token
     verifyOtp(identifier: string, code: string): Promise<any> {
         return lastValueFrom(this.http.post(`${this.authApiUrl}/verify-otp`, { identifier, code }));
     }
 
-    // reset password using reset_token
     resetPassword(reset_token: string, new_password: string): Promise<any> {
         return lastValueFrom(this.http.post(`${this.authApiUrl}/reset-password`, { reset_token, new_password }));
+    }
+
+    signInWithGooglePopup(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const popupWidth = 600;
+            const popupHeight = 700;
+            const left = window.screenX + (window.innerWidth - popupWidth) / 2;
+            const top = window.screenY + (window.innerHeight - popupHeight) / 2;
+
+            const url = `${this.authApiUrl}/google?returnTo=${encodeURIComponent(window.location.origin)}`;
+
+            const popup = window.open(url, '_blank', `width=${popupWidth},height=${popupHeight},top=${top},left=${left}`);
+
+            if (!popup) return reject(new Error('Popup blocked'));
+
+            const listener = (event: MessageEvent) => {
+                if (event.origin !== window.location.origin) return;
+                const data = event.data;
+                if (data && data.access_token) {
+                    window.removeEventListener('message', listener);
+                    try {
+                        localStorage.setItem('access_token', data.access_token);
+                        if (data.role) localStorage.setItem('role', data.role);
+                        if (data.user_id) localStorage.setItem('user_id', data.user_id);
+                    } catch (e) {
+                    }
+                    resolve(data);
+                }
+            };
+
+            window.addEventListener('message', listener);
+
+            const timeoutId = setTimeout(() => {
+                window.removeEventListener('message', listener);
+                reject(new Error('Timeout waiting for Google sign-in'));
+                try { popup.close(); } catch (e) { }
+            }, 120000);
+        });
     }
 }
