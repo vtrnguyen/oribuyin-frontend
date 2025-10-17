@@ -71,12 +71,14 @@
                             <div
                                 class="w-8 h-8 bg-gray-200 rounded-full overflow-hidden flex items-center justify-center">
                                 <ng-container *ngIf="userInfo && userInfo.avatar">
-                                    <img [src]="'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/avatar/' + userInfo.avatar"
-                                        [alt]="(userInfo.firstName || '') + ' ' + (userInfo.lastName || '') + ' Avatar'"
-                                        class="w-full h-full object-cover">
+                                    <img [src]="userInfo.avatar.startsWith('https') ? userInfo.avatar : 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/avatar/' + userInfo.avatar"
+                                        alt="Avatar" class="w-full h-full object-cover" />
                                 </ng-container>
-                                <i *ngIf="!(userInfo && userInfo.avatar)"
-                                    class="fa-solid fa-user text-gray-600 text-lg"></i>
+
+                                <div *ngIf="!userInfo || !userInfo.avatar"
+                                    class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-2 border-blue-400 mr-6">
+                                    <i class="w-full h-full object-cover"></i>
+                                </div>
                             </div>
                             <span class="hidden lg:inline text-sm font-medium">
                                 {{ (userInfo && userInfo.firstName && userInfo.lastName) ? (userInfo.firstName + ' ' +
