@@ -30,6 +30,8 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     currentMonthRevenue: number = 0;
     monthlyRevenueData: MonthlyRevenue[] = [];
 
+    topSellingProducts: any[] = [];
+
     @ViewChild("revenueChart") revenueChartRef!: ElementRef<HTMLCanvasElement>;
     private revenueChart: Chart | undefined;
 
@@ -45,6 +47,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         this.getRecentOrders();
         this.getCurrentMonthRevenue();
         this.initializeMonthlyRevenue();
+        this.getTopSellingProducts();
     }
 
     ngAfterViewInit(): void {
@@ -199,5 +202,20 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
                 }
             });
         }
+    }
+
+    private getTopSellingProducts(limit: number = 12): void {
+        this.productsService.getTopSelling(limit).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1 && Array.isArray(response.data)) {
+                    this.topSellingProducts = response.data;
+                } else {
+                    this.topSellingProducts = [];
+                }
+            },
+            error: (error: any) => {
+                this.topSellingProducts = [];
+            },
+        });
     }
 }

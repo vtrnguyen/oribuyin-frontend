@@ -118,4 +118,8 @@ export class ProductsService {
     deleteProduct(productID: number): Observable<any> {
         return this.http.delete<any>(`${this.productApiUrl}/${productID}`);
     }
+
+    getTopSelling(limit: number = 10): Observable<any> {
+        return this.http.get<any>(`${this.productApiUrl}/top-selling?limit=${limit}`);
+    }
 }
