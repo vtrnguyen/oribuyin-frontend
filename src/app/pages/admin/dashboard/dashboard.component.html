@@ -138,4 +138,79 @@
       <p class="text-sm text-gray-500 text-center">Không có sản phẩm bán chạy.</p>
     </ng-template>
   </div>
+
+  <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-700">Đánh giá sản phẩm</h3>
+
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1">
+          <button class="px-3 py-1 text-sm rounded border border-gray-300 cursor-pointer"
+            [ngClass]="{'bg-blue-50 border-blue-300': reviewsRatingFilter === null}"
+            (click)="setReviewsRatingFilter(null)">Tất cả</button>
+          <button *ngFor="let r of [5,4,3,2,1]"
+            class="px-3 py-1 text-sm rounded border border-gray-300 flex items-center gap-1 cursor-pointer"
+            [ngClass]="{'bg-blue-50 border-blue-300': reviewsRatingFilter === r}" (click)="setReviewsRatingFilter(r)">
+            <span class="text-sm font-medium">{{ r }} sao</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="reviews && reviews.length > 0; else noReviews">
+      <ul class="space-y-3">
+        <li *ngFor="let item of reviews" class="flex gap-3 p-3 border border-gray-300 rounded-md items-start">
+          <div class="w-16 h-16 rounded overflow-hidden flex items-center justify-center bg-gray-100">
+            <img *ngIf="item.product?.image; else prodPlaceholder"
+              [src]="item.product.image ? 'https://raw.githubusercontent.com/vtrnguyen/hosting-image-file/refs/heads/main/oribuyin/products/' + item.product.image : 'images/oribuyin_logo.png'"
+              [alt]="item.product?.name" class="w-full h-full object-cover">
+            <ng-template #prodPlaceholder>
+              <i class="fa-solid fa-box text-gray-400 text-2xl"></i>
+            </ng-template>
+          </div>
+
+          <div class="flex-1">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-semibold text-gray-800">{{ item.product?.name }}</p>
+                <p class="text-xs text-gray-500">{{ item.product?.total_sold ? ('Đã bán: ' + item.product.total_sold) :
+                  '' }}</p>
+              </div>
+              <div class="text-right">
+                <div class="flex items-center justify-end">
+                  <span class="text-sm font-medium mr-2">{{ item.review?.rating }}</span>
+                  <i class="fa-solid fa-star text-yellow-400"></i>
+                </div>
+                <p class="text-xs text-gray-400">{{ item.review?.created_at | date: 'yyyy-MM-dd HH:mm' }}</p>
+              </div>
+            </div>
+
+            <p class="mt-2 text-sm text-gray-700">{{ item.review?.comment }}</p>
+
+            <p class="mt-2 text-xs text-gray-500">Người đánh giá:
+              <span class="font-medium">
+                {{ item.review?.user?.first_name }} {{ item.review?.user?.last_name }}
+              </span>
+            </p>
+          </div>
+        </li>
+      </ul>
+
+      <!-- pagination -->
+      <div class="mt-4 flex items-center justify-between">
+        <div class="text-sm text-gray-600">Tổng {{ reviewsTotal }} đánh giá</div>
+        <div class="flex items-center space-x-2">
+          <button class="px-3 py-1 border border-gray-300 rounded text-sm cursor-pointer" [disabled]="reviewsPage <= 1"
+            (click)="goToPrevReviewsPage()">Trước</button>
+          <div class="text-sm text-gray-700">Trang {{ reviewsPage }} / {{ reviewsTotalPages }}</div>
+          <button class="px-3 py-1 border border-gray-300 rounded text-sm cursor-pointer"
+            [disabled]="reviewsPage >= reviewsTotalPages" (click)="goToNextReviewsPage()">Sau</button>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noReviews>
+      <p class="text-sm text-gray-500 text-center">Không có đánh giá nào khớp.</p>
+    </ng-template>
+  </div>
 </div>

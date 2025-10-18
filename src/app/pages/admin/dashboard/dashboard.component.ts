@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { OrderService } from "../../../core/services/order.service";
 import { Chart, registerables } from "chart.js";
 import { OrderStatusBadgeComponent } from "../../../shared/components/order_status_badge/order_status_badge.component";
+import { ReviewsService } from "../../../core/services/review.service";
 
 Chart.register(...registerables);
 
@@ -35,6 +36,13 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     availableYears: number[] = [];
     selectedYear: number = new Date().getFullYear();
 
+    // reviews properties
+    reviews: any[] = [];
+    reviewsTotal: number = 0;
+    reviewsPage: number = 1;
+    reviewsPageSize: number = 5;
+    reviewsRatingFilter: number | null = null; // null = all, 1-5 = filter by rating
+
     @ViewChild("revenueChart") revenueChartRef!: ElementRef<HTMLCanvasElement>;
     private revenueChart: Chart | undefined;
 
@@ -42,6 +50,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         private usersService: UsersService,
         private productsService: ProductsService,
         private ordersService: OrderService,
+        private reviewsService: ReviewsService,
     ) { }
 
     ngOnInit(): void {
@@ -55,6 +64,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         this.loadMonthlyRevenueByYear(this.selectedYear);
 
         this.getTopSellingProducts();
+        this.loadReviews(this.reviewsPage);
     }
 
     ngAfterViewInit(): void {
@@ -263,6 +273,49 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         if (!isNaN(year)) {
             this.selectedYear = year;
             this.loadMonthlyRevenueByYear(year);
+        }
+    }
+
+    loadReviews(page: number = 1): void {
+        this.reviewsPage = page;
+        this.reviewsService.getReviewsByAvgRating(this.reviewsPage, this.reviewsPageSize, this.reviewsRatingFilter).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1 && response.data) {
+                    const payload = response.data;
+                    this.reviewsTotal = payload.total || 0;
+                    this.reviewsPage = payload.page || this.reviewsPage;
+                    this.reviewsPageSize = payload.pageSize || this.reviewsPageSize;
+                    this.reviews = payload.data || [];
+                } else {
+                    this.reviews = [];
+                    this.reviewsTotal = 0;
+                }
+            },
+            error: (error: any) => {
+                this.reviews = [];
+                this.reviewsTotal = 0;
+            },
+        });
+    }
+
+    setReviewsRatingFilter(rating: number | null): void {
+        this.reviewsRatingFilter = rating;
+        this.reviewsPage = 1;
+        this.loadReviews(1);
+    }
+
+    get reviewsTotalPages(): number {
+        return Math.max(1, Math.ceil(this.reviewsTotal / this.reviewsPageSize));
+    }
+
+    goToPrevReviewsPage() {
+        if (this.reviewsPage > 1) {
+            this.loadReviews(this.reviewsPage - 1);
+        }
+    }
+    goToNextReviewsPage() {
+        if (this.reviewsPage < this.reviewsTotalPages) {
+            this.loadReviews(this.reviewsPage + 1);
         }
     }
 }
