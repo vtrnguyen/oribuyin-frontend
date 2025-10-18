@@ -29,8 +29,11 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     recentOrders: any[] = [];
     currentMonthRevenue: number = 0;
     monthlyRevenueData: MonthlyRevenue[] = [];
-
     topSellingProducts: any[] = [];
+
+    // monthly revenue by year properties
+    availableYears: number[] = [];
+    selectedYear: number = new Date().getFullYear();
 
     @ViewChild("revenueChart") revenueChartRef!: ElementRef<HTMLCanvasElement>;
     private revenueChart: Chart | undefined;
@@ -46,7 +49,11 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         this.getNumberOfProducts();
         this.getRecentOrders();
         this.getCurrentMonthRevenue();
-        this.initializeMonthlyRevenue();
+
+        this.loadAvailableYears(6);
+        this.selectedYear = new Date().getFullYear();
+        this.loadMonthlyRevenueByYear(this.selectedYear);
+
         this.getTopSellingProducts();
     }
 
@@ -116,23 +123,6 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
 
-    private initializeMonthlyRevenue(): void {
-        this.monthlyRevenueData = [
-            { month: "Tháng 1", revenue: 120000000 },
-            { month: "Tháng 2", revenue: 150000000 },
-            { month: "Tháng 3", revenue: 130000000 },
-            { month: "Tháng 4", revenue: 180000000 },
-            { month: "Tháng 5", revenue: 200000000 },
-            { month: "Tháng 6", revenue: 220000000 },
-            { month: "Tháng 7", revenue: 190000000 },
-            { month: "Tháng 8", revenue: 230000000 },
-            { month: "Tháng 9", revenue: 210000000 },
-            { month: "Tháng 10", revenue: 250000000 },
-            { month: "Tháng 11", revenue: 270000000 },
-            { month: "Tháng 12", revenue: 300000000 },
-        ];
-    }
-
     private renderRevenueChart(): void {
         if (!this.revenueChartRef || !this.revenueChartRef.nativeElement) {
             console.error('Chart canvas element not found');
@@ -143,8 +133,9 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
             this.revenueChart.destroy();
         }
 
-        const labels = this.monthlyRevenueData.map(data => data.month);
-        const data = this.monthlyRevenueData.map(data => data.revenue);
+        const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const labels = monthLabels;
+        const data = this.monthlyRevenueData.map(d => Number(d.revenue) || 0);
 
         const ctx = this.revenueChartRef.nativeElement.getContext('2d');
         if (ctx) {
@@ -217,5 +208,61 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
                 this.topSellingProducts = [];
             },
         });
+    }
+
+    private loadAvailableYears(lookback: number = 5): void {
+        const currentYear = new Date().getFullYear();
+        this.availableYears = [];
+        for (let i = 0; i < lookback; i++) {
+            this.availableYears.push(currentYear - i);
+        }
+    }
+
+    private loadMonthlyRevenueByYear(year: number): void {
+        this.ordersService.getMonthlyRevenueByYear(year).subscribe({
+            next: (response: any) => {
+                if (response && response.code === 1 && Array.isArray(response.data)) {
+                    const monthsMap = new Map<number, number>();
+                    for (let i = 1; i <= 12; i++) monthsMap.set(i, 0);
+
+                    for (const m of response.data) {
+                        const monthNum = Number(m.month);
+                        const revenueVal = Number(m.revenue) || 0;
+                        monthsMap.set(monthNum, revenueVal);
+                    }
+
+                    // set monthlyRevenueData in same format used by renderRevenueChart
+                    this.monthlyRevenueData = Array.from({ length: 12 }).map((_, idx) => {
+                        const monthIndex = idx + 1;
+                        return { month: `Tháng ${monthIndex}`, revenue: monthsMap.get(monthIndex) || 0 };
+                    });
+
+                    // re-render chart
+                    this.renderRevenueChart();
+                } else {
+                    // fallback: zeros
+                    this.monthlyRevenueData = Array.from({ length: 12 }).map((_, idx) => {
+                        const monthIndex = idx + 1;
+                        return { month: `Tháng ${monthIndex}`, revenue: 0 };
+                    });
+                    this.renderRevenueChart();
+                }
+                error: (error: any) => {
+                    this.monthlyRevenueData = Array.from({ length: 12 }).map((_, idx) => {
+                        const monthIndex = idx + 1;
+                        return { month: `Tháng ${monthIndex}`, revenue: 0 };
+                    });
+                    this.renderRevenueChart();
+                }
+            }
+        });
+    }
+
+    onYearChange(yearValue: string | number) {
+        const year = typeof yearValue === 'string' ? Number(yearValue) : yearValue;
+        if (!isNaN(year)) {
+            this.selectedYear = year;
+            this.loadMonthlyRevenueByYear(year);
+        }
     }
 }

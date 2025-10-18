@@ -53,4 +53,8 @@ export class OrderService {
     updateOrder(orderID: number, status: string): Observable<any> {
         return this.http.put<any>(`${this.orderApiUrl}/${orderID}/status`, { status });
     }
+
+    getMonthlyRevenueByYear(year: number): Observable<any> {
+        return this.http.get<any>(`${this.orderApiUrl}/revenue/monthly`, { params: { year: year.toString() } });
+    }
 }
